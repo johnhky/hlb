@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/titlebar"
+            layout="@layout/titlebar"></include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="病历记录"
+                    android:textColor="@color/gray_33"
+                    android:textSize="@dimen/sp_17" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="药品库存"
+                    android:textColor="@color/gray_33"
+                    android:textSize="@dimen/sp_17" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="设备数据"
+                    android:textColor="@color/gray_33"
+                    android:textSize="@dimen/sp_17" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="体征数据"
+                    android:textColor="@color/gray_33"
+                    android:textSize="@dimen/sp_17" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp_8"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_blood_fat"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_health_bloodfat"
+                        android:drawableTop="@drawable/blood_fat"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="血脂"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:id="@+id/tv_blood_pressure"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_marginLeft="@dimen/dp_8"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:layout_weight="1"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:background="@drawable/shape_health_blood_pressure"
+                        android:drawableTop="@drawable/blood_pressure"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="血压"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:id="@+id/tv_heart_rate"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_health_heartrate"
+                        android:drawableTop="@drawable/beart_rate"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:text="心率"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_sleep"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_health_sleep"
+                        android:drawableTop="@drawable/sleep"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="睡眠"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:id="@+id/tv_sport"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_marginLeft="@dimen/dp_8"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_health_sport"
+                        android:drawableTop="@drawable/movement"
+                        android:gravity="center"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="运动"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:id="@+id/tv_face"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_health_face"
+                        android:drawableTop="@drawable/face"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="人脸"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_nutrition"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_health_nutrition"
+                        android:drawableTop="@drawable/nutrition"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="营养"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:id="@+id/tv_temperature"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_marginLeft="@dimen/dp_8"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:layout_weight="1"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:background="@drawable/shape_health_temperature"
+                        android:drawableTop="@drawable/body"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="体温"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:id="@+id/tv_muscle"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_100"
+                        android:layout_weight="1"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:background="@drawable/shape_health_muscle"
+                        android:drawableTop="@drawable/muscle"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:text="肌肉"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

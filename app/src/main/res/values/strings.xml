@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">好老伴</string>
+    <string name="title" />
+    <string name="action_settings">Settings</string>
+    <!--首页-->
+    <string name="text_home">首页</string>
+    <string name="text_club">俱乐部</string>
+    <string name="text_mine">我的</string>
+    <string name="text_connect_team">联系医疗团队</string>
+    <string name="text_connect_club">联系俱乐部</string>
+    <!--我的-->
+    <string name="email">邮箱</string>
+    <string name="phone">电话</string>
+    <string name="service_email">service@haolaoban99.com</string>
+    <string name="service_phone">400-800-800</string>
+    <string name="copylight">广州好老伴健康养老有限公司 版权所有</string>
+    <string name="copyright">Copyright © haolanban inc.All Reserved</string>
+</resources>

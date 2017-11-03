@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_margin="@dimen/dp_8"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/main_ll_contact_team"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_4"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:padding="@dimen/dp_5">
+
+            <com.hlb.haolaoban.widget.RoundImageView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:background="@drawable/head" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:text="联系医疗团队"
+                android:textColor="@color/text_main_color" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"></View>
+
+            <ImageView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="right"
+                android:background="@drawable/icon_video" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_ll_contact_club"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_4"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:padding="@dimen/dp_5">
+
+            <com.hlb.haolaoban.widget.RoundImageView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:background="@drawable/head" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:text="联系俱乐部"
+                android:textColor="@color/text_main_color" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"></View>
+
+            <ImageView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="right"
+                android:background="@drawable/phone" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>
