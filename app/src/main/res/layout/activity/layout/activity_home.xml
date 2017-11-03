@@ -8,7 +8,9 @@
         android:background="@color/main_bg"
         android:orientation="vertical">
 
-        <include layout="@layout/item_contact"></include>
+        <include layout="@layout/item_contact"
+            android:id="@+id/list_item"
+            ></include>
 
         <LinearLayout
             android:layout_width="match_parent"

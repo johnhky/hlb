@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
             tokenout = Hawk.get(Constants.TOKENOUT);
         }
         long timestamp = System.currentTimeMillis() / 1000;
-        if (null == Hawk.get(Constants.TOKEN) || tokenout < timestamp) {
+        if (null == Hawk.get(Constants.TOKEN)) {
             getToken();
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

@@ -3,6 +3,10 @@
     package="com.hlb.haolaoban">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyApplication"
@@ -55,9 +59,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.ReSetPasswordActivity"
+            android:name=".activity.BindPhoneActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:theme="@style/FullScreenVideoTheme"></activity>
     </application>
 
 </manifest>

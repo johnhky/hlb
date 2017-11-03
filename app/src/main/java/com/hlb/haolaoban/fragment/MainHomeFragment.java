@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.LoginActivity;
 import com.hlb.haolaoban.bean.ArticleBean;
 import com.hlb.haolaoban.databinding.ActivityHomeBinding;
@@ -50,7 +51,17 @@ public class MainHomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_home, container, false);
         getAriticle();
+        initView();
         return binding.getRoot();
+    }
+
+    private void initView() {
+        binding.listItem.mainLlContactClub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ChatActivity.class);
+            }
+        });
     }
 
 /*
@@ -87,7 +98,7 @@ public class MainHomeFragment extends BaseFragment {
                     } else if (code == -99) {
                         startActivity(LoginActivity.class);
                         mActivity.finish();
-                    }else {
+                    } else {
                         Utils.showToast(response);
                     }
                 } catch (JSONException e) {

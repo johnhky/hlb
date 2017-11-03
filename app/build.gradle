@@ -13,15 +13,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a", "x86", "armeabi"
+        }
     }
-    signingConfigs{
+
+    signingConfigs {
         app_dev {
             storeFile file("debug.jks")
             storePassword "123456"
             keyAlias "android"
             keyPassword "123456"
         }
-        release{
+        release {
             storeFile file("release.jks")
             storePassword "123456"
             keyAlias "android"
@@ -32,11 +36,12 @@ android {
     buildTypes {
         elderRelease {
             buildConfigField "int", "USER_TYPE", '1'
-            buildConfigField "String","Appid",'"qzdzswbeta"'
-            buildConfigField "String","timeStamp",'"1506491067"'
-            buildConfigField "String","ApiTimeStamp",'"1505288414"'
-            buildConfigField "String","appkey",'"a0201ab95d5e7b9b6a660e5dbb2d9562"'
-            buildConfigField "String","BASE_URL",'"http://api1.haolaoban99.com/api/index/"'
+            buildConfigField "String", "Appid", '"qzdzswbeta"'
+            buildConfigField "String", "timeStamp", '"1506491067"'
+            buildConfigField "String", "ApiTimeStamp", '"1505288414"'
+            buildConfigField "String", "appkey", '"a0201ab95d5e7b9b6a660e5dbb2d9562"'
+            buildConfigField "String", "BASE_URL", '"http://api1.haolaoban99.com/api/index/"'
+            buildConfigField "String", "APPKEY", '"f34505123c454421a2f0145f61be0f0f"'
             debuggable false
             zipAlignEnabled true
             shrinkResources true
@@ -44,13 +49,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
-        elderDebug{
+        elderDebug {
             buildConfigField "int", "USER_TYPE", '1'
-            buildConfigField "String","Appid",'"qzdzswbeta"'
-            buildConfigField "String","timeStamp",'"1506491067"'
-            buildConfigField "String","ApiTimeStamp",'"1505288414"'
-            buildConfigField "String","appkey",'"a0201ab95d5e7b9b6a660e5dbb2d9562"'
-            buildConfigField "String","BASE_URL",'"http://api1.haolaoban99.com/api/index/"'
+            buildConfigField "String", "Appid", '"qzdzswbeta"'
+            buildConfigField "String", "timeStamp", '"1506491067"'
+            buildConfigField "String", "ApiTimeStamp", '"1505288414"'
+            buildConfigField "String", "appkey", '"a0201ab95d5e7b9b6a660e5dbb2d9562"'
+            buildConfigField "String", "BASE_URL", '"http://api1.haolaoban99.com/api/index/"'
+            buildConfigField "String", "APPKEY", '"f34505123c454421a2f0145f61be0f0f"'
             debuggable true
             zipAlignEnabled false
             shrinkResources false
@@ -61,6 +67,7 @@ android {
     }
     sourceSets {
         main {
+            jniLibs.srcDirs = ['libs']
             res.srcDirs =
                     [
                             'src/main/res/layout/activity',
