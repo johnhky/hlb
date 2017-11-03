@@ -16,7 +16,7 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.ClubAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
 import com.hlb.haolaoban.databinding.ActivityClubBinding;
-import com.hlb.haolaoban.module.LoginModule;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Utils;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -57,7 +57,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
         params.put("param[catid]", 9 + "");
         params.put("param[pageno]", pageNo + "");
         params.put("method", "article.get.list");
-        OkHttpUtils.get().url(LoginModule.BASE_URL).params(params).build().execute(new StringCallback() {
+        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 

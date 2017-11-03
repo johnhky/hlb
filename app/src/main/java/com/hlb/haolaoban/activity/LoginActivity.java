@@ -14,7 +14,7 @@ import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.UserData;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
-import com.hlb.haolaoban.module.LoginModule;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
@@ -81,8 +81,8 @@ public class LoginActivity extends BaseActivity {
         params.put("param[password]", binding.etPassword.getText().toString().trim());
         params.put("param[type]", BuildConfig.USER_TYPE + "");
         params.put("method", "member.login");
-        Log.e("eeee", params.toString() + "  " + LoginModule.BASE_URL);
-        OkHttpUtils.get().url(LoginModule.BASE_URL).params(params).build().execute(new StringCallback() {
+        Log.e("eeee", params.toString() + "  " + HttpUrls.BASE_URL);
+        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 DialogUtils.hideLoading();

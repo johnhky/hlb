@@ -1,13 +1,11 @@
 package com.hlb.haolaoban.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +15,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.LoginActivity;
 import com.hlb.haolaoban.bean.ArticleBean;
 import com.hlb.haolaoban.databinding.ActivityHomeBinding;
-import com.hlb.haolaoban.module.LoginModule;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
-import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
-import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -74,7 +69,7 @@ public class MainHomeFragment extends BaseFragment {
         params.put("param[catid]", 9 + "");
         params.put("param[pageno]", 1 + "");
         params.put("method", "article.get.list");
-        OkHttpUtils.get().url(LoginModule.BASE_URL).params(params).build().execute(new StringCallback() {
+        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 

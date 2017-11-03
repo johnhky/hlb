@@ -13,7 +13,7 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.bean.UserData;
 import com.hlb.haolaoban.databinding.ActivityPersonalBinding;
-import com.hlb.haolaoban.module.LoginModule;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -100,7 +100,7 @@ public class PersonalActivity extends BaseActivity {
         params.put("param[username]", Settings.getUserProfile().getUsername());
         params.put("method", "member.get.info");
         params.putAll(Constants.addParams());
-        OkHttpUtils.post().url(LoginModule.BASE_URL).params(params).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 

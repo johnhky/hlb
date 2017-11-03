@@ -14,7 +14,7 @@ import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.MainClubFragment;
 import com.hlb.haolaoban.fragment.MainHomeFragment;
 import com.hlb.haolaoban.fragment.MainMineFragment;
-import com.hlb.haolaoban.module.LoginModule;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
 
     public static void getToken() {
         final Gson gson = new GsonBuilder().create();
-        OkHttpUtils.post().url(LoginModule.GET_TOKEN)
+        OkHttpUtils.post().url(HttpUrls.GET_TOKEN)
                 .addParams("appid", BuildConfig.Appid)
                 .addParams("appkey", BuildConfig.appkey)
                 .addParams("timestamp", BuildConfig.timeStamp).build().execute(new StringCallback() {
