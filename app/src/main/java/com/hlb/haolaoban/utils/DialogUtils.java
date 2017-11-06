@@ -60,7 +60,7 @@ public class DialogUtils {
         dialog = new Dialog(context, R.style.transparentFrameWindowStyle);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null);
         TextView tv_msg = (TextView) view.findViewById(R.id.tv_msg);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCanceledOnTouchOutside(false);
         Window dialogWindow = dialog.getWindow();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display d = windowManager.getDefaultDisplay(); // 获取屏幕宽、高度

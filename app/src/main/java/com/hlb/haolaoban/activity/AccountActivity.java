@@ -40,6 +40,7 @@ public class AccountActivity extends BaseActivity {
         binding.llBind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(BindPhoneActivity.class);
             }
         });
     }

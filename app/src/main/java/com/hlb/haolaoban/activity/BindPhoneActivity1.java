@@ -61,6 +61,7 @@ public class BindPhoneActivity1 extends BaseActivity {
         }
         if (!password.equals(Hawk.get(Constants.PASSWORD))) {
             showToast("密码不正确!");
+            return;
         }
         startActivity(BindPhoneActivity2.class);
     }

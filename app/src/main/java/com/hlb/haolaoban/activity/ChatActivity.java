@@ -79,7 +79,6 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        Log.i("eeee", "onRequestPermissionsResult " + grantResults[0] + " " + requestCode);
         switch (requestCode) {
             case PERMISSION_REQ_ID_RECORD_AUDIO: {
                 if (grantResults.length > 0
@@ -115,14 +114,11 @@ public class ChatActivity extends BaseActivity {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), BuildConfig.APPKEY, mRtcEventHandler);
         } catch (Exception e) {
-            Log.e("eeee", Log.getStackTraceString(e));
-
             throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
         }
     }
 
     public boolean checkSelfPermission(String permission, int requestCode) {
-        Log.i("eeee", "checkSelfPermission " + permission + " " + requestCode);
         if (ContextCompat.checkSelfPermission(this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);

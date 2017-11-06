@@ -40,12 +40,11 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     private ClubAdapter mAdapter;
     ArticleBean data;
     private int pageNo = 1;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_club, container, false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        binding.mListView.setLayoutManager(linearLayoutManager);
         binding.swipeRefresh.setOnRefreshListener(this);
         getClub();
         return binding.getRoot();
@@ -71,11 +70,10 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                     int code = jobj.optInt("code");
                     if (code == 1) {
                         data = gson.fromJson(response, ArticleBean.class);
-                        mAdapter = new ClubAdapter(data.getData().getItems());
+                        mAdapter = new ClubAdapter(data.getData().getItems(), mActivity);
                         binding.mListView.setAdapter(mAdapter);
                         binding.swipeRefresh.setRefreshing(false);
                     } else if (code == -99) {
-                        Log.e("eeee",response);
                      /*   startActivity(LoginActivity.class);
                         mActivity.finish();*/
                     } else {

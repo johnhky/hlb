@@ -38,7 +38,7 @@ public class BindPhoneActivity extends BaseActivity {
         binding.tvBind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(BindPhoneActivity1.class);
             }
         });
     }

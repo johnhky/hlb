@@ -89,7 +89,6 @@ public class LoginActivity extends BaseActivity {
         params.put("param[type]", BuildConfig.USER_TYPE + "");
         params.put("param[device]", "mobile");
         params.put("method", "member.login");
-        Log.e("eeee", params.toString() + "  " + HttpUrls.BASE_URL);
         OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {

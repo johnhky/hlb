@@ -16,7 +16,9 @@ import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.AboutActivity;
 import com.hlb.haolaoban.activity.AccountActivity;
+import com.hlb.haolaoban.activity.FeedBackActivity;
 import com.hlb.haolaoban.activity.HealthRecordActivity;
+import com.hlb.haolaoban.activity.HelpCenterActivity;
 import com.hlb.haolaoban.activity.PersonalActivity;
 import com.hlb.haolaoban.databinding.ActivityMineBinding;
 import com.hlb.haolaoban.utils.DialogUtils;
@@ -29,6 +31,7 @@ import com.hlb.haolaoban.utils.Utils;
 public class MainMineFragment extends BaseFragment {
     ActivityMineBinding binding;
     Gson gson = new GsonBuilder().create();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +75,18 @@ public class MainMineFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 startActivity(AccountActivity.class);
+            }
+        });
+        binding.tvHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(HelpCenterActivity.class);
+            }
+        });
+        binding.tvFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(FeedBackActivity.class);
             }
         });
     }
