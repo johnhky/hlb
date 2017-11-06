@@ -95,6 +95,7 @@ public class BindPhoneActivity3 extends BaseActivity {
         params.put("param[mid]", Settings.getUserProfile().getMid() + "");
         params.put("param[mobile]", getPhone());
         params.put("param[smscode]", binding.etCheck.getText().toString().trim());
+        params.put("method", "member.modify.mobile");
         params.putAll(Constants.addParams());
         OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
