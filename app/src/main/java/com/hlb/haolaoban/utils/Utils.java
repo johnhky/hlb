@@ -50,4 +50,9 @@ public class Utils {
         }
     }
 
+    /*手机号码中间四位转为*号*/
+    public static String phoneToAsterisk(String phone) {
+        return phone.substring(0, 3) + "****" + phone.substring(7, 11);
+    }
+
 }

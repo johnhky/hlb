@@ -69,30 +69,7 @@ public class PersonalActivity extends BaseActivity {
                 finish();
             }
         });
-   /*     binding.etBirthday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickBirthDay(v.getContext());
-            }
-        });*/
     }
-
-/*    @SuppressWarnings("ResourceType")
-    public void pickBirthDay(Context context) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(context, DatePickerDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                binding.etBirthday.setText(year + "-" + month + "-" + dayOfMonth);
-            }
-        }, year, month, day);
-        datePickerDialog.show();
-    }*/
-
 
     private void getUserData() {
         Map<String, String> params = new LinkedHashMap<>();

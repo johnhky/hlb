@@ -19,6 +19,7 @@ import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -47,6 +48,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
+        if (null != Hawk.get(Constants.PHONE)) {
+            binding.etPhone.setText(Hawk.get(Constants.PHONE) + "");
+        }
+        if (null != Hawk.get(Constants.PASSWORD)) {
+            binding.etPassword.setText(Hawk.get(Constants.PASSWORD) + "");
+        }
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +87,7 @@ public class LoginActivity extends BaseActivity {
         params.put("param[username]", binding.etPhone.getText().toString().trim());
         params.put("param[password]", binding.etPassword.getText().toString().trim());
         params.put("param[type]", BuildConfig.USER_TYPE + "");
+        params.put("param[device]", "mobile");
         params.put("method", "member.login");
         Log.e("eeee", params.toString() + "  " + HttpUrls.BASE_URL);
         OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
@@ -96,6 +104,8 @@ public class LoginActivity extends BaseActivity {
                     jsonObject = new JSONObject(response);
                     int code = jsonObject.optInt("code");
                     if (code == 1) {
+                        Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
+                        Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                         UserData data = gson.fromJson(response, UserData.class);
                         Settings.setUesrProfile(data.getData());
                         startActivity(MainActivity.class);

@@ -42,7 +42,7 @@
         <TextView
             android:id="@+id/tv_save"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="@dimen/dp_60"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="保存"

@@ -30,5 +30,17 @@ public class HealthRecordActivity extends BaseActivity {
                 finish();
             }
         });
+        binding.tvRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(MedicalRecordActivity.class);
+            }
+        });
+        binding.tvMedical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(MedicalCountActivity.class);
+            }
+        });
     }
 }

@@ -55,11 +55,11 @@ public class ForgetPasswordActivity2 extends BaseActivity {
                 finish();
             }
         });
+        final TimeCountUtil countUtil = new TimeCountUtil(ForgetPasswordActivity2.this, 60000, 1000, binding.tvGetCheck);
         binding.tvGetCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCheck();
-                TimeCountUtil countUtil = new TimeCountUtil(ForgetPasswordActivity2.this, 60000, 1000, binding.tvGetCheck);
                 countUtil.start();
             }
         });
@@ -101,7 +101,7 @@ public class ForgetPasswordActivity2 extends BaseActivity {
         params.put("param[new_password]", binding.etPassword.getText().toString().trim());
         params.put("param[confirm_password]", binding.etNewPassword.getText().toString().trim());
         params.put("method", "member.modify.password");
-        OkHttpUtils.get().params(params).build().execute(new StringCallback() {
+        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 
@@ -151,12 +151,12 @@ public class ForgetPasswordActivity2 extends BaseActivity {
                     int code = jsonObject.optInt("code");
                     if (code == 1) {
                         binding.tvMsg.setText(response);
-                    } else if (code == -99) {
+                    }/* else if (code == -99) {
                         startActivity(LoginActivity.class);
                         finish();
                     } else {
                         showToast(response);
-                    }
+                    }*/
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

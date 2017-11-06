@@ -15,17 +15,19 @@ import java.util.Map;
 public class Constants {
     public static final String TOKEN = "TOKEN";
     public static final String TOKENOUT = "TOKENOUT";
-    public static final String USER_PROFILE ="USER_PROFILE";
+    public static final String USER_PROFILE = "USER_PROFILE";
     public static final String PHONE = "PHONE";
-    public static Map<String, String> addParams(){
-        long timestamp = System.currentTimeMillis()/1000;
+    public static final String PASSWORD = "PASSWORD";
+
+    public static Map<String, String> addParams() {
+        long timestamp = System.currentTimeMillis() / 1000;
         Map<String, String> params = new LinkedHashMap<>();
-        params.put("token", Hawk.get(TOKEN)+"");
-        params.put("v", BuildConfig.VERSION_NAME+"");
+        params.put("token", Hawk.get(TOKEN) + "");
+        params.put("v", BuildConfig.VERSION_NAME + "");
         params.put("source", Build.MODEL);
-        params.put("appid",BuildConfig.Appid);
-        params.put("appkey",BuildConfig.appkey);
-        params.put("timestamp",timestamp+"");
+        params.put("appid", BuildConfig.Appid);
+        params.put("appkey", BuildConfig.appkey);
+        params.put("timestamp", timestamp + "");
         return params;
     }
 
