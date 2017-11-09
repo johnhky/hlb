@@ -9,19 +9,14 @@ import android.view.View;
 import com.hlb.haolaoban.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityForgetPassword2Binding;
+import com.hlb.haolaoban.http.Api;
+import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.TimeCountUtil;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import okhttp3.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by heky on 2017/11/3.
@@ -30,7 +25,7 @@ import okhttp3.Call;
 public class ForgetPasswordActivity2 extends BaseActivity {
 
     ActivityForgetPassword2Binding binding;
-
+    ApiModule api = Api.of(ApiModule.class);
 
     public static Intent intentFor(Context context, String phone) {
         Intent i = new Intent();
@@ -94,72 +89,35 @@ public class ForgetPasswordActivity2 extends BaseActivity {
     }
 
     private void updatePassword() {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.putAll(Constants.addParams());
-        params.put("param[username]", getPhone());
-        params.put("param[smscode]", binding.etCheck.getText().toString().trim());
-        params.put("param[new_password]", binding.etPassword.getText().toString().trim());
-        params.put("param[confirm_password]", binding.etNewPassword.getText().toString().trim());
-        params.put("method", "member.modify.password");
-        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
+        api.noResponse(HttpUrls.forgetPassword(getPhone(), binding.etCheck.getText().toString().trim(),
+                binding.etNewPassword.getText().toString().trim(),
+                binding.etPassword.getText().toString().trim())).enqueue(new Callback<ApiDTO>() {
             @Override
-            public void onError(Call call, Exception e, int id) {
-
+            public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
+                showToast("密码修改成功,请重新登录!");
+                startActivity(LoginActivity.class);
+                finish();
             }
 
             @Override
-            public void onResponse(String response, int id) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
-                        showToast("密码修改成功,请重新登录!");
-                        startActivity(LoginActivity.class);
-                        finish();
-                    } else if (code == -99) {
-                        startActivity(LoginActivity.class);
-                        finish();
-                    } else {
-                        showToast(response);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onFailure(retrofit2.Call<ApiDTO> call, Throwable t) {
 
             }
         });
+
     }
 
 
     private void getCheck() {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.putAll(Constants.addParams());
-        params.put("param[mobile]", getPhone());
-        params.put("method", "public.msm.send");
-        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
+        api.noResponse(HttpUrls.getCheck(getPhone())).enqueue(new Callback<ApiDTO>() {
             @Override
-            public void onError(Call call, Exception e, int id) {
-
+            public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
+                binding.tvMsg.setText(response.body().toString());
             }
 
             @Override
-            public void onResponse(String response, int id) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
-                        binding.tvMsg.setText(response);
-                    }/* else if (code == -99) {
-                        startActivity(LoginActivity.class);
-                        finish();
-                    } else {
-                        showToast(response);
-                    }*/
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onFailure(retrofit2.Call<ApiDTO> call, Throwable t) {
+
             }
         });
     }

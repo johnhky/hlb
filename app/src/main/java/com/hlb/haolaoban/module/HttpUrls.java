@@ -1,6 +1,12 @@
 package com.hlb.haolaoban.module;
 
 import com.hlb.haolaoban.BuildConfig;
+import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.Settings;
+import com.orhanobut.hawk.Hawk;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by heky on 2017/10/31.
@@ -8,8 +14,156 @@ import com.hlb.haolaoban.BuildConfig;
 
 public class HttpUrls {
 
-    /*获取token*/
-    public static final String GET_TOKEN = BuildConfig.BASE_URL + "getToken";
-    /*接口基类*/
-    public static final String BASE_URL = BuildConfig.BASE_URL + "index";
+
+    /*token参数*/
+    public static Map<String, String> getToken() {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("appid", BuildConfig.Appid);
+        params.put("appkey", BuildConfig.appkey);
+        params.put("timestamp", BuildConfig.timeStamp);
+        return params;
+    }
+
+    /*首页文章列表参数*/
+    public static Map<String, String> getArticle(int pageNo) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[catid]", 9 + "");
+        params.put("param[pageno]", pageNo + "");
+        params.put("method", "article.get.list");
+        return params;
+    }
+
+    /*用户个人信息参数*/
+    public static Map<String, String> getUserInfo() {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", Settings.getUserProfile().getMid() + "");
+        params.put("param[username]", Settings.getUserProfile().getUsername());
+        params.put("method", "member.get.info");
+        return params;
+    }
+
+    /*登录参数*/
+    public static Map<String, String> login(String phone, String psw) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[username]", phone);
+        params.put("param[password]", psw);
+        params.put("param[type]", BuildConfig.USER_TYPE + "");
+        params.put("param[device]", "mobile");
+        params.put("method", "member.login");
+        return params;
+    }
+
+    /*忘记密码*/
+    public static Map<String, String> forgetPassword(String phone, String smsCode, String newPsw, String confirmPsw) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[username]", phone);
+        params.put("param[smscode]", smsCode);
+        params.put("param[new_password]", newPsw);
+        params.put("param[confirm_password]", confirmPsw);
+        params.put("method", "member.modify.password");
+        return params;
+    }
+
+    /*获取验证码*/
+    public static Map<String, String> getCheck(String phone) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mobile]", phone);
+        params.put("method", "public.msm.send");
+        return params;
+    }
+
+    /*绑定手机*/
+    public static Map<String, String> bindPhone(String phone, String smsCode) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", Settings.getUserProfile().getMid() + "");
+        params.put("param[mobile]", phone);
+        params.put("param[smscode]", smsCode);
+        params.put("method", "member.modify.mobile");
+
+        return params;
+    }
+
+    /*忘记密码*/
+    public static Map<String, String> updatePassword(String phone, String oldPsw, String newPsw, String confirmPsw) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[username]", phone);
+        params.put("param[lod_password]", oldPsw);
+        params.put("param[new_password]", newPsw);
+        params.put("param[confirm_password]", confirmPsw);
+        params.put("method", "member.modify.password");
+        return params;
+    }
+        /*药品存量列表*/
+    public static Map<String, String> getMedical(String mid, int pageNo) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid);
+        params.put("param[pageno]", pageNo + "");
+        params.put("method", "member.get.drugsstock");
+        return params;
+    }
+    /*获取病历档案列表*/
+    public static Map<String,String>getHealthRecord(int mid,int pageNo){
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid+"");
+        params.put("param[pageno]", pageNo + "");
+        params.put("method", "member.get.disease");
+        return params;
+    }
+
+    /*上传图片*/
+    public static Map<String, String> uploadImage(String base64) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[image]", base64);
+        params.put("method", "public.uploads.images");
+        return params;
+    }
+
+    /*发起视频通话请求*/
+    public static Map<String, String> startVideo() {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "video.calling");
+        params.put("call", Settings.getUserProfile().getMid() + "");
+        params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
+        params.put("answers[]=", Settings.getUserProfile().getClub_id() + "");
+        return params;
+    }
+
+    /*拒绝视频通话
+    * @params mode 参数
+    *  1  应答者在呼叫时直接挂断
+    *  2  进⼊视频会话后主动退出
+    *  3  呼叫超时
+    *  4  异常
+    *  5  发起者在呼叫阶段主动取消
+     *  */
+    public static Map<String, String> rejectVideo(String mid, int mode, String channel) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "video.refuse");
+        params.put("mid", mid);
+        params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
+        params.put("mode", mode + "");
+        params.put("channel", channel);
+        return params;
+    }
+
+    /*接受视频通话*/
+    public static Map<String, String> acceptVideo(String mid, int mode, String channel) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "video.accept");
+        params.put("mid", mid);
+        params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
+        params.put("channel", channel);
+        return params;
+    }
+
 }

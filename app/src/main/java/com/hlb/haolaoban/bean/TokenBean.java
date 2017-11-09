@@ -1,60 +1,38 @@
 package com.hlb.haolaoban.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by heky on 2017/11/2.
  */
 
-public class TokenBean {
+public class TokenBean implements Serializable{
 
-    private String msg;
-    private int code;
-    private Data data;
+    public String token;
+    public long tokenout;
 
-    public String getMsg() {
-        return msg;
+    public String getToken() {
+        return token;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public int getCode() {
-        return code;
+    public long getTokenout() {
+        return tokenout;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    public class Data {
-
-        public String token;
-        public long tokenout;
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public long getTokenout() {
-            return tokenout;
-        }
-
-        public void setTokenout(long tokenout) {
-            this.tokenout = tokenout;
-        }
+    public void setTokenout(long tokenout) {
+        this.tokenout = tokenout;
     }
 
 
+    @Override
+    public String toString() {
+        return "{" +
+                "token='" + token + '\'' +
+                ", tokenout=" + tokenout +
+                '}';
+    }
 }

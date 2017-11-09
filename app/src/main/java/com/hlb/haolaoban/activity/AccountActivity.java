@@ -16,6 +16,7 @@ public class AccountActivity extends BaseActivity {
 
     ActivityAccountBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,5 @@ public class AccountActivity extends BaseActivity {
             }
         });
     }
-
 
 }

@@ -12,24 +12,29 @@ import com.hlb.haolaoban.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.bean.UserData;
+import com.hlb.haolaoban.bean.TokenBean;
+import com.hlb.haolaoban.bean.Userbean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
+import com.hlb.haolaoban.http.Api;
+import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.http.SimpleCallback;
+import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ServerHandshake;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.net.URI;
 
-import okhttp3.Call;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by heky on 2017/10/31.
@@ -38,6 +43,7 @@ import okhttp3.Call;
 public class LoginActivity extends BaseActivity {
     Gson gson;
     ActivityLoginBinding binding;
+    ApiModule api = Api.of(ApiModule.class);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,43 +88,70 @@ public class LoginActivity extends BaseActivity {
             showToast("密码不能为空!");
             return;
         }
-        Map<String, String> params = new LinkedHashMap<>();
-        params.putAll(Constants.addParams());
-        params.put("param[username]", binding.etPhone.getText().toString().trim());
-        params.put("param[password]", binding.etPassword.getText().toString().trim());
-        params.put("param[type]", BuildConfig.USER_TYPE + "");
-        params.put("param[device]", "mobile");
-        params.put("method", "member.login");
-        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
+        api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
             @Override
-            public void onError(Call call, Exception e, int id) {
+            protected void handleResponse(String response) {
                 DialogUtils.hideLoading();
-            }
-
-            @Override
-            public void onResponse(String response, int id) {
-                DialogUtils.hideLoading();
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
+                if (null != Hawk.get(Constants.TOKEN)) {
+                    Hawk.delete(Constants.TOKEN);
+                }
+                TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
+                Hawk.put(Constants.TOKEN, tokenBean.getToken());
+                Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
+                api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
+                    @Override
+                    protected void handleResponse(String response) {
+                        Userbean data = gson.fromJson(response, Userbean.class);
+                        DialogUtils.hideLoading();
                         Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
                         Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
-                        UserData data = gson.fromJson(response, UserData.class);
-                        Settings.setUesrProfile(data.getData());
+                        loginWebSocket(data.getMid() + "", data.getClub_id());
+                        Settings.setUesrProfile(data);
                         startActivity(MainActivity.class);
-                    } else if (code == -99) {
-                        MainActivity.getToken();
-                    } else {
-                        showToast(response);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        super.onFailure(call, t);
+                        DialogUtils.hideLoading();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+                DialogUtils.hideLoading();
             }
         });
+
+    }
+
+    private void loginWebSocket(String id, int club_id) {
+        String url = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + id + "&club_id=" + club_id;
+        final WebSocketClient myWebSocket = new WebSocketClient(URI.create(url), new Draft_17(), null, 3000) {
+
+            @Override
+            public void onOpen(ServerHandshake serverHandshake) {
+                Log.e("eeee", "链接成功!");
+            }
+
+            @Override
+            public void onMessage(String s) {
+                Log.e("eeee", s);
+            }
+
+            @Override
+            public void onClose(int i, String s, boolean b) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
+        myWebSocket.connect();
 
     }
 

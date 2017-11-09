@@ -9,22 +9,23 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/ll_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_margin="@dimen/dp_10"
-        >
+        android:padding="@dimen/dp_10">
 
         <ImageView
-            android:layout_width="@dimen/dp_200"
-            android:layout_height="160dp"
-            android:background="@drawable/article_bg" />
+            android:id="@+id/iv_image"
+            android:layout_width="140dp"
+            android:scaleType="fitXY"
+            android:layout_height="100dp" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
-            android:text="@{data}" />
+            android:layout_marginTop="@dimen/dp_10" />
     </LinearLayout>
 </layout>

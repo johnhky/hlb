@@ -2,25 +2,31 @@ package com.hlb.haolaoban;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.util.Log;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hlb.haolaoban.activity.LoginActivity;
 import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.MainClubFragment;
 import com.hlb.haolaoban.fragment.MainHomeFragment;
 import com.hlb.haolaoban.fragment.MainMineFragment;
+import com.hlb.haolaoban.http.Api;
+import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.http.SimpleCallback;
+import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.Settings;
 import com.orhanobut.hawk.Hawk;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import okhttp3.Call;
+import com.squareup.otto.Subscribe;
 
 
 /**
@@ -30,22 +36,12 @@ import okhttp3.Call;
 public class MainActivity extends BaseActivity {
     ActivityMainBinding binding;
     Fragment mainHome, mainClub, mainMine;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         binding.titlebar.tbTitle.setText("好老伴");
-        long tokenout = 0;
-        if (null != Hawk.get(Constants.TOKENOUT)){
-            tokenout = Hawk.get(Constants.TOKENOUT);
-        }
-        long timestamp = System.currentTimeMillis() / 1000;
-        if (null == Hawk.get(Constants.TOKEN)) {
-            getToken();
-        }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mainHome == null) {
             mainHome = new MainHomeFragment();
@@ -88,16 +84,20 @@ public class MainActivity extends BaseActivity {
                         binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
                         break;
                     case R.id.main_radio_mine:
-                        if (mainMine == null) {
-                            mainMine = new MainMineFragment();
-                            transaction.add(R.id.fragment_container, mainMine);
+                        if (null != Settings.getUserProfile()) {
+                            if (mainMine == null) {
+                                mainMine = new MainMineFragment();
+                                transaction.add(R.id.fragment_container, mainMine);
+                            } else {
+                                transaction.show(mainMine);
+                            }
+                            binding.titlebar.tbTitle.setText("我的");
+                            binding.mainRadioMine.setTextColor(getResources().getColor(R.color.main_tab_color));
+                            binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
+                            binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
                         } else {
-                            transaction.show(mainMine);
+                            startActivity(LoginActivity.class);
                         }
-                        binding.titlebar.tbTitle.setText("我的");
-                        binding.mainRadioMine.setTextColor(getResources().getColor(R.color.main_tab_color));
-                        binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
-                        binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
                         break;
                 }
                 transaction.commit();
@@ -117,26 +117,14 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public static void getToken() {
-        final Gson gson = new GsonBuilder().create();
-        OkHttpUtils.post().url(HttpUrls.GET_TOKEN)
-                .addParams("appid", BuildConfig.Appid)
-                .addParams("appkey", BuildConfig.appkey)
-                .addParams("timestamp", BuildConfig.timeStamp).build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-
-            }
-
-            @Override
-            public void onResponse(String response, int id) {
-                TokenBean data = gson.fromJson(response, TokenBean.class);
-                if (data.getCode() == 1) {
-                    Hawk.put(Constants.TOKEN, data.getData().getToken());
-                    Hawk.put(Constants.TOKENOUT, data.getData().getTokenout());
-                }
-            }
-        });
+    @Subscribe
+    public void onReceiveEvent(TokenOutEvent event) {
+        if (event.getCode() == -99) {
+            showToast("您的账号在别的地方登录,请重新登录!");
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 
 }

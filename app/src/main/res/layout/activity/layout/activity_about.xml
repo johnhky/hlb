@@ -35,7 +35,7 @@
                 <ImageView
                     android:layout_width="@dimen/dp_100"
                     android:layout_height="@dimen/dp_100"
-                    android:background="@drawable/logo" />
+                    android:background="@mipmap/logo" />
 
                 <TextView
                     android:layout_width="wrap_content"

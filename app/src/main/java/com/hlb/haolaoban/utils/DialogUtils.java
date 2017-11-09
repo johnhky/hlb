@@ -5,10 +5,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
@@ -21,6 +25,49 @@ import com.orhanobut.hawk.Hawk;
 
 public class DialogUtils {
     static Dialog dialog;
+
+    public interface OnDialogItemClickListener {
+        void onItemClick(int which);
+    }
+
+    public static void showPickPhotoDialog(View mView, final Activity context, final OnDialogItemClickListener onItemClickListener) {
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_pick_picture, null);
+        TextView tv_camera = (TextView) view.findViewById(R.id.tv_camera);
+        TextView tv_photo = (TextView) view.findViewById(R.id.tv_photo);
+        Button bt_cancel = (Button) view.findViewById(R.id.bt_cancel);
+        final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        final WindowManager.LayoutParams lp = context.getWindow().getAttributes();
+        lp.alpha = 0.4f;
+        context.getWindow().setAttributes(lp);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                lp.alpha = 1f;
+                context.getWindow().setAttributes(lp);
+            }
+        });
+        popupWindow.showAtLocation(mView, Gravity.BOTTOM, 0, 0);
+        tv_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(1);
+                popupWindow.dismiss();
+            }
+        });
+        tv_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(2);
+                popupWindow.dismiss();
+            }
+        });
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+    }
 
     public static void showExitDialog(Context context) {
         final Dialog dialog = new Dialog(context, R.style.transparentFrameWindowStyle);

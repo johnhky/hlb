@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 /**
  * Created by heky on 2017/10/31.
@@ -12,24 +14,21 @@ import android.content.Intent;
 public class BaseFragment extends Fragment {
 
     protected Activity mActivity;
-    protected Context mContext;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mActivity = getActivity();
-        mContext = getActivity();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity=null;
     }
 
-    public void startActivity(Class c){
+    public void startActivity(Class c) {
         Intent toStart = new Intent();
-        toStart.setClass(mContext,c);
+        toStart.setClass(mActivity, c);
         startActivity(toStart);
     }
 }

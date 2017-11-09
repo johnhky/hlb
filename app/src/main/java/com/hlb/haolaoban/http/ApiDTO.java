@@ -1,13 +1,14 @@
-package com.hlb.haolaoban.bean;
+package com.hlb.haolaoban.http;
+
 
 /**
- * Created by heky on 2017/10/31.
+ * Created by heky on 2017/11/8.
  */
 
-public class UserData {
+public class ApiDTO<T> {
     private int code;
     private String msg;
-    private UserBean data;
+    private Object data;
 
     public int getCode() {
         return code;
@@ -25,17 +26,18 @@ public class UserData {
         this.msg = msg;
     }
 
-    public UserBean getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(UserBean data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
+
     @Override
     public String toString() {
-        return "UserData{" +
+        return "{" +
                 "code=" + code +
                 ", msg='" + msg + '\'' +
                 ", data=" + data +

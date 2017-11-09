@@ -13,20 +13,15 @@ import android.view.View;
 import com.hlb.haolaoban.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityBindPhone3Binding;
+import com.hlb.haolaoban.http.Api;
+import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
-import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.TimeCountUtil;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import okhttp3.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by heky on 2017/11/6.
@@ -35,7 +30,7 @@ import okhttp3.Call;
 public class BindPhoneActivity3 extends BaseActivity {
 
     ActivityBindPhone3Binding binding;
-
+    ApiModule api = Api.of(ApiModule.class);
     public static Intent IntentFor(Context context, String phone) {
         Intent i = new Intent();
         i.setClass(context, BindPhoneActivity3.class);
@@ -91,40 +86,20 @@ public class BindPhoneActivity3 extends BaseActivity {
     }
 
     private void bindPhone() {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.put("param[mid]", Settings.getUserProfile().getMid() + "");
-        params.put("param[mobile]", getPhone());
-        params.put("param[smscode]", binding.etCheck.getText().toString().trim());
-        params.put("method", "member.modify.mobile");
-        params.putAll(Constants.addParams());
-        OkHttpUtils.get().url(HttpUrls.BASE_URL).params(params).build().execute(new StringCallback() {
+        api.noResponse(HttpUrls.bindPhone(getPhone(),binding.etCheck.getText().toString().trim())).enqueue(new Callback<ApiDTO>() {
             @Override
-            public void onError(Call call, Exception e, int id) {
-
+            public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
+                showToast("修改成功!");
+                startActivity(LoginActivity.class);
+                finish();
             }
 
             @Override
-            public void onResponse(String response, int id) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
-                        showToast("修改成功!");
-                        startActivity(LoginActivity.class);
-                        finish();
-                    } else if (code == -99) {
-                        showToast("token过期");
-                    } else {
-                        showToast(response);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+            public void onFailure(retrofit2.Call<ApiDTO> call, Throwable t) {
 
             }
         });
+
     }
 
 

@@ -3,7 +3,7 @@ package com.hlb.haolaoban;
 import android.app.Application;
 import android.content.Context;
 
-import com.hlb.haolaoban.http.MyInterceptor;
+import com.hlb.haolaoban.http.HttpInterceptor;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -38,7 +38,7 @@ public class MyApplication extends Application {
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
-                .addInterceptor(new MyInterceptor("Http", true))
+                .addInterceptor(new HttpInterceptor("Http", true))
                 .connectTimeout(60000L, TimeUnit.MILLISECONDS)
                 .readTimeout(60000L, TimeUnit.MILLISECONDS)
                 .writeTimeout(60000L, TimeUnit.MILLISECONDS)

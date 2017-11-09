@@ -28,8 +28,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="病历档案"
                     android:gravity="center_vertical"
+                    android:text="病历档案"
                     android:textColor="@color/gray_33"
                     android:textSize="@dimen/sp_17" />
 
@@ -56,8 +56,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="我的药品"
                     android:gravity="center_vertical"
+                    android:text="药品存量"
                     android:textColor="@color/gray_33"
                     android:textSize="@dimen/sp_17" />
 
@@ -130,6 +130,7 @@
 
                     <TextView
                         android:id="@+id/tv_blood_fat"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_weight="1"
@@ -138,18 +139,17 @@
                         android:gravity="center"
                         android:paddingTop="@dimen/dp_15"
                         android:text="血脂"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_18" />
 
                     <TextView
                         android:id="@+id/tv_blood_pressure"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_marginLeft="@dimen/dp_8"
                         android:layout_marginRight="@dimen/dp_8"
                         android:layout_weight="1"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:background="@drawable/shape_health_blood_pressure"
                         android:drawableTop="@drawable/blood_pressure"
                         android:gravity="center"
@@ -160,14 +160,14 @@
 
                     <TextView
                         android:id="@+id/tv_heart_rate"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_weight="1"
                         android:background="@drawable/shape_health_heartrate"
-                        android:drawableTop="@drawable/beart_rate"
+                        android:drawableTop="@drawable/heart_rate"
                         android:gravity="center"
                         android:paddingTop="@dimen/dp_15"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:text="心率"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_18" />
@@ -181,6 +181,7 @@
 
                     <TextView
                         android:id="@+id/tv_sleep"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_weight="1"
@@ -189,12 +190,12 @@
                         android:gravity="center"
                         android:paddingTop="@dimen/dp_15"
                         android:text="睡眠"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_18" />
 
                     <TextView
                         android:id="@+id/tv_sport"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_marginLeft="@dimen/dp_8"
@@ -203,7 +204,6 @@
                         android:background="@drawable/shape_health_sport"
                         android:drawableTop="@drawable/movement"
                         android:gravity="center"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:paddingTop="@dimen/dp_15"
                         android:text="运动"
                         android:textColor="@color/white"
@@ -211,6 +211,7 @@
 
                     <TextView
                         android:id="@+id/tv_face"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_weight="1"
@@ -219,7 +220,6 @@
                         android:gravity="center"
                         android:paddingTop="@dimen/dp_15"
                         android:text="人脸"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_18" />
                 </LinearLayout>
@@ -232,6 +232,7 @@
 
                     <TextView
                         android:id="@+id/tv_nutrition"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_weight="1"
@@ -240,18 +241,17 @@
                         android:gravity="center"
                         android:paddingTop="@dimen/dp_15"
                         android:text="营养"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_18" />
 
                     <TextView
                         android:id="@+id/tv_temperature"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_marginLeft="@dimen/dp_8"
                         android:layout_marginRight="@dimen/dp_8"
                         android:layout_weight="1"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:background="@drawable/shape_health_temperature"
                         android:drawableTop="@drawable/body"
                         android:gravity="center"
@@ -262,10 +262,10 @@
 
                     <TextView
                         android:id="@+id/tv_muscle"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dp_100"
                         android:layout_weight="1"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:background="@drawable/shape_health_muscle"
                         android:drawableTop="@drawable/muscle"
                         android:gravity="center"

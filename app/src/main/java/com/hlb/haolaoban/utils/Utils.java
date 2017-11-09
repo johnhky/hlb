@@ -2,10 +2,14 @@ package com.hlb.haolaoban.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,6 +57,16 @@ public class Utils {
     /*手机号码中间四位转为*号*/
     public static String phoneToAsterisk(String phone) {
         return phone.substring(0, 3) + "****" + phone.substring(7, 11);
+    }
+
+    /**
+     * 将Bitmap转换成字符串,图像进行Base64编码 bitmap 原图
+     */
+    public static String bitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] appicon = baos.toByteArray();// 转为byte数组
+        return Base64.encodeToString(appicon, Base64.DEFAULT);
     }
 
 }

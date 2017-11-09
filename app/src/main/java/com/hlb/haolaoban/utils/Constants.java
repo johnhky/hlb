@@ -18,11 +18,11 @@ public class Constants {
     public static final String USER_PROFILE = "USER_PROFILE";
     public static final String PHONE = "PHONE";
     public static final String PASSWORD = "PASSWORD";
-
-    public static Map<String, String> addParams() {
-        long timestamp = System.currentTimeMillis() / 1000;
-        Map<String, String> params = new LinkedHashMap<>();
-        params.put("token", Hawk.get(TOKEN) + "");
+    public static final String IMAGE = "IMAGE";
+    public static Map<String,String>addParams(){
+        long timestamp = System.currentTimeMillis()/1000;
+        Map<String,String>params = new LinkedHashMap<>();
+        params.put("token", Hawk.get(Constants.TOKEN) + "");
         params.put("v", BuildConfig.VERSION_NAME + "");
         params.put("source", Build.MODEL);
         params.put("appid", BuildConfig.Appid);
@@ -30,5 +30,4 @@ public class Constants {
         params.put("timestamp", timestamp + "");
         return params;
     }
-
 }
