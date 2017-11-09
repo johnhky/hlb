@@ -119,6 +119,15 @@ public class HttpUrls {
         return params;
     }
 
+    /*获取提醒事项列表*/
+    public static Map<String,String>getRemind(int mid){
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid+"");
+        params.put("method", "member.reminders.list");
+        return params;
+    }
+
     /*上传图片*/
     public static Map<String, String> uploadImage(String base64) {
         Map<String, String> params = new LinkedHashMap<>();

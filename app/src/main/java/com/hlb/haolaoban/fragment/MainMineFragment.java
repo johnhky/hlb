@@ -23,6 +23,7 @@ import com.hlb.haolaoban.activity.FeedBackActivity;
 import com.hlb.haolaoban.activity.HealthRecordActivity;
 import com.hlb.haolaoban.activity.HelpCenterActivity;
 import com.hlb.haolaoban.activity.PersonalActivity;
+import com.hlb.haolaoban.activity.RemindListActivity;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMineBinding;
 import com.hlb.haolaoban.http.Api;
@@ -110,6 +111,12 @@ public class MainMineFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 startActivity(FeedBackActivity.class);
+            }
+        });
+        binding.tvRemind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(RemindListActivity.class);
             }
         });
     }

@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -20,9 +19,6 @@ import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Settings;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 

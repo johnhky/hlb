@@ -1,5 +1,6 @@
 package com.hlb.haolaoban;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +13,11 @@ import com.hlb.haolaoban.utils.Utils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    public Activity mActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = this;
         BusProvider.getInstance().register(this);
         initToolbar();
     }

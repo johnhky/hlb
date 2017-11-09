@@ -43,7 +43,7 @@ public abstract class ApiCallback<T> implements Callback<ApiDTO> {
             return;
         }
         int code = response.body().getCode();
-        Log.e("eeee",code+"");
+        Log.e("eeee", response.body().toString());
         if (code == 1) {
             Object data = response.body().getData();
             if (null != data || !"[]".equals(data)) {

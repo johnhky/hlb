@@ -99,6 +99,9 @@
         <activity
             android:name=".activity.BigImageActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.RemindListActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
     </application>
 
