@@ -15,6 +15,7 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityBindPhone3Binding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
@@ -31,6 +32,7 @@ public class BindPhoneActivity3 extends BaseActivity {
 
     ActivityBindPhone3Binding binding;
     ApiModule api = Api.of(ApiModule.class);
+
     public static Intent IntentFor(Context context, String phone) {
         Intent i = new Intent();
         i.setClass(context, BindPhoneActivity3.class);
@@ -86,17 +88,12 @@ public class BindPhoneActivity3 extends BaseActivity {
     }
 
     private void bindPhone() {
-        api.noResponse(HttpUrls.bindPhone(getPhone(),binding.etCheck.getText().toString().trim())).enqueue(new Callback<ApiDTO>() {
+        api.noResponse(HttpUrls.bindPhone(getPhone(), binding.etCheck.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
-            public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
+            protected void handleResponse(String response) {
                 showToast("修改成功!");
                 startActivity(LoginActivity.class);
                 finish();
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<ApiDTO> call, Throwable t) {
-
             }
         });
 

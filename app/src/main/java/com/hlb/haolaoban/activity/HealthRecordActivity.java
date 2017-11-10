@@ -1,5 +1,6 @@
 package com.hlb.haolaoban.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
@@ -40,6 +41,13 @@ public class HealthRecordActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(MedicalCountActivity.class);
+            }
+        });
+        binding.tvMedicalRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = PrescriptionActivity.intentFor(HealthRecordActivity.this, 0);
+                startActivity(i);
             }
         });
     }

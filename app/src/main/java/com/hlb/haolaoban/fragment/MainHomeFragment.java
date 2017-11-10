@@ -62,9 +62,9 @@ public class MainHomeFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (null != Settings.getUserProfile()) {
-                    startActivity(LoginActivity.class);
-                } else {
                     startActivity(ChatActivity.class);
+                } else {
+                    startActivity(LoginActivity.class);
                 }
             }
         });

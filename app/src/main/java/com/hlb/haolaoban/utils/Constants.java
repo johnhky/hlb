@@ -19,6 +19,10 @@ public class Constants {
     public static final String PHONE = "PHONE";
     public static final String PASSWORD = "PASSWORD";
     public static final String IMAGE = "IMAGE";
+    public static final String MID = "MID";
+    public static final String CLUB_ID = "CLUB_ID";
+    public static final String POSITION = "POSITION";
+    public static final String TYPE = "TYPE";
     public static Map<String,String>addParams(){
         long timestamp = System.currentTimeMillis()/1000;
         Map<String,String>params = new LinkedHashMap<>();

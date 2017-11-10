@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.LoginActivity;
+import com.hlb.haolaoban.http.Api;
+import com.hlb.haolaoban.module.ApiModule;
 import com.orhanobut.hawk.Hawk;
 
 /**
@@ -25,6 +27,7 @@ import com.orhanobut.hawk.Hawk;
 
 public class DialogUtils {
     static Dialog dialog;
+    static ApiModule api = Api.of(ApiModule.class);
 
     public interface OnDialogItemClickListener {
         void onItemClick(int which);
@@ -92,13 +95,15 @@ public class DialogUtils {
         });
         tv_exit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 Intent i = new Intent();
                 i.setClass(v.getContext(), LoginActivity.class);
                 v.getContext().startActivity(i);
                 ((Activity) v.getContext()).finish();
                 dialog.cancel();
-                Hawk.deleteAll();
+                Hawk.delete(Constants.TOKEN);
+                Hawk.delete(Constants.USER_PROFILE);
+                Hawk.delete(Constants.MID);
             }
         });
     }
@@ -121,8 +126,11 @@ public class DialogUtils {
     }
 
     public static void hideLoading() {
-        if (dialog.isShowing()) {
-            dialog.dismiss();
+        if (null!=dialog){
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
         }
+
     }
 }

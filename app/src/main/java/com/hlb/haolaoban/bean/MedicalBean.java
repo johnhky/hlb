@@ -3,6 +3,7 @@ package com.hlb.haolaoban.bean;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class MedicalBean {
     private int total;
     private int currentPage;
     private int listRows;
-    private List<ItemsBean> items;
+    private List<ItemsBean> items = new ArrayList<>();
 
     public int getTotal() {
         return total;

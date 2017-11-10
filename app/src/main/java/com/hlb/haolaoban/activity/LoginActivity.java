@@ -3,6 +3,7 @@ package com.hlb.haolaoban.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -16,25 +17,24 @@ import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.bean.Userbean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
 import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.http.ApiDTO;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
-import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URI;
 
+import io.realm.Realm;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by heky on 2017/10/31.
@@ -63,7 +63,7 @@ public class LoginActivity extends BaseActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                loginCheck();
             }
         });
         binding.tvForget.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,31 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+
+
     private void login() {
+        api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                Userbean data = gson.fromJson(response, Userbean.class);
+                DialogUtils.hideLoading();
+                Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
+                Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
+                Hawk.put(Constants.MID, data.getMid());
+                Hawk.put(Constants.CLUB_ID, data.getClub_id());
+                loginWebclient(data.getMid() + "", data.getClub_id() + "");
+                startActivity(MainActivity.class);
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+                DialogUtils.hideLoading();
+            }
+        });
+    }
+
+    private void loginCheck() {
         DialogUtils.showLoading(LoginActivity.this, "正在登录...");
         if (null == binding.etPhone.getText().toString().trim() && binding.etPhone.getText().toString().trim().length() < 1) {
             showToast("手机号码不能为空!");
@@ -98,24 +122,7 @@ public class LoginActivity extends BaseActivity {
                 TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
                 Hawk.put(Constants.TOKEN, tokenBean.getToken());
                 Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
-                api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
-                    @Override
-                    protected void handleResponse(String response) {
-                        Userbean data = gson.fromJson(response, Userbean.class);
-                        DialogUtils.hideLoading();
-                        Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
-                        Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
-                        loginWebSocket(data.getMid() + "", data.getClub_id());
-                        Settings.setUesrProfile(data);
-                        startActivity(MainActivity.class);
-                    }
-
-                    @Override
-                    public void onFailure(Call call, Throwable t) {
-                        super.onFailure(call, t);
-                        DialogUtils.hideLoading();
-                    }
-                });
+                login();
             }
 
             @Override
@@ -127,18 +134,30 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    private void loginWebSocket(String id, int club_id) {
-        String url = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + id + "&club_id=" + club_id;
-        final WebSocketClient myWebSocket = new WebSocketClient(URI.create(url), new Draft_17(), null, 3000) {
-
+    private void loginWebclient(String id, String club_id) {
+        String url = BuildConfig.BASE_WEBSOCKET_URL + "?mid=" + id + "&club_id=" + club_id;
+        final WebSocketClient client =  new WebSocketClient(URI.create(url), new Draft_17(), null, 3000) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
-                Log.e("eeee", "链接成功!");
+                Log.e("eeee", "连接成功!");
             }
 
             @Override
             public void onMessage(String s) {
                 Log.e("eeee", s);
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(s);
+                    int code = jsonObject.optInt("nFlag");
+                    String type = jsonObject.getString("type");
+                    if (!TextUtils.isEmpty(type)) {
+                        if (type.equals("1")) {
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -151,8 +170,17 @@ public class LoginActivity extends BaseActivity {
 
             }
         };
-        myWebSocket.connect();
+        client.connect();
+    }
 
+    private void saveMsg() {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+            }
+        });
     }
 
 }

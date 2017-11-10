@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class UserInfoBean implements Serializable{
 
-    private String mid;
+    private int mid;
     private String username;
     private String photo;
     private String sex;
@@ -27,11 +27,11 @@ public class UserInfoBean implements Serializable{
     private String addtime;
     private Children children;
 
-    public String getMid() {
+    public int getMid() {
         return mid;
     }
 
-    public void setMid(String mid) {
+    public void setMid(int mid) {
         this.mid = mid;
     }
 

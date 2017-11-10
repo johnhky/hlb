@@ -1,32 +1,34 @@
 package com.hlb.haolaoban;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.util.Log;
+import android.app.Fragment;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.activity.LoginActivity;
 import com.hlb.haolaoban.bean.TokenBean;
+import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.MainClubFragment;
 import com.hlb.haolaoban.fragment.MainHomeFragment;
 import com.hlb.haolaoban.fragment.MainMineFragment;
 import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.http.ApiDTO;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
+
+import retrofit2.Call;
 
 
 /**
@@ -36,20 +38,33 @@ import com.squareup.otto.Subscribe;
 public class MainActivity extends BaseActivity {
     ActivityMainBinding binding;
     Fragment mainHome, mainClub, mainMine;
+    ApiModule api = Api.of(ApiModule.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
         binding.titlebar.tbTitle.setText("好老伴");
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mainHome == null) {
+            initUserData();
             mainHome = new MainHomeFragment();
             transaction.add(R.id.fragment_container, mainHome);
             binding.titlebar.toolBar.setNavigationIcon(null);
         }
         transaction.commit();
         initView();
+    }
+
+    private void initUserData() {
+        api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                Gson gson = new GsonBuilder().create();
+                UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
+                Settings.setUesrProfile(data);
+            }
+        });
     }
 
     public void initView() {

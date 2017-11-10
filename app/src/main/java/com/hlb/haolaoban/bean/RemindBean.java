@@ -1,6 +1,10 @@
 package com.hlb.haolaoban.bean;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmObject;
 
 /**
  * Created by heky on 2017/11/9.
@@ -19,7 +23,7 @@ public class RemindBean {
     private int total;
     private int currentPage;
     private int listRows;
-    private List<ItemsBean> items;
+    private List<ItemsBean> items = new ArrayList<>();
 
     public int getTotal() {
         return total;

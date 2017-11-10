@@ -7,6 +7,8 @@ import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.bean.Userbean;
 import com.hlb.haolaoban.http.ApiDTO;
 
+import org.json.JSONObject;
+
 import java.util.Map;
 
 import retrofit2.Call;
@@ -57,6 +59,6 @@ public interface ApiModule {
     /*发起通话请求*/
     @FormUrlEncoded
     @POST("index")
-    Call video(@FieldMap Map<String, String> params);
+    Call<JSONObject> video(@FieldMap Map<String, String> params);
 
 }

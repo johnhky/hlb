@@ -10,7 +10,9 @@
         <include
             android:id="@+id/titlebar"
             layout="@layout/titlebar"></include>
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,12 +26,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_record"
+                    android:id="@+id/tv_report"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="病历档案"
+                    android:text="健康报告"
                     android:textColor="@color/gray_33"
                     android:textSize="@dimen/sp_17" />
 
@@ -44,6 +46,61 @@
                 android:layout_height="@dimen/dp_1"
                 android:background="@color/main_bg"></View>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_medical_record"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="历史处方"
+                    android:textColor="@color/gray_33"
+                    android:textSize="@dimen/sp_17" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_record"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="病历档案"
+                    android:textColor="@color/gray_33"
+                    android:textSize="@dimen/sp_17" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
@@ -66,13 +123,11 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_arrow_right" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
                 android:background="@color/main_bg"></View>
-
-            <LinearLayout
+         <!--   <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
                 android:layout_marginLeft="@dimen/dp_8"
@@ -81,24 +136,22 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tv_device"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="设备数据"
                     android:textColor="@color/gray_33"
                     android:textSize="@dimen/sp_17" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_arrow_right" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:background="@color/main_bg"></View>
-
+                android:background="@color/main_bg"></View>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
@@ -115,7 +168,6 @@
                     android:textColor="@color/gray_33"
                     android:textSize="@dimen/sp_17" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -276,5 +328,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </layout>

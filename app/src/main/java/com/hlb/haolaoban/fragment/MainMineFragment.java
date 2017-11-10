@@ -41,27 +41,19 @@ import com.hlb.haolaoban.utils.Utils;
 
 public class MainMineFragment extends BaseFragment {
     ActivityMineBinding binding;
-    ApiModule api = Api.of(ApiModule.class);
-    UserInfoBean data;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_mine, container, false);
-        getUserData();
         initView();
         return binding.getRoot();
     }
 
-    private void initData(UserInfoBean data) {
-        this.data = data;
-        Glide.with(mActivity).load(data.getPhoto()).centerCrop().into(binding.mineIvAvater);
-        binding.mineTvName.setText(data.getName() + "");
-        binding.mineTvPresent.setText(data.getUsername() + "");
-
-    }
-
     private void initView() {
+        Glide.with(mActivity).load(Settings.getUserProfile().getPhoto()).centerCrop().into(binding.mineIvAvater);
+        binding.mineTvName.setText(Settings.getUserProfile().getName() + "");
+        binding.mineTvPresent.setText(Settings.getUserProfile().getUsername() + "");
         binding.tvAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,8 +63,8 @@ public class MainMineFragment extends BaseFragment {
         binding.tvPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != data) {
-                    Intent i = PersonalActivity.intentFor(mActivity, data);
+                if (null != Settings.getUserProfile()) {
+                    Intent i = PersonalActivity.intentFor(mActivity, Settings.getUserProfile());
                     startActivity(i);
                 }
             }
@@ -117,17 +109,6 @@ public class MainMineFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 startActivity(RemindListActivity.class);
-            }
-        });
-    }
-
-    private void getUserData() {
-        api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
-            @Override
-            protected void handleResponse(String response) {
-                Gson gson = new GsonBuilder().create();
-                UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
-                initData(data);
             }
         });
     }

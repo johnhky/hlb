@@ -28,8 +28,10 @@ public class Api {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(JacksonConverterFactory.create(JacksonUtils.getInstance()));
 
+
     public static <S> S of(Class<S> serviceClass) {
         Retrofit retrofit = builder.client(httpClient).build();
         return retrofit.create(serviceClass);
     }
+
 }

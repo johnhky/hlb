@@ -1,11 +1,10 @@
 package com.hlb.haolaoban.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.app.Fragment;
 
 /**
  * Created by heky on 2017/10/31.

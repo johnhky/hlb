@@ -2,6 +2,7 @@ package com.hlb.haolaoban.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.bean.Userbean;
 import com.orhanobut.hawk.Hawk;
 
@@ -13,16 +14,16 @@ public class Settings {
 
     static Gson gson = new GsonBuilder().create();
 
-    public static void setUesrProfile(Userbean data) {
+    public static void setUesrProfile(UserInfoBean data) {
         Hawk.put(Constants.USER_PROFILE, gson.toJson(data));
     }
 
-    public static Userbean getUserProfile() {
+    public static UserInfoBean getUserProfile() {
         String json = Hawk.get(Constants.USER_PROFILE);
         if (json == null || json.equals("")) {
             return null;
         }
-        Userbean data = gson.fromJson(json, Userbean.class);
+        UserInfoBean data = gson.fromJson(json, UserInfoBean.class);
         return data;
     }
 }

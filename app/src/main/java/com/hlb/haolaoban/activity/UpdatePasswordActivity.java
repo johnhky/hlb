@@ -10,6 +10,7 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityUpdatePasswordBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
@@ -27,6 +28,7 @@ public class UpdatePasswordActivity extends BaseActivity {
 
     ActivityUpdatePasswordBinding binding;
     ApiModule api = Api.of(ApiModule.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,17 +109,12 @@ public class UpdatePasswordActivity extends BaseActivity {
         api.noResponse(HttpUrls.updatePassword(Settings.getUserProfile().getUsername(),
                 binding.etOldPassword.getText().toString().trim(),
                 binding.etPassword.getText().toString().trim(),
-                binding.etConfrimPassword.getText().toString().trim())).enqueue(new Callback<ApiDTO>() {
+                binding.etConfrimPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
-            public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
+            protected void handleResponse(String response) {
                 showToast("密码修改成功!");
                 startActivity(LoginActivity.class);
                 finish();
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<ApiDTO> call, Throwable t) {
-
             }
         });
 

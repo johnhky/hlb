@@ -2,8 +2,10 @@ package com.hlb.haolaoban;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
-import com.hlb.haolaoban.http.HttpInterceptor;
+import com.hlb.haolaoban.http.MyInteceptor;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -11,6 +13,7 @@ import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 
 /**
@@ -24,7 +27,11 @@ public class MyApplication extends Application {
 
     public static MyApplication getInstance() {
         if (instance == null) {
-            return instance = new MyApplication();
+            synchronized (MyApplication.class) {
+                if (instance == null) {
+                    instance = new MyApplication();
+                }
+            }
         }
         return instance;
     }
@@ -38,7 +45,7 @@ public class MyApplication extends Application {
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
-                .addInterceptor(new HttpInterceptor("Http", true))
+                .addInterceptor(new MyInteceptor(MyInteceptor.TAG, true))
                 .connectTimeout(60000L, TimeUnit.MILLISECONDS)
                 .readTimeout(60000L, TimeUnit.MILLISECONDS)
                 .writeTimeout(60000L, TimeUnit.MILLISECONDS)
@@ -48,6 +55,8 @@ public class MyApplication extends Application {
                 .build();
         Utils.init(this);
         OkHttpUtils.initClient(okHttpClient);
+        Realm.init(this);
+
     }
 
 }

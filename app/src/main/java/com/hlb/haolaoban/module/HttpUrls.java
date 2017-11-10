@@ -1,5 +1,7 @@
 package com.hlb.haolaoban.module;
 
+import android.util.Log;
+
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
@@ -38,8 +40,8 @@ public class HttpUrls {
     public static Map<String, String> getUserInfo() {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
-        params.put("param[mid]", Settings.getUserProfile().getMid() + "");
-        params.put("param[username]", Settings.getUserProfile().getUsername());
+        params.put("param[mid]", Hawk.get(Constants.MID) + "");
+        params.put("param[username]", Hawk.get(Constants.PHONE) + "");
         params.put("method", "member.get.info");
         return params;
     }
@@ -100,7 +102,8 @@ public class HttpUrls {
         params.put("method", "member.modify.password");
         return params;
     }
-        /*药品存量列表*/
+
+    /*药品存量列表*/
     public static Map<String, String> getMedical(String mid, int pageNo) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
@@ -109,22 +112,31 @@ public class HttpUrls {
         params.put("method", "member.get.drugsstock");
         return params;
     }
+
     /*获取病历档案列表*/
-    public static Map<String,String>getHealthRecord(int mid,int pageNo){
+    public static Map<String, String> getHealthRecord(int mid, int pageNo) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
-        params.put("param[mid]", mid+"");
+        params.put("param[mid]", mid + "");
         params.put("param[pageno]", pageNo + "");
         params.put("method", "member.get.disease");
         return params;
     }
 
     /*获取提醒事项列表*/
-    public static Map<String,String>getRemind(int mid){
+    public static Map<String, String> getRemind(int mid) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
-        params.put("param[mid]", mid+"");
+        params.put("param[mid]", mid + "");
         params.put("method", "member.reminders.list");
+        return params;
+    }
+
+    /*退出登录*/
+    public static Map<String, String> logout() {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("method", "member.login.logout");
         return params;
     }
 
@@ -143,7 +155,7 @@ public class HttpUrls {
         params.put("method", "video.calling");
         params.put("call", Settings.getUserProfile().getMid() + "");
         params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
-        params.put("answers[]=", Settings.getUserProfile().getClub_id() + "");
+        params.put("answers[]=", "27");
         return params;
     }
 

@@ -11,10 +11,12 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityForgetPassword2Binding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.ApiDTO;
+import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.TimeCountUtil;
+
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -91,17 +93,12 @@ public class ForgetPasswordActivity2 extends BaseActivity {
     private void updatePassword() {
         api.noResponse(HttpUrls.forgetPassword(getPhone(), binding.etCheck.getText().toString().trim(),
                 binding.etNewPassword.getText().toString().trim(),
-                binding.etPassword.getText().toString().trim())).enqueue(new Callback<ApiDTO>() {
+                binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
-            public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
+            protected void handleResponse(String response) {
                 showToast("密码修改成功,请重新登录!");
                 startActivity(LoginActivity.class);
                 finish();
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<ApiDTO> call, Throwable t) {
-
             }
         });
 

@@ -5,6 +5,7 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseItem;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ArticleBean implements Serializable{
     private int total;
     private int currentPage;
     private int listRows;
-    private List<ItemsBean> items;
+    private List<ItemsBean> items = new ArrayList<>();
 
     public int getTotal() {
         return total;
