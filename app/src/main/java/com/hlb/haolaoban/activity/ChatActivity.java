@@ -15,7 +15,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.CompoundButton;
 
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityChatBinding;
@@ -23,7 +23,6 @@ import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Settings;
-import com.squareup.otto.Bus;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 

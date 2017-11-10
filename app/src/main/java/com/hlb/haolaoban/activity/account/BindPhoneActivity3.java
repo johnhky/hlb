@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.account;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,19 +10,15 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityBindPhone3Binding;
 import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.http.ApiDTO;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.TimeCountUtil;
-
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by heky on 2017/11/6.

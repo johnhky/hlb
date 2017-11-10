@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.fragment;
+package com.hlb.haolaoban.base;
 
 import android.app.Activity;
 import android.os.Bundle;

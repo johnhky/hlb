@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.MedicalRecordAdapter;
 import com.hlb.haolaoban.adapter.SpaceItemDecoration;

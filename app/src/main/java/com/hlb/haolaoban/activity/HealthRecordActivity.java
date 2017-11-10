@@ -5,7 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityHealthRecordBinding;
 

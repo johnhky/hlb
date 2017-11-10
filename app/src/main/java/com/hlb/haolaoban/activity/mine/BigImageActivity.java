@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.mine;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityBigimageBinding;
 import com.hlb.haolaoban.utils.Constants;

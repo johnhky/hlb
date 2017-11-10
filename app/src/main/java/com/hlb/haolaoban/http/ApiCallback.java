@@ -1,24 +1,13 @@
 package com.hlb.haolaoban.http;
 
 import android.accounts.NetworkErrorException;
-import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MyApplication;
-import com.hlb.haolaoban.activity.LoginActivity;
-import com.hlb.haolaoban.bean.TokenBean;
-import com.hlb.haolaoban.module.ApiModule;
-import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.TokenOutEvent;
-import com.hlb.haolaoban.utils.Constants;
-import com.orhanobut.hawk.Hawk;
-
-import org.json.JSONObject;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;

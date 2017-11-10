@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.fragment;
+package com.hlb.haolaoban.fragment.main;
 
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
@@ -17,9 +17,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.ChatActivity;
-import com.hlb.haolaoban.activity.LoginActivity;
+import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.bean.ArticleBean;
 import com.hlb.haolaoban.databinding.ActivityHomeBinding;
+import com.hlb.haolaoban.base.BaseFragment;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;

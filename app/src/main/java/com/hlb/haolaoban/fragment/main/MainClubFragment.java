@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.fragment;
+package com.hlb.haolaoban.fragment.main;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,15 +15,11 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.ClubAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
 import com.hlb.haolaoban.databinding.ActivityClubBinding;
+import com.hlb.haolaoban.base.BaseFragment;
 import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.http.ApiDTO;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
-import com.hlb.haolaoban.utils.Constants;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 

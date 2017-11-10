@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.activity.BigImageActivity;
+import com.hlb.haolaoban.activity.mine.BigImageActivity;
 import com.hlb.haolaoban.bean.HealthRecordBean;
 
 import java.util.List;

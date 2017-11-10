@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.mine;
 
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityHelpCenterBinding;
 

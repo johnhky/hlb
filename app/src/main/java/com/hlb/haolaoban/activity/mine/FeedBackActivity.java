@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.mine;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,12 +18,11 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.ImageBean;
 import com.hlb.haolaoban.databinding.ActivityFeedbackBinding;
 import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.http.ApiDTO;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;

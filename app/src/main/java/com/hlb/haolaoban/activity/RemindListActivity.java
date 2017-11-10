@@ -3,13 +3,11 @@ package com.hlb.haolaoban.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.RemindListAdapter;
 import com.hlb.haolaoban.bean.RemindBean;

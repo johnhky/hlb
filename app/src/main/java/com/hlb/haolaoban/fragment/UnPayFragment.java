@@ -1,18 +1,17 @@
 package com.hlb.haolaoban.fragment;
 
-import android.database.DatabaseUtils;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.UnpayAdapter;
+import com.hlb.haolaoban.base.BaseFragment2;
 import com.hlb.haolaoban.databinding.FragmentUnpayBinding;
 import com.hlb.haolaoban.utils.Constants;
 

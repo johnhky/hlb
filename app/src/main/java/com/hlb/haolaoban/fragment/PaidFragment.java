@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.UnpayAdapter;
+import com.hlb.haolaoban.base.BaseFragment2;
 import com.hlb.haolaoban.databinding.FragmentPaidBinding;
 import com.hlb.haolaoban.utils.Constants;
 

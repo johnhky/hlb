@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.account;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;

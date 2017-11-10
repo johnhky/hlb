@@ -1,10 +1,10 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.mine;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityAboutBinding;

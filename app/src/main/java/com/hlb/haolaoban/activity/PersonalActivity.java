@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityPersonalBinding;

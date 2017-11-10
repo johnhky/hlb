@@ -37,10 +37,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".activity.mine.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.account.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
@@ -53,31 +53,31 @@
             android:name=".activity.AccountActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.UpdatePasswordActivity"
+            android:name=".activity.account.UpdatePasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.ForgetPasswordActivity1"
+            android:name=".activity.account.ForgetPasswordActivity1"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.ForgetPasswordActivity2"
+            android:name=".activity.account.ForgetPasswordActivity2"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.BindPhoneActivity"
+            android:name=".activity.account.BindPhoneActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.BindPhoneActivity1"
+            android:name=".activity.account.BindPhoneActivity1"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.BindPhoneActivity2"
+            android:name=".activity.account.BindPhoneActivity2"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.BindPhoneActivity3"
+            android:name=".activity.account.BindPhoneActivity3"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
@@ -90,14 +90,14 @@
             android:name=".activity.MedicalCountActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.HelpCenterActivity"
+            android:name=".activity.mine.HelpCenterActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.FeedBackActivity"
+            android:name=".activity.mine.FeedBackActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>\]
         <activity
-            android:name=".activity.BigImageActivity"
+            android:name=".activity.mine.BigImageActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.RemindListActivity"

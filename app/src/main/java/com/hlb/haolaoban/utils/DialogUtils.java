@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.activity.LoginActivity;
+import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.module.ApiModule;
 import com.orhanobut.hawk.Hawk;

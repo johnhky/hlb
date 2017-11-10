@@ -10,25 +10,20 @@ import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hlb.haolaoban.activity.LoginActivity;
-import com.hlb.haolaoban.bean.TokenBean;
+import com.hlb.haolaoban.activity.account.LoginActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
-import com.hlb.haolaoban.fragment.MainClubFragment;
-import com.hlb.haolaoban.fragment.MainHomeFragment;
-import com.hlb.haolaoban.fragment.MainMineFragment;
+import com.hlb.haolaoban.fragment.main.MainClubFragment;
+import com.hlb.haolaoban.fragment.main.MainHomeFragment;
+import com.hlb.haolaoban.fragment.main.MainMineFragment;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.TokenOutEvent;
-import com.hlb.haolaoban.utils.Constants;
-import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
-import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
-
-import retrofit2.Call;
 
 
 /**

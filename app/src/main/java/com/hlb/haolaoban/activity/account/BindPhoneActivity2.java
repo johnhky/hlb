@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.account;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.hlb.haolaoban.BaseActivity;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityBindPhone2Binding;
 import com.hlb.haolaoban.utils.Utils;
