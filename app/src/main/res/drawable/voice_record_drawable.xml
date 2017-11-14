@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/chat_voice1"
+        android:maxLevel="0"></item>
+    <item
+        android:drawable="@drawable/chat_voice2"
+        android:maxLevel="1"></item>
+    <item
+        android:drawable="@drawable/chat_voice3"
+        android:maxLevel="2"></item>
+    <item
+        android:drawable="@drawable/chat_voice4"
+        android:maxLevel="3"></item>
+    <item
+        android:drawable="@drawable/chat_voice5"
+        android:maxLevel="4"></item>
+    <item
+        android:drawable="@drawable/chat_voice6"
+        android:maxLevel="5"></item>
+</level-list>

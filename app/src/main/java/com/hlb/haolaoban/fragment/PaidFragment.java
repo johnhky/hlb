@@ -48,17 +48,7 @@ public class PaidFragment extends BaseFragment2 implements SwipeRefreshLayout.On
     }
 
     private void getData() {
-        List<String> list = new ArrayList<>();
-        if (getType().equals("1")) {
-            list.add("诊断:MDZZ");
-            list.add("诊断:智障");
-        } else {
-            list.add("诊断:MDZZ");
-            list.add("诊断:智障");
-            list.add("诊断:MDZZ");
-            list.add("诊断:智障");
-        }
-        mAdapter = new UnpayAdapter(list, mActivity);
+        /*mAdapter = new UnpayAdapter(list, mActivity);*/
         binding.recyclerView.setAdapter(mAdapter);
         binding.swipeRefresh.setRefreshing(false);
     }

@@ -50,7 +50,7 @@ public class RemindListActivity extends BaseActivity {
     }
 
     private void getRemind() {
-        api.getArticle(HttpUrls.getRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
+        api.getBaseUrl(HttpUrls.getRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 RemindBean data = gson.fromJson(response,RemindBean.class);

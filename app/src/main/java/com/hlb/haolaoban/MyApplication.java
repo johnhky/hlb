@@ -1,16 +1,24 @@
 package com.hlb.haolaoban;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.hlb.haolaoban.http.MyInteceptor;
+import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.https.HttpsUtils;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -56,7 +64,6 @@ public class MyApplication extends Application {
         Utils.init(this);
         OkHttpUtils.initClient(okHttpClient);
         Realm.init(this);
-
     }
 
 }

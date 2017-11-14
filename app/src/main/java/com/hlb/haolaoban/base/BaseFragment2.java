@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 
 public class BaseFragment2 extends Fragment {
     public Activity mActivity;
+    public String TAG = this.getClass().getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

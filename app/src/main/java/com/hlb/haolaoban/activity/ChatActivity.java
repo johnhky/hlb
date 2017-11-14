@@ -1,15 +1,17 @@
 package com.hlb.haolaoban.activity;
 
-import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -21,14 +23,20 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.databinding.ActivityChatBinding;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.FinishChatEvent;
+import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Settings;
+import com.squareup.otto.Subscribe;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -41,19 +49,29 @@ import okhttp3.Call;
  */
 
 public class ChatActivity extends BaseActivity {
-    private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
-    private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
     private String TAG = "eeee";
     private RtcEngine mRtcEngine;
     ActivityChatBinding binding;
     private String channel;
+    private Timer timer = null;//计时器
+    private TimerTask timerTask;
+    private int callNoResponse = 40000;
+    private boolean isAccept = false;
+
+    public static Intent intentFor(Context context, String channel) {
+        Intent i = new Intent(context, ChatActivity.class);
+        i.putExtra(com.hlb.haolaoban.utils.Constants.CHANNEL, channel);
+        return i;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO) && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)) {
-            initAgoraEngineAndJoinChannel();
+        if (!TextUtils.isEmpty(getChannel())) {
+            binding.tvFinish.setBackgroundResource(R.drawable.answer);
+        } else {
+            calling();
         }
         initView();
     }
@@ -61,6 +79,7 @@ public class ChatActivity extends BaseActivity {
     private void initView() {
         binding.tvName.setText(Settings.getUserProfile().getClub_name());
         binding.tvStatus.setText("通话连接中...");
+
         binding.tvHangup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,9 +89,22 @@ public class ChatActivity extends BaseActivity {
         binding.tvFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disconnectVideo(2);
+                if (!TextUtils.isEmpty(getChannel())) {
+                    isAccept = true;
+                    if (isAccept) {
+                        disconnectVideo(getChannel(), 2);
+                    } else {
+                        acceptVideo(getChannel());
+                        binding.tvFinish.setBackgroundResource(R.drawable.icon_refused);
+                    }
+                } else {
+                    disconnectVideo(channel, 2);
+                }
+
+
             }
         });
+
         binding.tvFinish.setKeepScreenOn(true);
         binding.chxVoice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -82,7 +114,9 @@ public class ChatActivity extends BaseActivity {
                 } else {
                     binding.chxVoice.setTextColor(getResources().getColor(R.color.main_bg));
                 }
-                mRtcEngine.muteLocalAudioStream(binding.chxVoice.isSelected());
+                if (null != mRtcEngine) {
+                    mRtcEngine.muteLocalAudioStream(binding.chxVoice.isSelected());
+                }
             }
         });
     }
@@ -104,38 +138,14 @@ public class ChatActivity extends BaseActivity {
         notifyManager.notify(1, builder.build());
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQ_ID_RECORD_AUDIO: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA);
-                } else {
-                    showToast("No permission for " + Manifest.permission.RECORD_AUDIO);
-                    finish();
-                }
-                break;
-            }
-            case PERMISSION_REQ_ID_CAMERA: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                } else {
-                    showToast("No permission for " + Manifest.permission.CAMERA);
-                    finish();
-                }
-                break;
-            }
-        }
-    }
-
-
+    /*发起视频通话请求*/
     private void initAgoraEngineAndJoinChannel() {
         //在视频连接之前  请求服务器接口,判断对方是否未接听  挂断
         calling();
         // Tutorial Step 4
     }
 
+    /*初始化远程视频窗口*/
     private void initializeAgoraEngine() {
         try {
             mRtcEngine = RtcEngine.create(mActivity, BuildConfig.APPKEY, mRtcEventHandler);
@@ -144,6 +154,7 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    /*检测是否拥有语音 视频权限*/
     public boolean checkSelfPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -153,12 +164,14 @@ public class ChatActivity extends BaseActivity {
         return true;
     }
 
+    /*设置视频属性*/
     // Tutorial Step 2
     private void setupVideoProfile() {
         mRtcEngine.enableVideo();
         mRtcEngine.setVideoProfile(Constants.VIDEO_PROFILE_360P, false);
     }
 
+    /*初始化本地视频视图*/
     // Tutorial Step 3
     private void setupLocalVideo() {
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
@@ -168,11 +181,13 @@ public class ChatActivity extends BaseActivity {
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
     }
 
+    /*加入频道*/
     // Tutorial Step 4
     private void joinChannel(String channel) {
         mRtcEngine.joinChannel(null, channel, null, 0); // if you do not specify the uid, we will generate the uid for you
     }
 
+    /*初始化远程视频视图*/
     // Tutorial Step 5
     private void setupRemoteVideo(int uid) {
         if (binding.flYourVideo.getChildCount() >= 1) {
@@ -185,6 +200,7 @@ public class ChatActivity extends BaseActivity {
         binding.tvStatus.setVisibility(View.GONE);
     }
 
+    /*离开该频道*/
     // Tutorial Step 6
     private void leaveChannel() {
         if (mRtcEngine != null) {
@@ -192,12 +208,15 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    /*监听到远程用户离开房间时的操作*/
     // Tutorial Step 7
     private void onRemoteUserLeft() {
         binding.flYourVideo.removeAllViews();
         binding.tvStatus.setVisibility(View.VISIBLE);
+        BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
     }
 
+    /*判断是否显示远程视频*/
     // Tutorial Step 10
     private void onRemoteUserVideoMuted(int uid, boolean muted) {
         SurfaceView surfaceView = (SurfaceView) binding.flYourVideo.getChildAt(0);
@@ -207,6 +226,7 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    /*视频监听  */
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() { // Tutorial Step 1
         @Override
         public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) { // Tutorial Step 5
@@ -271,7 +291,8 @@ public class ChatActivity extends BaseActivity {
 
     /*发起视频通话请求*/
     private void calling() {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL).params(HttpUrls.startVideo()).build().execute(new StringCallback() {
+        startTime();
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL+"videochat/index").params(HttpUrls.startVideo()).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
             }
@@ -284,10 +305,6 @@ public class ChatActivity extends BaseActivity {
                     int code = jsonObject.optInt("nFlag");
                     if (code == 1) {
                         channel = jsonObject.getString("channel");
-                        initializeAgoraEngine();     // Tutorial Step 1
-                        setupVideoProfile();         // Tutorial Step 2
-                        setupLocalVideo();           // Tutorial Step 3
-                        joinChannel(channel);
                     } else if (code == -99) {
                         BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
@@ -300,8 +317,21 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
-    public void disconnectVideo(int mode) {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL).params(HttpUrls.rejectVideo(Settings.getUserProfile().getMid() + "", mode, channel)).build().execute(new StringCallback() {
+    /*断开连接时通知服务器
+     拒绝视频通话
+    * @params mode 参数
+    *  1  应答者在呼叫时直接挂断
+    *  2  进⼊视频会话后主动退出
+    *  3  呼叫超时
+    *  4  异常
+    *  5  发起者在呼叫阶段主动取消
+     *  */
+    public void disconnectVideo(String channel, int mode) {
+        if (channel == null) {
+            showToast("频道号码为空!");
+            return;
+        }
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL+"videochat/index").params(HttpUrls.rejectVideo(Settings.getUserProfile().getMid() + "", mode, channel)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 
@@ -309,13 +339,14 @@ public class ChatActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
                 Log.e(TAG, response);
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
                     int code = jsonObject.optInt("nFlag");
                     if (code == 1) {
-                        finish();
+                        stopTime();
                     } else if (code == -99) {
                         BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
@@ -325,6 +356,97 @@ public class ChatActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /*接受视频通话*/
+    private void acceptVideo(final String channel) {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL+"videochat/index").params(HttpUrls.acceptVideo(Settings.getUserProfile().getMid() + "", channel)).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(response);
+                    int code = jsonObject.optInt("nFlag");
+                    if (code == 1) {
+                        startChat(channel);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /*开始视频通话*/
+    private void startChat(String channel) {
+        initializeAgoraEngine();     // Tutorial Step 1
+        setupVideoProfile();         // Tutorial Step 2
+        setupLocalVideo();           // Tutorial Step 3
+        joinChannel(channel);
+    }
+
+    @Subscribe
+    public void onReciveEvent(JoinVideoEvent event) {
+        if (event.getType().equals("meet")) {
+            stopTime();
+            startChat(channel);
+            binding.tvStatus.setText("正在通话中...");
+        }
+    }
+
+    @Subscribe
+    public void onReciveEvent(FinishChatEvent event) {
+        switch (event.getType()) {
+            case "finish":
+                finish();
+                break;
+        }
+
+
+    }
+
+    /*开始计时*/
+    private void startTime() {
+        if (timer == null) {
+            timer = new Timer();
+        }
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                int count = callNoResponse - 1000;
+                Message msg = handler.obtainMessage();
+                msg.what = count;
+            }
+        };
+    }
+
+    /*停止计时*/
+    private void stopTime() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            startTime();
+            if (msg.what == 0) {
+                disconnectVideo(channel, 5);
+
+            }
+        }
+    };
+
+
+    private String getChannel() {
+        return getIntent().getStringExtra(com.hlb.haolaoban.utils.Constants.CHANNEL);
     }
 
 }

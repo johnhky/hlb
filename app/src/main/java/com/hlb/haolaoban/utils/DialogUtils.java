@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.account.LoginActivity;
+import com.hlb.haolaoban.databinding.DialogPayBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.module.ApiModule;
 import com.orhanobut.hawk.Hawk;
@@ -108,6 +110,7 @@ public class DialogUtils {
         });
     }
 
+    /*显示加载框*/
     public static void showLoading(Context context, String msg) {
         dialog = new Dialog(context, R.style.transparentFrameWindowStyle);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null);
@@ -125,8 +128,34 @@ public class DialogUtils {
         tv_msg.setText(msg);
     }
 
+    public static void showRemindMsg(Context context, String msg, final OnDialogItemClickListener onDialogItemClickListener) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        final Dialog dialog = new Dialog(context, R.style.transparentFrameWindowStyle);
+        DialogPayBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_pay, null, false);
+        dialog.setCanceledOnTouchOutside(false);
+        Window dialogWindow = dialog.getWindow();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display d = windowManager.getDefaultDisplay(); // 获取屏幕宽、高度
+        WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        p.height = (int) (d.getHeight() * 0.2); // 高度设置为屏幕的0.3，根据实际情况调整
+        p.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.8，根据实际情况调整
+        dialogWindow.setAttributes(p);
+        dialog.setContentView(binding.getRoot());
+        dialog.show();
+        binding.tvTitle.setText(msg);
+        binding.tvContent.setText(msg);
+        binding.btSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDialogItemClickListener.onItemClick(1);
+                dialog.dismiss();
+            }
+        });
+    }
+
+
     public static void hideLoading() {
-        if (null!=dialog){
+        if (null != dialog) {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }

@@ -1,18 +1,15 @@
 package com.hlb.haolaoban.utils;
 
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Base64;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,15 +68,42 @@ public class Utils {
         return Base64.encodeToString(appicon, Base64.DEFAULT);
     }
 
-    public static boolean serviceIsWorked(Context context, String serviceName) {
-        ActivityManager myManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> serviceInfo = myManager.getRunningServices(30);
-        for (int i = 0; i < serviceInfo.size(); i++) {
-            if (serviceInfo.get(i).service.getClassName().toString().equals(serviceName)) {
-                return true;
-            }
+    public static String getTime(long time) {
+        long minute = 0;
+        long second = 0;
+        second = time / 1000;
+        if (second > 60) {
+            minute = second / 60;
         }
-        return false;
+        return getTwoLength(minute) + ":" + getTwoLength(second);
     }
 
+    private static String getTwoLength(long data) {
+        if (data < 10) {
+            return "0" + data;
+        } else {
+            return data + "";
+        }
+    }
+
+    public static void mkDirs(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    //把时间戳转换为毫秒
+    public static long dateTimeMs(long str) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        long msTime = -1;
+        try {
+            msTime = simpleDateFormat.parse(String.valueOf(str)).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return msTime;
+
+    }
 }

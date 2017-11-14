@@ -57,7 +57,7 @@ public class MedicalRecordActivity extends BaseActivity implements SwipeRefreshL
 
     private void getMedicalRecord(int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
-        api.getArticle(HttpUrls.getHealthRecord(Settings.getUserProfile().getMid(), pageNo)).enqueue(new SimpleCallback() {
+        api.getBaseUrl(HttpUrls.getHealthRecord(Settings.getUserProfile().getMid(), pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);

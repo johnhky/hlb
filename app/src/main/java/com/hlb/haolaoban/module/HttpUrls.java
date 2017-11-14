@@ -7,6 +7,7 @@ import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.orhanobut.hawk.Hawk;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -132,6 +133,18 @@ public class HttpUrls {
         return params;
     }
 
+    /*获取订单列表*/
+    public static Map<String, String> getOrderList(String mid, int pageNo, String status) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "orders.get.list");
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid);
+        params.put("param[order_type]","prescription");
+        params.put("param[status]", status);
+        params.put("param[pageno]", pageNo + "");
+        return params;
+    }
+
     /*退出登录*/
     public static Map<String, String> logout() {
         Map<String, String> params = new LinkedHashMap<>();
@@ -178,7 +191,7 @@ public class HttpUrls {
     }
 
     /*接受视频通话*/
-    public static Map<String, String> acceptVideo(String mid, int mode, String channel) {
+    public static Map<String, String> acceptVideo(String mid, String channel) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "video.accept");
         params.put("mid", mid);
@@ -187,4 +200,11 @@ public class HttpUrls {
         return params;
     }
 
+    /*上传图片*/
+    public static Map<String, String> uploadPicture(int mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "voice.push");
+        params.put("mid", mid + "");
+        return params;
+    }
 }

@@ -54,7 +54,7 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
 
     private void getMedical(int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
-        api.getArticle(HttpUrls.getMedical(Settings.getUserProfile().getMid() + "", pageNo)).enqueue(new SimpleCallback() {
+        api.getBaseUrl(HttpUrls.getMedical(Settings.getUserProfile().getMid() + "", pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);

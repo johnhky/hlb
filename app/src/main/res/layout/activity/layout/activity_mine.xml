@@ -193,6 +193,7 @@
                     android:gravity="center"
                     android:paddingTop="@dimen/dp_10"
                     android:text="意见反馈" />
+
             </LinearLayout>
 
             <LinearLayout

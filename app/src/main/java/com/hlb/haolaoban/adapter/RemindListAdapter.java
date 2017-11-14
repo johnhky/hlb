@@ -21,21 +21,26 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Ho
     Context context;
     List<RemindBean.ItemsBean> myDatas;
 
-    public RemindListAdapter(Context context,List<RemindBean.ItemsBean> myDatas) {
-        this.context =context;
+    public RemindListAdapter(Context context, List<RemindBean.ItemsBean> myDatas) {
+        this.context = context;
         this.myDatas = myDatas;
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_remindlist,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_remindlist, null);
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-            holder.tv_title.setText(myDatas.get(position).getContent());
-        holder.tv_time.setText(myDatas.get(position).getStart_his());
+        holder.tv_title.setText(myDatas.get(position).getContent());
+        if (myDatas.get(position).getStart_day() == 0) {
+            holder.tv_time.setText("今天 " + myDatas.get(position).getStart_his());
+        } else {
+            holder.tv_time.setText(myDatas.get(position).getStart_his());
+        }
+
     }
 
     @Override

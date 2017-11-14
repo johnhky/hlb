@@ -15,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
@@ -35,7 +36,7 @@ public interface ApiModule {
     /*获取首页文章列表*/
     @FormUrlEncoded
     @POST("index")
-    Call<ApiDTO> getArticle(@FieldMap Map<String, String> params);
+    Call<ApiDTO> getBaseUrl(@FieldMap Map<String, String> params);
 
     /*获取用户个人信息*/
     @FormUrlEncoded
@@ -55,10 +56,5 @@ public interface ApiModule {
     @FormUrlEncoded
     @POST("index")
     Call<ApiDTO> uploadImage(@FieldMap Map<String, String> params);
-
-    /*发起通话请求*/
-    @FormUrlEncoded
-    @POST("index")
-    Call<JSONObject> video(@FieldMap Map<String, String> params);
 
 }

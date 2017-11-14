@@ -20,6 +20,10 @@ import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.FinishChatEvent;
+import com.hlb.haolaoban.otto.JoinVideoEvent;
+import com.hlb.haolaoban.otto.ShowNotificationEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
@@ -73,7 +77,6 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
-
 
 
     private void login() {
@@ -136,7 +139,7 @@ public class LoginActivity extends BaseActivity {
 
     private void loginWebclient(String id, String club_id) {
         String url = BuildConfig.BASE_WEBSOCKET_URL + "?mid=" + id + "&club_id=" + club_id;
-        final WebSocketClient client =  new WebSocketClient(URI.create(url), new Draft_17(), null, 3000) {
+        WebSocketClient client = new WebSocketClient(URI.create(url), new Draft_17(), null, 3000) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
                 Log.e("eeee", "连接成功!");
@@ -144,18 +147,38 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onMessage(String s) {
-                Log.e("eeee", s);
+                Log.e("eeee", "wobSocket:" + s);
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(s);
                     int code = jsonObject.optInt("nFlag");
                     String type = jsonObject.getString("type");
-                    if (!TextUtils.isEmpty(type)) {
+                    String channel = "";
+                    if (type.equals("calling")) {
+                        channel = jsonObject.getString("channel");
+                    }
+                    if (code == 1) {
+                        if (!TextUtils.isEmpty(type)) {
+                            switch (type) {
+                                case "meet":
+                                    BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
+                                    break;
+                                case "refuse":
+                                    BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
+                                    break;
+                                case "calling":
+                                    BusProvider.getInstance().postEvent(new JoinVideoEvent(type, channel));
+                                    break;
+                            }
+                        }
+                    } else {
+                        String msg = jsonObject.getString("msg");
                         if (type.equals("1")) {
-
+                            BusProvider.getInstance().postEvent(new ShowNotificationEvent(msg));
                         }
                     }
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
             }
