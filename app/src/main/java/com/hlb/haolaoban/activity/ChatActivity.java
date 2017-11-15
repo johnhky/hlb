@@ -56,7 +56,6 @@ public class ChatActivity extends BaseActivity {
     private Timer timer = null;//计时器
     private TimerTask timerTask;
     private int callNoResponse = 40000;
-    private boolean isAccept = false;
 
     public static Intent intentFor(Context context, String channel) {
         Intent i = new Intent(context, ChatActivity.class);
@@ -69,7 +68,7 @@ public class ChatActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
         if (!TextUtils.isEmpty(getChannel())) {
-            binding.tvFinish.setBackgroundResource(R.drawable.answer);
+            acceptVideo(getChannel());
         } else {
             calling();
         }
@@ -79,7 +78,6 @@ public class ChatActivity extends BaseActivity {
     private void initView() {
         binding.tvName.setText(Settings.getUserProfile().getClub_name());
         binding.tvStatus.setText("通话连接中...");
-
         binding.tvHangup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,19 +87,7 @@ public class ChatActivity extends BaseActivity {
         binding.tvFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(getChannel())) {
-                    isAccept = true;
-                    if (isAccept) {
-                        disconnectVideo(getChannel(), 2);
-                    } else {
-                        acceptVideo(getChannel());
-                        binding.tvFinish.setBackgroundResource(R.drawable.icon_refused);
-                    }
-                } else {
-                    disconnectVideo(channel, 2);
-                }
-
-
+                disconnectVideo(channel, 2);
             }
         });
 
@@ -136,13 +122,6 @@ public class ChatActivity extends BaseActivity {
         //.setWhen(System.currentTimeMillis());
         //通过builder.build()方法生成Notification对象,并发送通知,id=1
         notifyManager.notify(1, builder.build());
-    }
-
-    /*发起视频通话请求*/
-    private void initAgoraEngineAndJoinChannel() {
-        //在视频连接之前  请求服务器接口,判断对方是否未接听  挂断
-        calling();
-        // Tutorial Step 4
     }
 
     /*初始化远程视频窗口*/
@@ -246,6 +225,14 @@ public class ChatActivity extends BaseActivity {
         }
 
         @Override
+        public void onLastmileQuality(int quality) {
+            super.onLastmileQuality(quality);
+            if (quality > 2) {
+                showToast("当前网络连接不稳定!");
+            }
+        }
+
+        @Override
         public void onUserOffline(int uid, final int reason) { // Tutorial Step 7
             runOnUiThread(new Runnable() {
                 @Override
@@ -292,7 +279,7 @@ public class ChatActivity extends BaseActivity {
     /*发起视频通话请求*/
     private void calling() {
         startTime();
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL+"videochat/index").params(HttpUrls.startVideo()).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.startVideo()).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
             }
@@ -327,11 +314,7 @@ public class ChatActivity extends BaseActivity {
     *  5  发起者在呼叫阶段主动取消
      *  */
     public void disconnectVideo(String channel, int mode) {
-        if (channel == null) {
-            showToast("频道号码为空!");
-            return;
-        }
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL+"videochat/index").params(HttpUrls.rejectVideo(Settings.getUserProfile().getMid() + "", mode, channel)).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.rejectVideo(Settings.getUserProfile().getMid() + "", mode, channel)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 
@@ -360,7 +343,7 @@ public class ChatActivity extends BaseActivity {
 
     /*接受视频通话*/
     private void acceptVideo(final String channel) {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL+"videochat/index").params(HttpUrls.acceptVideo(Settings.getUserProfile().getMid() + "", channel)).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.acceptVideo(Settings.getUserProfile().getMid() + "", channel)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 
@@ -384,6 +367,7 @@ public class ChatActivity extends BaseActivity {
 
     /*开始视频通话*/
     private void startChat(String channel) {
+        binding.tvStatus.setText("正在通话中...");
         initializeAgoraEngine();     // Tutorial Step 1
         setupVideoProfile();         // Tutorial Step 2
         setupLocalVideo();           // Tutorial Step 3
@@ -395,7 +379,7 @@ public class ChatActivity extends BaseActivity {
         if (event.getType().equals("meet")) {
             stopTime();
             startChat(channel);
-            binding.tvStatus.setText("正在通话中...");
+
         }
     }
 
@@ -423,6 +407,7 @@ public class ChatActivity extends BaseActivity {
                 msg.what = count;
             }
         };
+        timerTask.run();
     }
 
     /*停止计时*/
@@ -439,7 +424,6 @@ public class ChatActivity extends BaseActivity {
             startTime();
             if (msg.what == 0) {
                 disconnectVideo(channel, 5);
-
             }
         }
     };

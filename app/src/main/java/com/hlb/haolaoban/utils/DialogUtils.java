@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.account.LoginActivity;
+import com.hlb.haolaoban.databinding.DialogConsactClubBinding;
 import com.hlb.haolaoban.databinding.DialogPayBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.module.ApiModule;
@@ -29,7 +30,6 @@ import com.orhanobut.hawk.Hawk;
 
 public class DialogUtils {
     static Dialog dialog;
-    static ApiModule api = Api.of(ApiModule.class);
 
     public interface OnDialogItemClickListener {
         void onItemClick(int which);
@@ -153,6 +153,51 @@ public class DialogUtils {
         });
     }
 
+    public static void showConsactClub(Context context, String msg, final OnDialogItemClickListener itemClickListener) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        final Dialog dialog = new Dialog(context, R.style.transparentFrameWindowStyle);
+        DialogConsactClubBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_consact_club, null, false);
+        Window dialogWindow = dialog.getWindow();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display d = windowManager.getDefaultDisplay(); // 获取屏幕宽、高度
+        WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        p.height = (int) (d.getHeight() * 0.2); // 高度设置为屏幕的0.3，根据实际情况调整
+        p.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.8，根据实际情况调整
+        dialogWindow.setAttributes(p);
+        dialog.setContentView(binding.getRoot());
+        dialog.show();
+        binding.tvMsg.setText("联系俱乐部:" + msg);
+        binding.etCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        binding.etSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onItemClick(1);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public static void showPayDialog(final Activity context, View mView) {
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_topay, null);
+        final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        final WindowManager.LayoutParams lp = context.getWindow().getAttributes();
+        lp.alpha = 0.4f;
+        context.getWindow().setAttributes(lp);
+        popupWindow.showAtLocation(mView, Gravity.BOTTOM, 0, 0);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                lp.alpha = 1f;
+                context.getWindow().setAttributes(lp);
+            }
+        });
+
+    }
 
     public static void hideLoading() {
         if (null != dialog) {

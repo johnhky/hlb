@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.PrescriptionDetailActivity;
 import com.hlb.haolaoban.bean.OrderBean;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.RefreshOrderEvent;
@@ -55,8 +57,7 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.tv_title.setText(myDatas.get(position).getOid() + "");
         Glide.with(context).load(myDatas.get(position).getKuaizhao_img()).fitCenter().into(holder.iv_drug);
-        double total = Double.parseDouble(myDatas.get(position).getCost_item()) + Double.parseDouble(myDatas.get(position).getCost_freight());
-        SpannableString spannableString = new SpannableString("合计: " + total + "元");
+        SpannableString spannableString = new SpannableString("合计: " + myDatas.get(position).getTotal_fee() + "元");
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#FF0000"));
         spannableString.setSpan(foregroundColorSpan, 4, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.tv_total.setText(spannableString);
@@ -65,21 +66,37 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
 
                 break;
             case "2":
-                long time = myDatas.get(position).getAddtime() + oneDay;
+                String time = (myDatas.get(position).getAddtime() + 86400) + "";
+                long times = Long.parseLong(time);
                 long currentTime = System.currentTimeMillis() / 1000;
-                long surplusTime = currentTime - time;
-                CountDownTimer timer = new CountDownTimer(Utils.dateTimeMs(surplusTime), 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String data = Utils.formatData(currentTime);
+                String date2 = Utils.formatData(times);
+                Date date;
+                Date date1;
+                try {
+                    date = df.parse(date2);
+                    date1 = df.parse(data);
+                    final long timess = date.getTime() - date1.getTime();
+                    CountDownTimer timer = new CountDownTimer(timess, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            long days = millisUntilFinished / (1000 * 60 * 60 * 24);
+                            long hours = (millisUntilFinished - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+                            long minutes = (millisUntilFinished - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
+                            long seconds = (millisUntilFinished - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60) - minutes * (1000 * 60)) / 1000;
+                            holder.tv_time.setText("剩余:" + hours + "时" + minutes + "分" + seconds + "秒");
+                        }
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        BusProvider.getInstance().postEvent(new RefreshOrderEvent());
-                    }
-                };
-                timer.start();
+                        @Override
+                        public void onFinish() {
+                            BusProvider.getInstance().postEvent(new RefreshOrderEvent());
+                        }
+                    };
+                    timer.start();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "3":
 
@@ -95,10 +112,13 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
         holder.ll_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = PrescriptionDetailActivity.intentFor(context, myDatas.get(position).getOid() + "");
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -127,12 +147,6 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
 
     }
 
-    TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-
-        }
-    };
 
 /*    public static void setItemHeight(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

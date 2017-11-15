@@ -64,11 +64,13 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
         api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, 2 + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.d(TAG, "handleResponse:" + response);
+                Log.d("eeee", "handleResponse:" + response);
                 OrderBean data = gson.fromJson(response, OrderBean.class);
-                mAdapter = new UnpayAdapter(data.getItems(), mActivity);
-                binding.recyclerView.setAdapter(mAdapter);
-                binding.swipeRefresh.setRefreshing(false);
+                if (data.getItems().size()>0){
+                    mAdapter = new UnpayAdapter(data.getItems(), mActivity);
+                    binding.recyclerView.setAdapter(mAdapter);
+                    binding.swipeRefresh.setRefreshing(false);
+                }
             }
 
             @Override

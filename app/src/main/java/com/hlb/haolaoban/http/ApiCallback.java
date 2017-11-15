@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.http;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;

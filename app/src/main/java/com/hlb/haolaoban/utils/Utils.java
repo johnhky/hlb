@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,17 +93,35 @@ public class Utils {
         }
     }
 
-    //把时间戳转换为毫秒
-    public static long dateTimeMs(long str) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        long msTime = -1;
-        try {
-            msTime = simpleDateFormat.parse(String.valueOf(str)).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
+    /*
+   * 将时间戳转换为时间
+   */
+    public static String stampToDate(String s) {
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
+
+
+    public static String formatData(long timeStamp) {
+        if (timeStamp == 0) {
+            return "";
         }
+        timeStamp = timeStamp * 1000;
+        String result = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        result = format.format(new Date(timeStamp));
+        return result;
+    }
 
-        return msTime;
-
+    public static String dateByCountdown(long millis) {
+        long day = millis / (1000 * 60 * 60 * 24);
+        long hour = millis - day * (1000 * 60 * 60 * 24) / (1000 * 60 * 60);
+        long minute = millis - day * (1000 * 60 * 60 * 24) - hour * (1000 * 60 * 60) / (1000 * 60);
+        long seconds = millis - day * (1000 * 60 * 60 * 24) - hour * (1000 * 60 * 60) - minute * (1000 * 60) / 1000;
+        return hour + "时" + minute + "分" + seconds + "秒";
     }
 }

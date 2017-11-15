@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.fragment.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -115,6 +116,7 @@ public class MainHomeFragment extends BaseFragment {
 
             @Override
             public void onStop(String filePath) {
+
                 uploadAudio(filePath);
                 tv_voice.setText(Utils.getTime(0));
             }
@@ -124,7 +126,7 @@ public class MainHomeFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (null != Settings.getUserProfile()) {
-                    startActivity(ChatActivity.class);
+                    contactClub();
                 } else {
                     startActivity(LoginActivity.class);
                 }
@@ -258,6 +260,20 @@ public class MainHomeFragment extends BaseFragment {
         }
         myAdapter = new MyAdapter(mViewList);
         binding.mViewpager.setAdapter(myAdapter);
+    }
+
+    private void contactClub() {
+        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
+            @Override
+            public void onItemClick(int which) {
+                if (which == 1) {
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_CALL);
+                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getUsername()));
+                    startActivity(i);
+                }
+            }
+        });
     }
 
     class MyAdapter extends PagerAdapter {

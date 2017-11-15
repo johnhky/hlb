@@ -48,6 +48,7 @@ public class LoginActivity extends BaseActivity {
     Gson gson;
     ActivityLoginBinding binding;
     ApiModule api = Api.of(ApiModule.class);
+    private final String TAG = this.getClass().getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,18 +148,19 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onMessage(String s) {
-                Log.e("eeee", "wobSocket:" + s);
+                Log.e(TAG, "onMessage:" + s);
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(s);
                     int code = jsonObject.optInt("nFlag");
-                    String type = jsonObject.getString("type");
+                    String type = "";
+                    type = jsonObject.getString("type");
                     String channel = "";
-                    if (type.equals("calling")) {
-                        channel = jsonObject.getString("channel");
-                    }
                     if (code == 1) {
                         if (!TextUtils.isEmpty(type)) {
+                            if (type.equals("calling")) {
+                                channel = jsonObject.getString("channel");
+                            }
                             switch (type) {
                                 case "meet":
                                     BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
@@ -174,7 +176,9 @@ public class LoginActivity extends BaseActivity {
                     } else {
                         String msg = jsonObject.getString("msg");
                         if (type.equals("1")) {
-                            BusProvider.getInstance().postEvent(new ShowNotificationEvent(msg));
+                            /*BusProvider.getInstance().postEvent(new ShowNotificationEvent(msg));*/
+                        } else if (type.equals("2")) {
+
                         }
                     }
                 } catch (JSONException e) {

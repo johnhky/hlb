@@ -124,12 +124,30 @@ public class HttpUrls {
         return params;
     }
 
+    /*获取健康报告列表*/
+    public static Map<String, String> getHealthReport(int mid, int pageNo) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid + "");
+        params.put("param[pageno]", pageNo + "");
+        params.put("method", "member.healtheport.list");
+        return params;
+    }
+
     /*获取提醒事项列表*/
     public static Map<String, String> getRemind(int mid) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
         params.put("param[mid]", mid + "");
         params.put("method", "member.reminders.list");
+        return params;
+    }
+    /*获取提醒事项列表*/
+    public static Map<String, String> getOrderDetail(String oid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[oid]", oid + "");
+        params.put("method", "orders.get.info");
         return params;
     }
 
@@ -139,17 +157,9 @@ public class HttpUrls {
         params.put("method", "orders.get.list");
         params.putAll(Constants.addParams());
         params.put("param[mid]", mid);
-        params.put("param[order_type]","prescription");
+        params.put("param[order_type]", "prescription");
         params.put("param[status]", status);
         params.put("param[pageno]", pageNo + "");
-        return params;
-    }
-
-    /*退出登录*/
-    public static Map<String, String> logout() {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.putAll(Constants.addParams());
-        params.put("method", "member.login.logout");
         return params;
     }
 

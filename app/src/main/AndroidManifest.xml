@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -106,8 +107,24 @@
             android:name=".activity.PrescriptionActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
+            android:name=".activity.HealthReportActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".activity.TotalRemindActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.PrescriptionDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver
+            android:name=".service.AlarmReceiver"
+            android:process=":remote"></receiver>
+        <service
+            android:name=".service.RemindService"
+            android:enabled="true"
+            android:exported="true"
+            android:persistent="true"
+            android:priority="1000"></service>
 
     </application>
 

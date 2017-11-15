@@ -50,6 +50,7 @@ public class MainActivity extends BaseActivity {
     private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
     public static final int REQUEST_CODE = 1001;
+    public static final int CALL_REQUEST_CODE = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +192,7 @@ public class MainActivity extends BaseActivity {
             case PERMISSION_REQ_ID_RECORD_AUDIO: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA);
+                    checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO);
                 } else {
                     showToast("没有开启 " + Manifest.permission.RECORD_AUDIO + "权限!");
                 }
@@ -200,6 +201,7 @@ public class MainActivity extends BaseActivity {
             case PERMISSION_REQ_ID_CAMERA: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA);
                 } else {
                     showToast("没有开启 " + Manifest.permission.CAMERA + "权限!");
                 }
@@ -208,6 +210,12 @@ public class MainActivity extends BaseActivity {
             }
             case REQUEST_CODE: {
                 if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    checkPermission();
+                }
+                break;
+            }
+            case CALL_REQUEST_CODE: {
+                if (permissions[0].equals(Manifest.permission.CALL_PHONE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     checkPermission();
                 }
                 break;
@@ -222,6 +230,10 @@ public class MainActivity extends BaseActivity {
             int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+            }
+            int hasCallPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
+            if (hasCallPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST_CODE);
             }
         }
         Utils.mkDirs(Environment.getExternalStorageDirectory().getPath() + "/hlb/record/");

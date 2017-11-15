@@ -35,7 +35,7 @@ public class AudioRecordUtils {
 
     public AudioRecordUtils(Context context) {
         //默认保存路径为/sdcard/hlb/record/下
-        this(Environment.getExternalStorageDirectory()+"/hlb/record/", context);
+        this(Environment.getExternalStorageDirectory() + "/hlb/record/", context);
     }
 
     public AudioRecordUtils(String filePath, Context context) {

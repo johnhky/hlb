@@ -79,6 +79,7 @@ public class OrderBean {
          * kuaizhao_img :
          * corntab_status : 0
          * addtime : 1510307794
+         * total_fee:￥126.00
          */
 
         private long oid;
@@ -105,6 +106,15 @@ public class OrderBean {
         private String kuaizhao_img;
         private String corntab_status;
         private long addtime;
+        private String total_fee;
+
+        public String getTotal_fee() {
+            return total_fee;
+        }
+
+        public void setTotal_fee(String total_fee) {
+            this.total_fee = total_fee;
+        }
 
         public long getOid() {
             return oid;
