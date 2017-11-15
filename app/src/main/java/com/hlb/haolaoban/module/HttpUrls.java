@@ -134,6 +134,15 @@ public class HttpUrls {
         return params;
     }
 
+    /*获取健康报告详情*/
+    public static Map<String, String> getHealthReportDetail(String id) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[id]", id);
+        params.put("method", "member.healtheport.info");
+        return params;
+    }
+
     /*获取提醒事项列表*/
     public static Map<String, String> getRemind(int mid) {
         Map<String, String> params = new LinkedHashMap<>();
@@ -142,6 +151,7 @@ public class HttpUrls {
         params.put("method", "member.reminders.list");
         return params;
     }
+
     /*获取提醒事项列表*/
     public static Map<String, String> getOrderDetail(String oid) {
         Map<String, String> params = new LinkedHashMap<>();

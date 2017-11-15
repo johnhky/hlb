@@ -94,7 +94,7 @@ public class Utils {
     }
 
     /*
-   * 将时间戳转换为时间
+   * 将时间戳转换为年月日
    */
     public static String stampToDate(String s) {
         String res;
@@ -105,7 +105,7 @@ public class Utils {
         return res;
     }
 
-
+    /*将时间戳转换为日期格式的字符串*/
     public static String formatData(long timeStamp) {
         if (timeStamp == 0) {
             return "";
@@ -115,13 +115,5 @@ public class Utils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         result = format.format(new Date(timeStamp));
         return result;
-    }
-
-    public static String dateByCountdown(long millis) {
-        long day = millis / (1000 * 60 * 60 * 24);
-        long hour = millis - day * (1000 * 60 * 60 * 24) / (1000 * 60 * 60);
-        long minute = millis - day * (1000 * 60 * 60 * 24) - hour * (1000 * 60 * 60) / (1000 * 60);
-        long seconds = millis - day * (1000 * 60 * 60 * 24) - hour * (1000 * 60 * 60) - minute * (1000 * 60) / 1000;
-        return hour + "时" + minute + "分" + seconds + "秒";
     }
 }

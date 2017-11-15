@@ -115,6 +115,9 @@
         <activity
             android:name=".activity.PrescriptionDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.HealthReportDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <receiver
             android:name=".service.AlarmReceiver"
