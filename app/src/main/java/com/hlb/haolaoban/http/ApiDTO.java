@@ -9,7 +9,6 @@ public class ApiDTO<T> {
     private int code;
     private String msg;
     private Object data;
-
     public int getCode() {
         return code;
     }
@@ -35,9 +34,10 @@ public class ApiDTO<T> {
     }
 
 
+
     @Override
     public String toString() {
-        return "{" +
+        return "ApiDTO{" +
                 "code=" + code +
                 ", msg='" + msg + '\'' +
                 ", data=" + data +

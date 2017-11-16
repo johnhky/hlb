@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.DeviceManageActivity;
 import com.hlb.haolaoban.activity.mine.AboutActivity;
 import com.hlb.haolaoban.activity.AccountActivity;
 import com.hlb.haolaoban.activity.mine.FeedBackActivity;
@@ -101,6 +102,12 @@ public class MainMineFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 startActivity(RemindListActivity.class);
+            }
+        });
+        binding.tvDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(DeviceManageActivity.class);
             }
         });
     }

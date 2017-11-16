@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.adapter.ClubAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
@@ -61,7 +59,6 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     PopupWindow popupWindow;
     ImageView iv_state;
     TextView tv_voice;
-
     LinearLayoutManager linearLayoutManager;
 
     @Nullable
@@ -159,7 +156,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
 
-    private void getClub(final int pageNo) {
+    private void getClub() {
         binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
             @Override
@@ -181,7 +178,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         pageNo = 1;
-        getClub(pageNo);
+        getClub();
     }
 
     private void contactClub() {

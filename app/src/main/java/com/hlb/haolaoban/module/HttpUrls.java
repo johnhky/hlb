@@ -1,5 +1,7 @@
 package com.hlb.haolaoban.module;
 
+import android.os.Build;
+
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
@@ -21,6 +23,7 @@ public class HttpUrls {
         params.put("appid", BuildConfig.Appid);
         params.put("appkey", BuildConfig.appkey);
         params.put("timestamp", BuildConfig.timeStamp);
+        params.put("deviceid", Build.SERIAL);
         return params;
     }
 
