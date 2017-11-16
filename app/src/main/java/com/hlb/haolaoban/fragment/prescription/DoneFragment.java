@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.fragment;
+package com.hlb.haolaoban.fragment.prescription;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -29,10 +29,10 @@ import com.squareup.otto.Subscribe;
 import retrofit2.Call;
 
 /**
- * Created by heky on 2017/11/10.
+ * Created by heky on 2017/11/15.
  */
 
-public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.OnRefreshListener {
+public class DoneFragment extends BaseFragment2 implements SwipeRefreshLayout.OnRefreshListener {
 
     FragmentUnpayBinding binding;
     private UnpayAdapter mAdapter;
@@ -40,8 +40,8 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
 
-    public static UnPayFragment getInstance(String type) {
-        UnPayFragment unPayFragment = new UnPayFragment();
+    public static DoneFragment getInstance(String type) {
+        DoneFragment unPayFragment = new DoneFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TYPE, type);
         unPayFragment.setArguments(bundle);
@@ -61,15 +61,14 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
 
     private void getData() {
         binding.swipeRefresh.setRefreshing(true);
-        api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, 2 + "")).enqueue(new SimpleCallback() {
+        api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, getType())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.d("eeee", "handleResponse:" + response);
+                binding.swipeRefresh.setRefreshing(false);
                 OrderBean data = gson.fromJson(response, OrderBean.class);
-                if (data.getItems().size()>0){
+                if (!data.getItems().isEmpty()) {
                     mAdapter = new UnpayAdapter(data.getItems(), mActivity);
                     binding.recyclerView.setAdapter(mAdapter);
-                    binding.swipeRefresh.setRefreshing(false);
                 }
             }
 

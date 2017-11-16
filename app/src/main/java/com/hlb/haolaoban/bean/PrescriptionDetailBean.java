@@ -1,5 +1,6 @@
 package com.hlb.haolaoban.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,7 +70,7 @@ public class PrescriptionDetailBean {
     private String qianming;
     private int age;
     private String total_fee;
-    private List<GoodsBean> goods;
+    private List<GoodsBean> goods = new ArrayList<>();
 
     public String getOid() {
         return oid;

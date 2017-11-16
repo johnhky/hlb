@@ -55,13 +55,21 @@
     <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@drawable/dialog_bg</item>
     </style>
+
     <style name="FullScreenVideoTheme" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
     <style name="MyButtonStyle">
         <item name="android:background">@drawable/button_click_selector</item>
     </style>
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
+
+
 </resources>

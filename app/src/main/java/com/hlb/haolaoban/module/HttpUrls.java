@@ -1,13 +1,10 @@
 package com.hlb.haolaoban.module;
 
-import android.util.Log;
-
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.orhanobut.hawk.Hawk;
 
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

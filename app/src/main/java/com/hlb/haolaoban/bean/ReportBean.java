@@ -1,5 +1,6 @@
 package com.hlb.haolaoban.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class ReportBean {
     private int total;
     private int currentPage;
     private int listRows;
-    private List<ItemsBean> items;
+    private List<ItemsBean> items = new ArrayList<>();
 
     public int getTotal() {
         return total;

@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
 public class Videobean implements Serializable{
 
     private int nFlag;
-    private List<String> answers;
+    private List<String> answers = new ArrayList<>();
     private String channel;
     private String type;
 

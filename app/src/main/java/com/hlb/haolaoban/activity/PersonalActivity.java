@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +14,7 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityPersonalBinding;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.Utils;
 
 /**
  * Created by heky on 2017/10/31.
@@ -38,7 +40,8 @@ public class PersonalActivity extends BaseActivity {
 
     private void initData(UserInfoBean data) {
         Glide.with(this).load(data.getPhoto()).into(binding.ivAvater);
-        binding.etBirthday.setText(data.getBirthday());
+        String birthDay = Utils.stampToDate(data.getBirthday() + "000");
+        binding.etBirthday.setText(birthDay);
         binding.etName.setText(data.getName());
         String gender = "";
         if (data.getSex().equals("0")) {

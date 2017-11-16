@@ -23,7 +23,6 @@ import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.FinishChatEvent;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
-import com.hlb.haolaoban.otto.ShowNotificationEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
@@ -79,30 +78,28 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-
-    private void login() {
-        api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
+    private void loginCheck() {
+        api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Userbean data = gson.fromJson(response, Userbean.class);
-                DialogUtils.hideLoading();
-                Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
-                Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
-                Hawk.put(Constants.MID, data.getMid());
-                Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                loginWebclient(data.getMid() + "", data.getClub_id() + "");
-                startActivity(MainActivity.class);
+                if (null != Hawk.get(Constants.TOKEN)) {
+                    Hawk.delete(Constants.TOKEN);
+                }
+                TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
+                Hawk.put(Constants.TOKEN, tokenBean.getToken());
+                Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
+                login();
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
                 super.onFailure(call, t);
-                DialogUtils.hideLoading();
             }
         });
+
     }
 
-    private void loginCheck() {
+    private void login() {
         DialogUtils.showLoading(LoginActivity.this, "正在登录...");
         if (null == binding.etPhone.getText().toString().trim() && binding.etPhone.getText().toString().trim().length() < 1) {
             showToast("手机号码不能为空!");
@@ -116,17 +113,18 @@ public class LoginActivity extends BaseActivity {
             showToast("密码不能为空!");
             return;
         }
-        api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
+        api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 DialogUtils.hideLoading();
-                if (null != Hawk.get(Constants.TOKEN)) {
-                    Hawk.delete(Constants.TOKEN);
-                }
-                TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
-                Hawk.put(Constants.TOKEN, tokenBean.getToken());
-                Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
-                login();
+                Userbean data = gson.fromJson(response, Userbean.class);
+                Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
+                Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
+                Hawk.put(Constants.MID, data.getMid());
+                Hawk.put(Constants.CLUB_ID, data.getClub_id());
+                loginWebclient(data.getMid() + "", data.getClub_id() + "");
+                startActivity(MainActivity.class);
+                finish();
             }
 
             @Override
@@ -135,7 +133,6 @@ public class LoginActivity extends BaseActivity {
                 DialogUtils.hideLoading();
             }
         });
-
     }
 
     private void loginWebclient(String id, String club_id) {

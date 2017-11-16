@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
@@ -22,6 +23,7 @@ import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.TotalRemindActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.BaseActivity;
+import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
@@ -37,7 +39,10 @@ import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
+
+import retrofit2.Call;
 
 /**
  * Created by heky on 2017/10/31.
@@ -47,6 +52,7 @@ public class MainActivity extends BaseActivity {
     ActivityMainBinding binding;
     Fragment mainHome, mainClub, mainMine;
     ApiModule api = Api.of(ApiModule.class);
+    Gson gson = new GsonBuilder().create();
     private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
     public static final int REQUEST_CODE = 1001;
@@ -161,12 +167,12 @@ public class MainActivity extends BaseActivity {
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
-            showToast("您的账号在别的地方登录,请重新登录!");
-            Intent i = new Intent(this, LoginActivity.class);
+            Intent i = new Intent(mActivity,LoginActivity.class);
             startActivity(i);
             finish();
         }
     }
+
 
     @Subscribe
     public void onReceiveEvent(ShowNotificationEvent event) {

@@ -62,12 +62,6 @@ public class PrescriptionDetailActivity extends BaseActivity {
                 finish();
             }
         });
-        binding.tvPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogUtils.showPayDialog(mActivity, v);
-            }
-        });
     }
 
     private void getData() {
@@ -82,40 +76,64 @@ public class PrescriptionDetailActivity extends BaseActivity {
     }
 
     private void initData(final PrescriptionDetailBean data) {
+        switch (data.getStatus()) {
+            case "1":
+                binding.tvDone.setText("已付款");
+                binding.tvStatus.setText("订单已付款");
+                break;
+            case "2":
+                binding.tvDone.setVisibility(View.GONE);
+                binding.tvPay.setVisibility(View.VISIBLE);
+                binding.llDone.setVisibility(View.GONE);
+                binding.llPay.setVisibility(View.VISIBLE);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                long maxTime = data.getAddtime() + 86400;
+                String date = Utils.formatData(maxTime);
+                long currentTime = System.currentTimeMillis() / 1000;
+                String date1 = Utils.formatData(currentTime);
+                try {
+                    Date date2 = df.parse(date);
+                    Date date3 = df.parse(date1);
+                    long millis = date2.getTime() - date3.getTime();
+                    CountDownTimer timer = new CountDownTimer(millis, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            long days = millisUntilFinished / (1000 * 60 * 60 * 24);
+                            long hours = (millisUntilFinished - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+                            long minutes = (millisUntilFinished - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
+                            long seconds = (millisUntilFinished - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60) - minutes * (1000 * 60)) / 1000;
+                            binding.tvTime.setText(hours + "时" + minutes + "分" + seconds + "秒" + "后自动过期");
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            finish();
+                            BusProvider.getInstance().postEvent(new RefreshOrderEvent());
+                        }
+                    };
+                    timer.start();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "3":
+                binding.tvDone.setText("已配送");
+                binding.tvStatus.setText("订单已配送");
+                break;
+            case "4":
+                binding.tvDone.setText("已完成");
+                binding.tvStatus.setText("订单已完成");
+                break;
+            case "5":
+                binding.tvDone.setText("已过期");
+                binding.tvStatus.setText("订单已过期");
+                break;
+        }
         Glide.with(mActivity).load(data.getKuaizhao_img()).fitCenter().into(binding.ivPicture);
         binding.tvAddress.setText(data.getShip_address() + "");
         binding.tvFreight.setText(data.getCost_freight() + "");
         binding.tvDrugCount.setText(data.getCost_item() + "");
         binding.tvReceive.setText(data.getShip_name());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long maxTime = data.getAddtime() + 86400;
-        String date = Utils.formatData(maxTime);
-        long currentTime = System.currentTimeMillis() / 1000;
-        String date1 = Utils.formatData(currentTime);
-        try {
-            Date date2 = df.parse(date);
-            Date date3 = df.parse(date1);
-            long millis = date2.getTime() - date3.getTime();
-            CountDownTimer timer = new CountDownTimer(millis, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    long days = millisUntilFinished / (1000 * 60 * 60 * 24);
-                    long hours = (millisUntilFinished - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
-                    long minutes = (millisUntilFinished - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
-                    long seconds = (millisUntilFinished - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60) - minutes * (1000 * 60)) / 1000;
-                    binding.tvTime.setText(hours + "时" + minutes + "分" + seconds + "秒" + "后自动过期");
-                }
-
-                @Override
-                public void onFinish() {
-                    finish();
-                    BusProvider.getInstance().postEvent(new RefreshOrderEvent());
-                }
-            };
-            timer.start();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         String phone = "";
         if (!TextUtils.isEmpty(data.getShip_mobile())) {
             phone = data.getShip_mobile();
@@ -130,6 +148,12 @@ public class PrescriptionDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent i = BigImageActivity.intentFor(mActivity, data.getKuaizhao_img());
                 startActivity(i);
+            }
+        });
+        binding.tvPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogUtils.showPayDialog(mActivity, v);
             }
         });
     }

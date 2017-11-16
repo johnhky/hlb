@@ -40,7 +40,6 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
 
     private List<OrderBean.ItemsBean> myDatas;
     private Context context;
-    private long oneDay = 24 * 60 * 60;
 
     public UnpayAdapter(List<OrderBean.ItemsBean> myDatas, Context context) {
         this.context = context;
@@ -63,9 +62,11 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
         holder.tv_total.setText(spannableString);
         switch (myDatas.get(position).getStatus()) {
             case "1":
-
+                holder.tv_done.setText("已付款");
                 break;
             case "2":
+                holder.ll_unpay.setVisibility(View.VISIBLE);
+                holder.tv_done.setVisibility(View.GONE);
                 String time = (myDatas.get(position).getAddtime() + 86400) + "";
                 long times = Long.parseLong(time);
                 long currentTime = System.currentTimeMillis() / 1000;
@@ -99,14 +100,14 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
                 }
                 break;
             case "3":
-
+                holder.tv_done.setText("已配送");
                 break;
             case "4":
-                holder.ll_unpay.setVisibility(View.GONE);
-                holder.tv_done.setVisibility(View.VISIBLE);
+                holder.tv_done.setText("已完成");
                 break;
             case "5":
-
+                holder.tv_done.setText("已过期");
+                holder.ll_detail.setEnabled(false);
                 break;
         }
         holder.ll_detail.setOnClickListener(new View.OnClickListener() {

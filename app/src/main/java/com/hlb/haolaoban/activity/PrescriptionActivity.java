@@ -56,9 +56,9 @@ public class PrescriptionActivity extends BaseActivity {
         binding.pagerTabs.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setIndicator(binding.pagerTabs,40,40);
+                setIndicator(binding.pagerTabs,14,14);
             }
-        }, 500);
+        }, 100);
     }
 
     protected FragmentPagerAdapter createPagerAdapter() {

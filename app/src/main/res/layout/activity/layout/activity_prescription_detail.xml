@@ -28,10 +28,29 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/ll_done"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/dp_80"
                         android:background="@color/white"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_10"
+                            android:text=""
+                            android:textColor="@color/gray_33"
+                            android:textSize="@dimen/sp_20" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_pay"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_80"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -192,8 +211,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:paddingTop="15dp"
                         android:paddingLeft="@dimen/dp_15"
+                        android:paddingTop="15dp"
                         android:text=""
                         android:textColor="@color/text_main_color"
                         android:textSize="@dimen/sp_15" />
@@ -251,6 +270,15 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_done"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/text_main_color"
+                android:textSize="@dimen/sp_18" />
+
+            <TextView
                 android:id="@+id/tv_pay"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
@@ -258,7 +286,8 @@
                 android:gravity="center"
                 android:text="支付"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_18" />
+                android:textSize="@dimen/sp_18"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </layout>

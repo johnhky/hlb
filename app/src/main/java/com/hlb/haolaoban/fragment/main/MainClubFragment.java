@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,12 +62,14 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     ImageView iv_state;
     TextView tv_voice;
 
+    LinearLayoutManager linearLayoutManager;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_club, container, false);
         binding.swipeRefresh.setOnRefreshListener(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
@@ -156,17 +159,15 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
 
-    private void getClub(int pageNo) {
+    private void getClub(final int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);
                 ArticleBean data = gson.fromJson(response, ArticleBean.class);
-                if (!data.getItems().isEmpty()) {
-                    mAdapter = new ClubAdapter(data.getItems(), mActivity);
-                    binding.recyclerView.setAdapter(mAdapter);
-                }
+                mAdapter = new ClubAdapter(data.getItems(), mActivity);
+                binding.recyclerView.setAdapter(mAdapter);
             }
 
             @Override
@@ -179,6 +180,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
+        pageNo = 1;
         getClub(pageNo);
     }
 
@@ -189,7 +191,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 if (which == 1) {
                     Intent i = new Intent();
                     i.setAction(Intent.ACTION_CALL);
-                    i.setData(Uri.parse("tel:"+Settings.getUserProfile().getUsername()));
+                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getUsername()));
                     startActivity(i);
                 }
             }

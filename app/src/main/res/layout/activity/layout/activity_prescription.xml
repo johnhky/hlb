@@ -24,6 +24,7 @@
                 android:layout_height="@dimen/dp_45"
                 app:tabIndicatorColor="@color/main_tab_color"
                 app:tabSelectedTextColor="@color/main_tab_color"
+                app:tabTextAppearance="@style/TabLayoutTextStyle"
                 app:tabTextColor="@color/gray_33" />
 
             <View
@@ -31,11 +32,11 @@
                 android:layout_height="1px"
                 android:background="@color/main_bg" />
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/vp"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 </layout>
