@@ -54,7 +54,6 @@ public class RemindListActivity extends BaseActivity {
         api.getBaseUrl(HttpUrls.getRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.e("eeee",response);
                 RemindBean data = gson.fromJson(response,RemindBean.class);
                 if (!data.getItems().isEmpty()){
                     mAdapter = new RemindListAdapter(mActivity,data.getItems());

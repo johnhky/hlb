@@ -8,14 +8,19 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.IdRes;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,17 +47,19 @@ import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import retrofit2.Call;
 
 /**
  * Created by heky on 2017/10/31.
  */
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends FragmentActivity {
     ActivityMainBinding binding;
     Fragment mainHome, mainClub, mainMine;
     ApiModule api = Api.of(ApiModule.class);
-    Gson gson = new GsonBuilder().create();
     private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
     public static final int REQUEST_CODE = 1001;
@@ -133,7 +140,8 @@ public class MainActivity extends BaseActivity {
                             binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
                             binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
                         } else {
-                            startActivity(LoginActivity.class);
+                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(i);
                         }
                         break;
                 }
@@ -167,7 +175,7 @@ public class MainActivity extends BaseActivity {
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
-            Intent i = new Intent(mActivity,LoginActivity.class);
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
         }
@@ -186,7 +194,7 @@ public class MainActivity extends BaseActivity {
     @Subscribe
     public void onReciveEvent(JoinVideoEvent event) {
         if (event.getType().equals("calling")) {
-            Intent i = ChatActivity.intentFor(mActivity, event.getChannel());
+            Intent i = ChatActivity.intentFor(MainActivity.this, event.getChannel());
             startActivity(i);
         }
     }
@@ -200,7 +208,7 @@ public class MainActivity extends BaseActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO);
                 } else {
-                    showToast("没有开启 " + Manifest.permission.RECORD_AUDIO + "权限!");
+                    Utils.showToast("没有开启 " + Manifest.permission.RECORD_AUDIO + "权限!");
                 }
                 break;
             }
@@ -209,7 +217,7 @@ public class MainActivity extends BaseActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA);
                 } else {
-                    showToast("没有开启 " + Manifest.permission.CAMERA + "权限!");
+                    Utils.showToast("没有开启 " + Manifest.permission.CAMERA + "权限!");
                 }
                 break;
 
@@ -244,4 +252,36 @@ public class MainActivity extends BaseActivity {
         }
         Utils.mkDirs(Environment.getExternalStorageDirectory().getPath() + "/hlb/record/");
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    boolean isExit = false;
+
+    private void exit() {
+        if (!isExit) {
+            isExit = true;
+            Utils.showToast("再按一次退出程序");
+            // 利用handler延迟发送更改状态信息
+            mHandler.sendEmptyMessageDelayed(0, 2000);
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
+
+    Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
 }

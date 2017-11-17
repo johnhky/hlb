@@ -33,7 +33,6 @@ public class Constants {
         params.put("v", BuildConfig.VERSION_NAME + "");
         params.put("source", Build.MODEL);
         params.put("appid", BuildConfig.Appid);
-        params.put("appkey", BuildConfig.appkey);
         params.put("timestamp", timestamp + "");
         return params;
     }

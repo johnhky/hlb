@@ -81,8 +81,10 @@
 -keep class com.google.gson.**{*;}
 -keep io.agora.rtc.**{*;}
 -keep org.java_websocket.**{*;}
+-keep public class com.tencent.bugly.**{*;}
 
 -dontwarn com.google.**
+-dontwarn com.tencent.bugly.**
 -dontwarn io.agora.rtc.**
 -dontwarn org.java_websocket.**
 

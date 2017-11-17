@@ -153,7 +153,7 @@ public class MainHomeFragment extends BaseFragment {
     }
 
     public void uploadAudio(String fileName) {
-        DialogUtils.showLoading(mActivity, "语音上传中...");
+        DialogUtils.showLoading("语音上传中...");
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
@@ -201,7 +201,9 @@ public class MainHomeFragment extends BaseFragment {
             TextView tv_read = (TextView) view.findViewById(R.id.tv_read);
             final TextView tv_voice = (TextView) view.findViewById(R.id.tv_voice);
             ImageView iv_title = (ImageView) view.findViewById(R.id.iv_title);
-            Glide.with(mActivity).load(list.get(i).getImage()).centerCrop().into(iv_title);
+            if (null!=mActivity){
+                Glide.with(mActivity).load(list.get(i).getImage()).centerCrop().into(iv_title);
+            }
             mViewList.add(view);
             final int position = i;
             tv_read.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +220,7 @@ public class MainHomeFragment extends BaseFragment {
                         isPlaying = player.isPlaying();
                         if (!isPlaying) {
                             tv_voice.setText("停止播放");
-                            DialogUtils.showLoading(mActivity, "正在加载语音...");
+                            DialogUtils.showLoading("正在加载语音...");
                             Uri uri = Uri.parse(list.get(position).getFiles());
                             try {
                                 player.setDataSource(mActivity, uri);
@@ -263,7 +265,7 @@ public class MainHomeFragment extends BaseFragment {
     }
 
     private void contactClub() {
-        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
+/*        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
             @Override
             public void onItemClick(int which) {
                 if (which == 1) {
@@ -273,7 +275,8 @@ public class MainHomeFragment extends BaseFragment {
                     startActivity(i);
                 }
             }
-        });
+        });*/
+        startActivity(ChatActivity.class);
     }
 
     class MyAdapter extends PagerAdapter {

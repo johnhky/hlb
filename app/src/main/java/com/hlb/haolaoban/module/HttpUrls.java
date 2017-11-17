@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.module;
 
 import android.os.Build;
+import android.util.Log;
 
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
@@ -19,11 +20,11 @@ public class HttpUrls {
 
     /*token参数*/
     public static Map<String, String> getToken() {
+        long timestamp = System.currentTimeMillis() / 1000;
         Map<String, String> params = new LinkedHashMap<>();
         params.put("appid", BuildConfig.Appid);
         params.put("appkey", BuildConfig.appkey);
-        params.put("timestamp", BuildConfig.timeStamp);
-        params.put("deviceid", Build.SERIAL);
+        params.put("timestamp", timestamp + "");
         return params;
     }
 
@@ -200,13 +201,14 @@ public class HttpUrls {
     *  4  异常
     *  5  发起者在呼叫阶段主动取消
      *  */
-    public static Map<String, String> rejectVideo(String mid, int mode, String channel) {
+    public static Map<String, String> rejectVideo(String mid, String mode, String channel) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "video.refuse");
         params.put("mid", mid);
         params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
-        params.put("mode", mode + "");
-        params.put("channel", channel);
+        params.put("mode", mode);
+        params.put("channel", channel+"");
+        Log.e("eeee",params.toString());
         return params;
     }
 

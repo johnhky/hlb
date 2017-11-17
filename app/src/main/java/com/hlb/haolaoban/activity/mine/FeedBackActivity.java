@@ -37,6 +37,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+
 
 /**
  * Created by heky on 2017/11/6.
@@ -53,6 +55,7 @@ public class FeedBackActivity extends BaseActivity {
     private List<String> pictureList;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,13 +174,20 @@ public class FeedBackActivity extends BaseActivity {
     }
 
     private void uploadPicture(Bitmap bm) {
-        DialogUtils.showLoading(this, "正在上传中...");
+        DialogUtils.showLoading("正在上传中...");
         String base64 = Utils.bitmapToString(bm);
         api.uploadImage(HttpUrls.uploadImage(base64)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                ImageBean data = gson.fromJson(response,ImageBean.class);
+                DialogUtils.hideLoading();
+                ImageBean data = gson.fromJson(response, ImageBean.class);
                 pictureList.add(data.getImage_patg());
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+                DialogUtils.hideLoading();
             }
         });
     }

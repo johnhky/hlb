@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.activity.DeviceManageActivity;
+import com.hlb.haolaoban.activity.device.DeviceManageActivity;
 import com.hlb.haolaoban.activity.mine.AboutActivity;
 import com.hlb.haolaoban.activity.AccountActivity;
 import com.hlb.haolaoban.activity.mine.FeedBackActivity;
@@ -46,7 +46,9 @@ public class MainMineFragment extends BaseFragment {
     private void initView() {
         Glide.with(mActivity).load(Settings.getUserProfile().getPhoto()).centerCrop().into(binding.mineIvAvater);
         binding.mineTvName.setText(Settings.getUserProfile().getName() + "");
-        binding.mineTvPresent.setText(Settings.getUserProfile().getUsername() + "");
+        String userName = Settings.getUserProfile().getUsername();
+        String subString = userName.substring(0, 3) + "****" + userName.substring(7, 11);
+        binding.mineTvPresent.setText(subString);
         binding.tvAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,15 +114,14 @@ public class MainMineFragment extends BaseFragment {
         });
     }
 
-
     private void cleanCache(final Context context) {
-        DialogUtils.showLoading(context, "缓存清除中");
+        DialogUtils.showLoading("缓存清除中");
         Utils.deleteFilesByDirectory(context.getCacheDir());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(1000);
                     Message msg = mHandler.obtainMessage();
                     msg.arg1 = 1;
                     msg.sendToTarget();

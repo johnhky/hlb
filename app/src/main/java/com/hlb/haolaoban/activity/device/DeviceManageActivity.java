@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.activity;
+package com.hlb.haolaoban.activity.device;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,9 +13,7 @@ import com.hlb.haolaoban.databinding.ActivityDeviceManageBinding;
  */
 
 public class DeviceManageActivity extends BaseActivity {
-
     ActivityDeviceManageBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,5 +29,13 @@ public class DeviceManageActivity extends BaseActivity {
                 finish();
             }
         });
+        binding.tvWristbands.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(WristbandsActivity.class);
+            }
+        });
     }
+
+
 }

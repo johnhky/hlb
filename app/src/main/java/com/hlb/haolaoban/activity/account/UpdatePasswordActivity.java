@@ -3,6 +3,7 @@ package com.hlb.haolaoban.activity.account;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.hlb.haolaoban.base.BaseActivity;

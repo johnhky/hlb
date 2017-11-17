@@ -100,7 +100,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        DialogUtils.showLoading(LoginActivity.this, "正在登录...");
+        DialogUtils.showLoading("正在登录...");
         if (null == binding.etPhone.getText().toString().trim() && binding.etPhone.getText().toString().trim().length() < 1) {
             showToast("手机号码不能为空!");
             return;

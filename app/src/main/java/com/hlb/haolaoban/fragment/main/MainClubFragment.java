@@ -125,7 +125,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
 
     /*上传语音*/
     public void uploadAudio(String fileName) {
-        DialogUtils.showLoading(mActivity, "语音上传中...");
+        DialogUtils.showLoading("语音上传中...");
         /*String fileName = Environment.getExternalStorageDirectory()+"/Recordings/REC20171113163916.mp3";*/
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";

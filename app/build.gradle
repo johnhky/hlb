@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
+apply plugin: 'bugly'
+bugly {
+    appId = '223ddeb462'
+    appKey = 'ca9a255e-6bb3-4e4d-a38a-c4c73487885e'
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.3'
@@ -37,10 +43,9 @@ android {
     buildTypes {
         elderRelease {
             buildConfigField "int", "USER_TYPE", '1'
+            buildConfigField "String", "buglyId", '"223ddeb462"'
             buildConfigField "String", "Appid", '"qzdzswbeta"'
-            buildConfigField "String", "timeStamp", '"1506491067"'
-            buildConfigField "String", "ApiTimeStamp", '"1505288414"'
-            buildConfigField "String", "appkey", '"a0201ab95d5e7b9b6a660e5dbb2d9562"'
+            buildConfigField "String", "appkey", '"CTZQNlI1AWZbOQVnVjADYwc0UGMAZg81AzANNAU1BWVRYQc1XjsFPAYyUDFUN1QyAWVSYAtpAWsBbw43VzVRYw=="'
             buildConfigField "String", "BASE_URL", '"http://api1.haolaoban99.com/api/index/"'
             buildConfigField "String", "BASE_VIDEO_URL", '"http://39.108.126.238:9502/"'
             buildConfigField "String", "BASE_WEBSOCKET_URL", '"ws://39.108.126.238:9502?"'
@@ -54,10 +59,9 @@ android {
         }
         elderDebug {
             buildConfigField "int", "USER_TYPE", '1'
+            buildConfigField "String", "buglyId", '"223ddeb462"'
             buildConfigField "String", "Appid", '"qzdzswbeta"'
-            buildConfigField "String", "timeStamp", '"1506491067"'
-            buildConfigField "String", "ApiTimeStamp", '"1505288414"'
-            buildConfigField "String", "appkey", '"a0201ab95d5e7b9b6a660e5dbb2d9562"'
+            buildConfigField "String", "appkey", '"CTZQNlI1AWZbOQVnVjADYwc0UGMAZg81AzANNAU1BWVRYQc1XjsFPAYyUDFUN1QyAWVSYAtpAWsBbw43VzVRYw=="'
             buildConfigField "String", "BASE_URL", '"http://api1.haolaoban99.com/api/index/"'
             buildConfigField "String", "BASE_VIDEO_URL", '"http://39.108.126.238:9502/"'
             buildConfigField "String", "BASE_WEBSOCKET_URL", '"ws://39.108.126.238:9502?"'
@@ -75,6 +79,8 @@ android {
             jniLibs.srcDirs = ['libs']
             res.srcDirs =
                     [
+                            'src/main/res/layout/mine',
+                            'src/main/res/layout/account',
                             'src/main/res/layout/activity',
                             'src/main/res/layout/item',
                             'src/main/res/layout/fragment',
@@ -110,4 +116,7 @@ dependencies {
     })
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.android.support:design:25.0.1'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile project(path: ':library')
 }

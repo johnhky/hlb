@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
@@ -49,13 +51,9 @@ import okhttp3.Call;
  */
 
 public class ChatActivity extends BaseActivity {
-    private String TAG = "eeee";
     private RtcEngine mRtcEngine;
     ActivityChatBinding binding;
     private String channel;
-    private Timer timer = null;//计时器
-    private TimerTask timerTask;
-    private int callNoResponse = 40000;
 
     public static Intent intentFor(Context context, String channel) {
         Intent i = new Intent(context, ChatActivity.class);
@@ -87,7 +85,7 @@ public class ChatActivity extends BaseActivity {
         binding.tvFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disconnectVideo(channel, 2);
+                disconnectVideo(channel, "2");
             }
         });
 
@@ -209,7 +207,6 @@ public class ChatActivity extends BaseActivity {
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() { // Tutorial Step 1
         @Override
         public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) { // Tutorial Step 5
-            Log.e(TAG, uid + " , " + elapsed);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -221,7 +218,6 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void onError(int err) {
             super.onError(err);
-            Log.e(TAG, err + "error");
         }
 
         @Override
@@ -237,7 +233,6 @@ public class ChatActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e(TAG, reason + " 对方断开连接");
                     onRemoteUserLeft();
                 }
             });
@@ -252,7 +247,6 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             super.onUserJoined(uid, elapsed);
-            Log.e(TAG, "对方加入:" + uid + "  ,  " + elapsed);
         }
 
         @Override
@@ -278,10 +272,10 @@ public class ChatActivity extends BaseActivity {
 
     /*发起视频通话请求*/
     private void calling() {
-        startTime();
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.startVideo()).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
+                Log.e("eeee", "connect failed:" + e.getMessage());
             }
 
             @Override
@@ -302,6 +296,21 @@ public class ChatActivity extends BaseActivity {
 
             }
         });
+        CountDownTimer timer = new CountDownTimer(40000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long time = millisUntilFinished / 1000;
+                binding.tvStatus.setText(time + "秒后对方未接听将自动挂断");
+            }
+
+            @Override
+            public void onFinish() {
+                if (!TextUtils.isEmpty(channel)) {
+                    disconnectVideo(channel, "5");
+                }
+            }
+        };
+        timer.start();
     }
 
     /*断开连接时通知服务器
@@ -313,7 +322,7 @@ public class ChatActivity extends BaseActivity {
     *  4  异常
     *  5  发起者在呼叫阶段主动取消
      *  */
-    public void disconnectVideo(String channel, int mode) {
+    public void disconnectVideo(String channel, final String mode) {
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.rejectVideo(Settings.getUserProfile().getMid() + "", mode, channel)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -322,15 +331,15 @@ public class ChatActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                if (mode.equals("5")) {
+                    Toast.makeText(mActivity, "对方未接听视频通话", Toast.LENGTH_LONG).show();
+                }
                 BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
-                Log.e(TAG, response);
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
                     int code = jsonObject.optInt("nFlag");
-                    if (code == 1) {
-                        stopTime();
-                    } else if (code == -99) {
+                    if (code == -99) {
                         BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
                 } catch (JSONException e) {
@@ -377,7 +386,6 @@ public class ChatActivity extends BaseActivity {
     @Subscribe
     public void onReciveEvent(JoinVideoEvent event) {
         if (event.getType().equals("meet")) {
-            stopTime();
             startChat(channel);
 
         }
@@ -393,41 +401,6 @@ public class ChatActivity extends BaseActivity {
 
 
     }
-
-    /*开始计时*/
-    private void startTime() {
-        if (timer == null) {
-            timer = new Timer();
-        }
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                int count = callNoResponse - 1000;
-                Message msg = handler.obtainMessage();
-                msg.what = count;
-            }
-        };
-        timerTask.run();
-    }
-
-    /*停止计时*/
-    private void stopTime() {
-        if (timer != null) {
-            timer.cancel();
-        }
-    }
-
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            startTime();
-            if (msg.what == 0) {
-                disconnectVideo(channel, 5);
-            }
-        }
-    };
-
 
     private String getChannel() {
         return getIntent().getStringExtra(com.hlb.haolaoban.utils.Constants.CHANNEL);
