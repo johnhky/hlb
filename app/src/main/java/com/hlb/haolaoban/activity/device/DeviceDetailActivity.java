@@ -1,11 +1,13 @@
 package com.hlb.haolaoban.activity.device;
 
 import android.bluetooth.BluetoothDevice;
+
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseActivity;
@@ -25,7 +27,6 @@ import java.util.List;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
-
 /**
  * Created by heky on 2017/11/17.
  */
@@ -33,12 +34,20 @@ import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 public class DeviceDetailActivity extends BaseActivity {
 
     ActivityDeviceDetailBinding binding;
+    /**
+     * 蓝牙主要操作对象，建议单例。
+     */
+    /**
+     * 默认异常处理器
+     */
+    private static final String TAG = "eeee";
     List<DetailItem> items;
     private BluetoothDevice mDevice;
 
-    public static Intent intentFor(Context context, String address) {
+    public static Intent intentFor(Context context, String address, String name) {
         Intent i = new Intent(context, DeviceDetailActivity.class);
         i.putExtra("mac", address);
+        i.putExtra("name", name);
         return i;
     }
 
@@ -46,10 +55,20 @@ public class DeviceDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(mActivity, R.layout.activity_device_detail);
+        initView();
         mDevice = BluetoothUtils.getRemoteDevice(getAddress());
-        items = new ArrayList<>();
         ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
         connectDevice();
+    }
+
+    private void initView() {
+        binding.titlebar.tbTitle.setText(getIntent().getStringExtra("name"));
+        binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
@@ -62,7 +81,7 @@ public class DeviceDetailActivity extends BaseActivity {
     };
 
     private void connectDevice() {
-        DialogUtils.showLoading("正在连接设备...");
+        DialogUtils.showLoading(mActivity,"正在连接设备...");
         BleConnectOptions options = new BleConnectOptions.Builder()
                 .setConnectRetry(3)
                 .setConnectTimeout(20000)
@@ -73,16 +92,17 @@ public class DeviceDetailActivity extends BaseActivity {
         ClientManager.getClient().connect(mDevice.getAddress(), options, new BleConnectResponse() {
             @Override
             public void onResponse(int code, BleGattProfile data) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
                 if (code == REQUEST_SUCCESS) {
                     List<DetailItem> list = setItems(data);
                     for (int i = 0; i < list.size(); i++) {
-                        Log.e("eeee", i  + "次  serviceId " + list.get(i).getService() + " characterId:  " + list.get(i).getUuid());
+                        Log.e("eeee", i + "次  serviceId " + list.get(i).getService() + " characterId:  " + list.get(i).getUuid());
                     }
                 } else {
                     showToast("设备连接失败!");
                 }
             }
+
         });
 
     }

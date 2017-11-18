@@ -1,6 +1,5 @@
 package com.hlb.haolaoban.http;
 
-
 /**
  * Created by heky on 2017/11/8.
  */

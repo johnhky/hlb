@@ -15,7 +15,7 @@ android {
     }
     defaultConfig {
         applicationId "com.hlb.haolaoban"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -118,5 +118,6 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    compile project(path: ':library')
+    compile project(':library')
+    compile files('libs/libammsdk.jar')
 }

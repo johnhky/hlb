@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -31,6 +34,8 @@ import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
@@ -60,6 +65,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     ImageView iv_state;
     TextView tv_voice;
     LinearLayoutManager linearLayoutManager;
+    private float startY, endY;
 
     @Nullable
     @Override
@@ -106,7 +112,12 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
 
             @Override
             public void onStop(String filePath) {
-                uploadAudio(filePath);
+                float length = startY - endY;
+                if (length < 80) {
+                    uploadAudio(filePath);
+                } else {
+                    Utils.showToast("录音已取消!");
+                }
                 tv_voice.setText(Utils.getTime(0));
             }
         });
@@ -120,12 +131,31 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 }
             }
         });
+        binding.listItem.mainLlContactTeam.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        popupWindow.showAtLocation(binding.recyclerView, Gravity.CENTER, 0, 0);
+                        recordUtils.startRecord();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        endY = event.getY();
+                        recordUtils.stopRecord();
+                        recordUtils.cancelRecord();
+                        popupWindow.dismiss();
+                        break;
+                }
+                return true;
+            }
+        });
 
     }
 
     /*上传语音*/
     public void uploadAudio(String fileName) {
-        DialogUtils.showLoading("语音上传中...");
+        DialogUtils.showLoading(mActivity,"语音上传中...");
         /*String fileName = Environment.getExternalStorageDirectory()+"/Recordings/REC20171113163916.mp3";*/
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
@@ -134,18 +164,20 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 .addFile("file", newFileName, file).build().execute(new StringCallback() {
             @Override
             public void onError(okhttp3.Call call, Exception e, int id) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
             }
 
             @Override
             public void onResponse(String response, int id) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
                     int code = jsonObject.optInt("code");
                     if (code == 1) {
                         Toast.makeText(mActivity, "语音上传成功!", Toast.LENGTH_LONG).show();
+                    } else if (code == -99) {
+                        BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

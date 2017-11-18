@@ -174,12 +174,12 @@ public class FeedBackActivity extends BaseActivity {
     }
 
     private void uploadPicture(Bitmap bm) {
-        DialogUtils.showLoading("正在上传中...");
+        DialogUtils.showLoading(mActivity,"正在上传中...");
         String base64 = Utils.bitmapToString(bm);
         api.uploadImage(HttpUrls.uploadImage(base64)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
                 ImageBean data = gson.fromJson(response, ImageBean.class);
                 pictureList.add(data.getImage_patg());
             }
@@ -187,7 +187,7 @@ public class FeedBackActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, Throwable t) {
                 super.onFailure(call, t);
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
             }
         });
     }

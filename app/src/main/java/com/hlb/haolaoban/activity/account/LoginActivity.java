@@ -67,7 +67,7 @@ public class LoginActivity extends BaseActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginCheck();
+                login();
             }
         });
         binding.tvForget.setOnClickListener(new View.OnClickListener() {
@@ -78,51 +78,31 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void loginCheck() {
-        api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
-            @Override
-            protected void handleResponse(String response) {
-                if (null != Hawk.get(Constants.TOKEN)) {
-                    Hawk.delete(Constants.TOKEN);
-                }
-                TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
-                Hawk.put(Constants.TOKEN, tokenBean.getToken());
-                Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
-                login();
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                super.onFailure(call, t);
-            }
-        });
-
-    }
-
     private void login() {
-        DialogUtils.showLoading("正在登录...");
-        if (null == binding.etPhone.getText().toString().trim() && binding.etPhone.getText().toString().trim().length() < 1) {
+        DialogUtils.showLoading(mActivity, "正在登录...");
+        if (TextUtils.isEmpty(binding.etPhone.getText().toString().trim()) || binding.etPhone.getText().toString().trim().length() < 1) {
             showToast("手机号码不能为空!");
             return;
         }
+
         if (!Utils.isMobile(binding.etPhone.getText().toString().trim())) {
             showToast("请输入正确的手机号码!");
             return;
         }
-        if (null == binding.etPassword.getText().toString().trim() && binding.etPassword.getText().toString().trim().length() < 1) {
+        if (TextUtils.isEmpty(binding.etPassword.getText().toString().trim()) || binding.etPassword.getText().toString().trim().length() < 1) {
             showToast("密码不能为空!");
             return;
         }
         api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
                 Userbean data = gson.fromJson(response, Userbean.class);
                 Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                loginWebclient(data.getMid() + "", data.getClub_id() + "");
+                loginWebClient(data.getMid() + "", data.getClub_id() + "");
                 startActivity(MainActivity.class);
                 finish();
             }
@@ -130,12 +110,12 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, Throwable t) {
                 super.onFailure(call, t);
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
             }
         });
     }
 
-    private void loginWebclient(String id, String club_id) {
+    private void loginWebClient(String id, String club_id) {
         String url = BuildConfig.BASE_WEBSOCKET_URL + "?mid=" + id + "&club_id=" + club_id;
         WebSocketClient client = new WebSocketClient(URI.create(url), new Draft_17(), null, 3000) {
             @Override

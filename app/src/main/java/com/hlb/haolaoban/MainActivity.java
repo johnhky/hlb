@@ -64,19 +64,17 @@ public class MainActivity extends FragmentActivity {
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
     public static final int REQUEST_CODE = 1001;
     public static final int CALL_REQUEST_CODE = 1002;
+    Gson gson = new GsonBuilder().create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO) && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)) {
-
-        }
         checkPermission();
         binding.titlebar.tbTitle.setText("好老伴");
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mainHome == null) {
-            initUserData();
+            getToken();
             mainHome = new MainHomeFragment();
             transaction.add(R.id.fragment_container, mainHome);
             binding.titlebar.toolBar.setNavigationIcon(null);
@@ -85,15 +83,21 @@ public class MainActivity extends FragmentActivity {
         initView();
     }
 
-    private void initUserData() {
-        api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
+    private void getToken() {
+        api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Gson gson = new GsonBuilder().create();
-                UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
-                Settings.setUesrProfile(data);
+                if (null != Hawk.get(Constants.TOKEN)) {
+                    Hawk.delete(Constants.TOKEN);
+                }
+                if (!TextUtils.isEmpty(response)) {
+                    TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
+                    Hawk.put(Constants.TOKEN, tokenBean.getToken());
+                    Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
+                }
             }
         });
+
     }
 
     public void initView() {
@@ -175,9 +179,8 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
+            Utils.showToast("请重新尝试!");
+            getToken();
         }
     }
 
@@ -241,6 +244,7 @@ public class MainActivity extends FragmentActivity {
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO);
             int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
@@ -248,6 +252,14 @@ public class MainActivity extends FragmentActivity {
             int hasCallPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
             if (hasCallPermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST_CODE);
+            }
+            int hasCameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
+            if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQ_ID_CAMERA);
+            }
+            int hasAudioPermission = checkSelfPermission(Manifest.permission.RECORD_AUDIO);
+            if (hasAudioPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_REQ_ID_RECORD_AUDIO);
             }
         }
         Utils.mkDirs(Environment.getExternalStorageDirectory().getPath() + "/hlb/record/");

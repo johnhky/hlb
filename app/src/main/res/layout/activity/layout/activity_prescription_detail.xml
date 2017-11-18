@@ -205,7 +205,10 @@
                             android:textColor="@color/gray_33"
                             android:textSize="@dimen/sp_16" />
                     </LinearLayout>
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/main_bg"></View>
                     <TextView
                         android:id="@+id/tv_orderId"
                         android:layout_width="match_parent"

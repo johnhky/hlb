@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.IdRes;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.hlb.haolaoban.MyApplication;
@@ -104,7 +106,6 @@ public class DialogUtils {
                 v.getContext().startActivity(i);
                 ((Activity) v.getContext()).finish();
                 dialog.cancel();
-                Hawk.delete(Constants.TOKEN);
                 Hawk.delete(Constants.USER_PROFILE);
                 Hawk.delete(Constants.MID);
             }
@@ -112,13 +113,13 @@ public class DialogUtils {
     }
 
     /*显示加载框*/
-    public static void showLoading(String msg) {
-        dialog = new Dialog(MyApplication.mContext, R.style.transparentFrameWindowStyle);
-        View view = LayoutInflater.from(MyApplication.mContext).inflate(R.layout.dialog_loading, null);
+    public static void showLoading(Context context, String msg) {
+        dialog = new Dialog(context, R.style.transparentFrameWindowStyle);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null);
         TextView tv_msg = (TextView) view.findViewById(R.id.tv_msg);
         dialog.setCanceledOnTouchOutside(false);
         Window dialogWindow = dialog.getWindow();
-        WindowManager windowManager = (WindowManager) MyApplication.mContext.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display d = windowManager.getDefaultDisplay(); // 获取屏幕宽、高度
         WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
         p.height = (int) (d.getHeight() * 0.2); // 高度设置为屏幕的0.3，根据实际情况调整
@@ -183,8 +184,11 @@ public class DialogUtils {
         });
     }
 
-    public static void showPayDialog(final Activity context, View mView) {
+    public static void showPayDialog(final Activity context, View mView, final OnDialogItemClickListener itemClickListener) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_topay, null);
+        Button bt_cancel = (Button) view.findViewById(R.id.btn_quit);
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radio_payment);
+        Button bt_submit = (Button) view.findViewById(R.id.btn_submit);
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         final WindowManager.LayoutParams lp = context.getWindow().getAttributes();
         lp.alpha = 0.4f;
@@ -193,17 +197,45 @@ public class DialogUtils {
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+                itemClickListener.onItemClick(1);
                 lp.alpha = 1f;
                 context.getWindow().setAttributes(lp);
             }
         });
-
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        bt_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onItemClick(3);
+                popupWindow.dismiss();
+            }
+        });
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_ali:
+                        itemClickListener.onItemClick(1);
+                        break;
+                    case R.id.radio_wechat:
+                        itemClickListener.onItemClick(2);
+                        break;
+                }
+            }
+        });
     }
 
-    public static void hideLoading() {
+    public static void hideLoading(Context context) {
         if (null != dialog) {
             if (dialog.isShowing()) {
-                dialog.dismiss();
+                if (context != null) {
+                    dialog.dismiss();
+                }
             }
         }
 

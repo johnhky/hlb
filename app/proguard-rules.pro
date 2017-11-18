@@ -82,7 +82,11 @@
 -keep io.agora.rtc.**{*;}
 -keep org.java_websocket.**{*;}
 -keep public class com.tencent.bugly.**{*;}
+-keep class retrofit2.** { *; }
+-keep com.tencent.mm.opensdk.**{*;}
 
+-dontwarn com.tencent.mm.opensdk.**{*;}
+-dontwarn retrofit2.**
 -dontwarn com.google.**
 -dontwarn com.tencent.bugly.**
 -dontwarn io.agora.rtc.**

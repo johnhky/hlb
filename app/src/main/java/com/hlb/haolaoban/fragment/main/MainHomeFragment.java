@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,15 +26,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
+import com.hlb.haolaoban.adapter.MyRemindAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
+import com.hlb.haolaoban.bean.RemindBean;
+import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityHomeBinding;
 import com.hlb.haolaoban.base.BaseFragment;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
@@ -70,7 +74,7 @@ public class MainHomeFragment extends BaseFragment {
     PopupWindow popupWindow;
     ImageView iv_state;
     TextView tv_voice;
-
+    private float startY, endY;
 
     @Nullable
     @Override
@@ -88,8 +92,10 @@ public class MainHomeFragment extends BaseFragment {
         popupWindow.setWidth(width / 2);
         popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         player = new MediaPlayer();
-        getArticle();
         initView();
+        initData();
+        getTodayRemind();
+        getArticle();
         return binding.getRoot();
     }
 
@@ -97,7 +103,6 @@ public class MainHomeFragment extends BaseFragment {
         recordUtils.setOnAudioUpdateListener(new AudioRecordUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
-                /*int dp = (int) (3000 + 6000 * db / 100);*/
                 int dp = (int) db;
                 if (dp <= 30) {
                     iv_state.getDrawable().setLevel(0);
@@ -117,7 +122,12 @@ public class MainHomeFragment extends BaseFragment {
 
             @Override
             public void onStop(String filePath) {
-                uploadAudio(filePath);
+                float length = startY - endY;
+                if (length < 80) {
+                    uploadAudio(filePath);
+                } else {
+                    Utils.showToast("录音已取消!");
+                }
                 tv_voice.setText(Utils.getTime(0));
             }
         });
@@ -137,10 +147,12 @@ public class MainHomeFragment extends BaseFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
                         popupWindow.showAtLocation(binding.llRemind, Gravity.CENTER, 0, 0);
                         recordUtils.startRecord();
                         break;
                     case MotionEvent.ACTION_UP:
+                        endY = event.getY();
                         recordUtils.stopRecord();
                         recordUtils.cancelRecord();
                         popupWindow.dismiss();
@@ -152,8 +164,9 @@ public class MainHomeFragment extends BaseFragment {
 
     }
 
+    /*上传语音*/
     public void uploadAudio(String fileName) {
-        DialogUtils.showLoading("语音上传中...");
+        DialogUtils.showLoading(mActivity, "语音上传中...");
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
@@ -161,18 +174,20 @@ public class MainHomeFragment extends BaseFragment {
                 .addFile("file", newFileName, file).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
             }
 
             @Override
             public void onResponse(String response, int id) {
-                DialogUtils.hideLoading();
+                DialogUtils.hideLoading(mActivity);
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
                     int code = jsonObject.optInt("code");
                     if (code == 1) {
                         Toast.makeText(mActivity, "语音上传成功!", Toast.LENGTH_LONG).show();
+                    } else if (code == -99) {
+                        BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -182,7 +197,37 @@ public class MainHomeFragment extends BaseFragment {
         });
     }
 
+    /*获取用户信息*/
+    private void initData() {
+        api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
+                Settings.setUesrProfile(data);
+            }
+        });
+    }
 
+    /*获取当天提醒事项*/
+    private void getTodayRemind() {
+        if (null != Settings.getUserProfile()) {
+            api.getBaseUrl(HttpUrls.getTodayRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
+                @Override
+                protected void handleResponse(String response) {
+                    RemindBean data = gson.fromJson(response, RemindBean.class);
+                    if (!TextUtils.isEmpty(response)) {
+                        MyRemindAdapter myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
+                        binding.listView.setAdapter(myRemindAdapter);
+                    }
+                }
+            });
+        } else {
+            startActivity(LoginActivity.class);
+        }
+
+    }
+
+    /*获取文章*/
     private void getArticle() {
         api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
             @Override
@@ -201,7 +246,7 @@ public class MainHomeFragment extends BaseFragment {
             TextView tv_read = (TextView) view.findViewById(R.id.tv_read);
             final TextView tv_voice = (TextView) view.findViewById(R.id.tv_voice);
             ImageView iv_title = (ImageView) view.findViewById(R.id.iv_title);
-            if (null!=mActivity){
+            if (null != mActivity) {
                 Glide.with(mActivity).load(list.get(i).getImage()).centerCrop().into(iv_title);
             }
             mViewList.add(view);
@@ -220,7 +265,7 @@ public class MainHomeFragment extends BaseFragment {
                         isPlaying = player.isPlaying();
                         if (!isPlaying) {
                             tv_voice.setText("停止播放");
-                            DialogUtils.showLoading("正在加载语音...");
+                            DialogUtils.showLoading(mActivity, "正在加载语音...");
                             Uri uri = Uri.parse(list.get(position).getFiles());
                             try {
                                 player.setDataSource(mActivity, uri);
@@ -237,7 +282,7 @@ public class MainHomeFragment extends BaseFragment {
                                 player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
-                                        DialogUtils.hideLoading();
+                                        DialogUtils.hideLoading(mActivity);
                                         mp.start();
                                     }
                                 });
@@ -264,8 +309,9 @@ public class MainHomeFragment extends BaseFragment {
         binding.mViewpager.setAdapter(myAdapter);
     }
 
+    /*联系俱乐部*/
     private void contactClub() {
-/*        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
+        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
             @Override
             public void onItemClick(int which) {
                 if (which == 1) {
@@ -275,8 +321,8 @@ public class MainHomeFragment extends BaseFragment {
                     startActivity(i);
                 }
             }
-        });*/
-        startActivity(ChatActivity.class);
+        });
+        /*startActivity(ChatActivity.class);*/
     }
 
     class MyAdapter extends PagerAdapter {
@@ -308,6 +354,5 @@ public class MainHomeFragment extends BaseFragment {
             container.removeView(mViewList.get(position));
         }
     }
-
 
 }

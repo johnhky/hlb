@@ -1,13 +1,11 @@
 package com.hlb.haolaoban.module;
 
-import android.os.Build;
-import android.util.Log;
-
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.orhanobut.hawk.Hawk;
 
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -77,6 +75,7 @@ public class HttpUrls {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
         params.put("param[mobile]", phone);
+        params.put("param[type]", "code");
         params.put("method", "public.msm.send");
         return params;
     }
@@ -89,7 +88,6 @@ public class HttpUrls {
         params.put("param[mobile]", phone);
         params.put("param[smscode]", smsCode);
         params.put("method", "member.modify.mobile");
-
         return params;
     }
 
@@ -154,6 +152,24 @@ public class HttpUrls {
     }
 
     /*获取提醒事项列表*/
+    public static Map<String, String> getTodayRemind(int mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String today;
+        if (day < 10) {
+            today = "0" + day;
+        } else {
+            today = day + "";
+        }
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid + "");
+        params.put("param[start_day]", today);
+        params.put("method", "member.reminders.list");
+        return params;
+    }
+
+    /*获取提醒事项列表*/
     public static Map<String, String> getOrderDetail(String oid) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
@@ -207,8 +223,7 @@ public class HttpUrls {
         params.put("mid", mid);
         params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
         params.put("mode", mode);
-        params.put("channel", channel+"");
-        Log.e("eeee",params.toString());
+        params.put("channel", channel + "");
         return params;
     }
 

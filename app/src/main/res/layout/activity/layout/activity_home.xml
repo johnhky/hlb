@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_10"
-                        android:text="      看麻烦圣诞快乐离开对方多少李开复代课老师东三路口发多少两款施蒂利克东三路口两点上课德鲁克说两点上课两点上课施蒂利克顺利打开都快死了单身快乐"
+                        android:text="      天气转冷,出门多穿衣,注意保暖"
                         android:textColor="@color/text_main_color"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>
@@ -65,14 +66,11 @@
                         android:textColor="@color/text_red"
                         android:textSize="@dimen/sp_16" />
 
-                    <TextView
-                        android:id="@+id/tv_remind"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:text=""
-                        android:textColor="@color/text_red"
-                        android:textSize="@dimen/sp_14" />
+                    <ListView
+                        android:id="@+id/list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_80"
+                        android:divider="#ffffffff" />
                 </LinearLayout>
 
                 <LinearLayout

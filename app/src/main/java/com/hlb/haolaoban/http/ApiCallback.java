@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.http;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public abstract class ApiCallback<T> implements Callback<ApiDTO> {
             onFailure(call, new NullPointerException());
             return;
         }
+        Log.e("eeee",response.body().toString());
         int code = response.body().getCode();
         if (code == 1) {
             Object data = response.body().getData();

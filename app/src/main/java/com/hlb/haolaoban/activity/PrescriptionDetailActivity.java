@@ -39,6 +39,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
     ActivityPrescriptionDetailBinding binding;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
+    int type = 1;
 
     public static Intent intentFor(Context context, String oid) {
         Intent i = new Intent(context, PrescriptionDetailActivity.class);
@@ -107,7 +108,8 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
                         @Override
                         public void onFinish() {
-                            finish();
+                            /*finish();*/
+                            showToast("订单已过期!");
                             BusProvider.getInstance().postEvent(new RefreshOrderEvent());
                         }
                     };
@@ -153,7 +155,22 @@ public class PrescriptionDetailActivity extends BaseActivity {
         binding.tvPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.showPayDialog(mActivity, v);
+                DialogUtils.showPayDialog(mActivity, v, new DialogUtils.OnDialogItemClickListener() {
+                    @Override
+                    public void onItemClick(int which) {
+                        switch (which) {
+                            case 1:
+                                type = 1;
+                                break;
+                            case 2:
+                                type = 2;
+                                break;
+                            case 3:
+                                /*支付*/
+                                break;
+                        }
+                    }
+                });
             }
         });
     }
