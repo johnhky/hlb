@@ -5,7 +5,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,16 +19,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.TotalRemindActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
-import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.bean.TokenBean;
-import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
 import com.hlb.haolaoban.fragment.main.MainHomeFragment;
@@ -47,10 +43,9 @@ import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
+import java.util.List;
 
-import retrofit2.Call;
 
 /**
  * Created by heky on 2017/10/31.
@@ -60,21 +55,17 @@ public class MainActivity extends FragmentActivity {
     ActivityMainBinding binding;
     Fragment mainHome, mainClub, mainMine;
     ApiModule api = Api.of(ApiModule.class);
-    private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
-    private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
-    public static final int REQUEST_CODE = 1001;
-    public static final int CALL_REQUEST_CODE = 1002;
     Gson gson = new GsonBuilder().create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showToken();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         checkPermission();
         binding.titlebar.tbTitle.setText("好老伴");
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mainHome == null) {
-            getToken();
             mainHome = new MainHomeFragment();
             transaction.add(R.id.fragment_container, mainHome);
             binding.titlebar.toolBar.setNavigationIcon(null);
@@ -83,21 +74,19 @@ public class MainActivity extends FragmentActivity {
         initView();
     }
 
-    private void getToken() {
+    public void showToken() {
         api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                if (null != Hawk.get(Constants.TOKEN)) {
-                    Hawk.delete(Constants.TOKEN);
-                }
-                if (!TextUtils.isEmpty(response)) {
-                    TokenBean tokenBean = gson.fromJson(response, TokenBean.class);
-                    Hawk.put(Constants.TOKEN, tokenBean.getToken());
-                    Hawk.put(Constants.TOKENOUT, tokenBean.getTokenout());
+                TokenBean data = gson.fromJson(response, TokenBean.class);
+                if (null != data) {
+                    Hawk.put(Constants.TOKEN, data.getToken());
+                    Hawk.put(Constants.TOKENOUT, data.getTokenout());
+                } else {
+                    Log.e("eeee", "服务器异常");
                 }
             }
         });
-
     }
 
     public void initView() {
@@ -166,21 +155,11 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    /*检测是否拥有语音 视频权限*/
-    public boolean checkSelfPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-            return false;
-        }
-        return true;
-    }
-
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
             Utils.showToast("请重新尝试!");
-            getToken();
+            showToken();
         }
     }
 
@@ -202,65 +181,41 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQ_ID_RECORD_AUDIO: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO);
-                } else {
-                    Utils.showToast("没有开启 " + Manifest.permission.RECORD_AUDIO + "权限!");
+      /*      case PERMISSION_REQ_ID_RECORD_AUDIO: {
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Utils.showToast("您拒绝了软件录音的权限,如有需要,请在应用程序权限管理中打开");
                 }
                 break;
-            }
-            case PERMISSION_REQ_ID_CAMERA: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA);
-                } else {
-                    Utils.showToast("没有开启 " + Manifest.permission.CAMERA + "权限!");
+            }*/
+            case 1:
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        checkPermission();
+                    }
                 }
                 break;
-
-            }
-            case REQUEST_CODE: {
-                if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkPermission();
-                }
-                break;
-            }
-            case CALL_REQUEST_CODE: {
-                if (permissions[0].equals(Manifest.permission.CALL_PHONE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkPermission();
-                }
-                break;
-            }
 
         }
-
     }
 
     private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO);
-            int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+        String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN};
+        List<String> mPermissionList = new ArrayList<>();
+        mPermissionList.clear();
+        for (int i = 0; i < permissions.length; i++) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                mPermissionList.add(permissions[i]);
             }
-            int hasCallPermission = checkSelfPermission(Manifest.permission.CALL_PHONE);
-            if (hasCallPermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST_CODE);
-            }
-            int hasCameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
-            if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQ_ID_CAMERA);
-            }
-            int hasAudioPermission = checkSelfPermission(Manifest.permission.RECORD_AUDIO);
-            if (hasAudioPermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_REQ_ID_RECORD_AUDIO);
-            }
+        }
+        if (!mPermissionList.isEmpty()) {
+            String[] permission = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
+            ActivityCompat.requestPermissions(MainActivity.this, permission, 1);
         }
         Utils.mkDirs(Environment.getExternalStorageDirectory().getPath() + "/hlb/record/");
     }
