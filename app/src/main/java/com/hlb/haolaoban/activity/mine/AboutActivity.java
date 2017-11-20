@@ -24,7 +24,7 @@ public class AboutActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("关于好老伴");
         String version = "好老伴  " + BuildConfig.VERSION_NAME;
         binding.setData(version);

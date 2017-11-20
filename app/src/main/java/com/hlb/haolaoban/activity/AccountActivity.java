@@ -26,7 +26,7 @@ public class AccountActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("账号安全");
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

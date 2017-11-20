@@ -15,7 +15,6 @@ import org.json.JSONObject;
  */
 
 public class TotalRemindActivity extends BaseActivity {
-    JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

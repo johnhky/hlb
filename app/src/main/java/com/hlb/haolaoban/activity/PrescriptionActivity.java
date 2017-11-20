@@ -56,7 +56,7 @@ public class PrescriptionActivity extends BaseActivity {
         binding.pagerTabs.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setIndicator(binding.pagerTabs,14,14);
+                setIndicator(binding.pagerTabs, 14, 14);
             }
         }, 100);
     }
@@ -65,7 +65,7 @@ public class PrescriptionActivity extends BaseActivity {
         return new PrescriptionAdapter(getSupportFragmentManager());
     }
 
-    public void setIndicator (TabLayout tabs,int leftDip,int rightDip) {
+    public void setIndicator(TabLayout tabs, int leftDip, int rightDip) {
         Class<?> tabLayout = tabs.getClass();
         Field tabStrip = null;
         try {
@@ -96,4 +96,4 @@ public class PrescriptionActivity extends BaseActivity {
         }
     }
 
-    }
+}

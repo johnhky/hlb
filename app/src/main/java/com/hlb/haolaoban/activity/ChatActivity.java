@@ -65,7 +65,7 @@ public class ChatActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.tvName.setText(Settings.getUserProfile().getClub_name());
         binding.tvStatus.setText("通话连接中...");
         binding.tvHangup.setOnClickListener(new View.OnClickListener() {

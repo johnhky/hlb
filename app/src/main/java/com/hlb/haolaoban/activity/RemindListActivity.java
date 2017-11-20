@@ -38,7 +38,7 @@ public class RemindListActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("提醒事项");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);

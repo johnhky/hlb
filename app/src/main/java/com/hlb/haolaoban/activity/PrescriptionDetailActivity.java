@@ -55,7 +55,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
         getData();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("处方详情");
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

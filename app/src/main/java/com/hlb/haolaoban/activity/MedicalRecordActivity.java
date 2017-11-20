@@ -40,7 +40,7 @@ public class MedicalRecordActivity extends BaseActivity implements SwipeRefreshL
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("病历档案");
         binding.swipeRefresh.setOnRefreshListener(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);

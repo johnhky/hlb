@@ -42,7 +42,7 @@ public class HealthReportActivity extends BaseActivity implements SwipeRefreshLa
         onRefresh();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("健康报告");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);

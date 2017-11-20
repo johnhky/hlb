@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,9 @@ import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
+import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 
 import java.io.ByteArrayInputStream;
@@ -35,7 +38,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 
@@ -63,7 +68,7 @@ public class FeedBackActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("意见反馈");
         imgBase64 = new ArrayList<>();
         pictureList = new ArrayList<>();
@@ -77,14 +82,32 @@ public class FeedBackActivity extends BaseActivity {
         binding.btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                uploadFeedback();
             }
         });
         initBitmap();
     }
 
     private void uploadFeedback() {
-
+        if (TextUtils.isEmpty(binding.etKeyword.getText().toString().trim()) || binding.etKeyword.getText().toString().trim().length() < 1) {
+            showToast("意见反馈不能为空!");
+            return;
+        }
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", Settings.getUserProfile().getMid() + "");
+        params.put("param[conetnt]", binding.etKeyword.getText().toString().trim());
+        if (!pictureList.isEmpty()) {
+            params.put("param[img]", pictureList.toString());
+        }
+        params.put("method", "public.feedback.add");
+        api.getBaseUrl(params).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                showToast("多谢您的建议,您的建议是我们不断前进的动力!");
+                finish();
+            }
+        });
     }
 
     private void initBitmap() {
@@ -174,7 +197,7 @@ public class FeedBackActivity extends BaseActivity {
     }
 
     private void uploadPicture(Bitmap bm) {
-        DialogUtils.showLoading(mActivity,"正在上传中...");
+        DialogUtils.showLoading(mActivity, "正在上传中...");
         String base64 = Utils.bitmapToString(bm);
         api.uploadImage(HttpUrls.uploadImage(base64)).enqueue(new SimpleCallback() {
             @Override

@@ -33,7 +33,7 @@ public class BigImageActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("");
         Glide.with(this).load(getImage()).into(binding.ivImage);
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {

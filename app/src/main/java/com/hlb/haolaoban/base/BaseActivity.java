@@ -16,12 +16,14 @@ import com.hlb.haolaoban.utils.Utils;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public Activity mActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
         BusProvider.getInstance().register(this);
         initToolbar();
+
     }
 
     private void initToolbar() {
@@ -63,9 +65,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void showToast(String msg) {
         Utils.showToast(msg);
     }
-    public void startActivity(Class clazz){;
+
+    public void startActivity(Class clazz) {
+        ;
         Intent i = new Intent();
-        i.setClass(this,clazz);
+        i.setClass(this, clazz);
         startActivity(i);
     }
 

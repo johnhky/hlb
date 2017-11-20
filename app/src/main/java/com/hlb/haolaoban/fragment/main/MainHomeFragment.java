@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -83,6 +82,7 @@ public class MainHomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_home, container, false);
         mActivity = getActivity();
+
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
         View view = LayoutInflater.from(mActivity).inflate(R.layout.pop_voice, null);
@@ -104,7 +104,6 @@ public class MainHomeFragment extends BaseFragment {
         recordUtils.setOnAudioUpdateListener(new AudioRecordUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
-                Log.e("eeee", db + " , " + time);
                 int dp = (int) db;
                 if (dp <= 30) {
                     iv_state.getDrawable().setLevel(0);

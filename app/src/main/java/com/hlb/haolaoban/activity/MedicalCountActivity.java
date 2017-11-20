@@ -39,7 +39,7 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("药品存量");
         binding.swipeRefresh.setOnRefreshListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MedicalCountActivity.this);

@@ -56,7 +56,7 @@ public class PersonalActivity extends BaseActivity {
         binding.etClub.setText(data.getClub_name());
     }
 
-    public void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText("个人资料");
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

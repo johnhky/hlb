@@ -1,7 +1,5 @@
 package com.hlb.haolaoban.module;
 
-import android.util.Log;
-
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
@@ -135,15 +133,6 @@ public class HttpUrls {
         return params;
     }
 
-    /*获取健康报告详情*/
-    public static Map<String, String> getHealthReportDetail(String id) {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.putAll(Constants.addParams());
-        params.put("param[id]", id);
-        params.put("method", "member.healtheport.info");
-        return params;
-    }
-
     /*获取提醒事项列表*/
     public static Map<String, String> getRemind(int mid) {
         Map<String, String> params = new LinkedHashMap<>();
@@ -196,7 +185,7 @@ public class HttpUrls {
     public static Map<String, String> uploadImage(String base64) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
-        params.put("param[image]", base64);
+        params.put("param[image]", "data:image/jpeg;base64," + base64);
         params.put("method", "public.uploads.images");
         return params;
     }

@@ -34,7 +34,7 @@ public class HealthReportDetailActivity extends BaseActivity {
         initView();
     }
 
-    private void initView() {
+    protected void initView() {
         binding.titlebar.tbTitle.setText(getName());
         binding.tvContent.setText(getContent());
         binding.tvTime.setText(getTime());
