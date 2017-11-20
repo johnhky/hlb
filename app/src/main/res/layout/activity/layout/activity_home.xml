@@ -70,6 +70,7 @@
                         android:id="@+id/list_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_80"
+                        android:scrollbars="none"
                         android:divider="#ffffffff" />
                 </LinearLayout>
 

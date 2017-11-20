@@ -13,7 +13,6 @@ import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.bean.Userbean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
 import com.hlb.haolaoban.http.Api;

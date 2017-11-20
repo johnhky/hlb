@@ -1,15 +1,11 @@
 package com.hlb.haolaoban.activity.device;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -33,7 +29,6 @@ public class WristbandsActivity extends BaseActivity {
     ActivityWristbandsBinding binding;
     private List<SearchResult> mDevices;
     private BlueToothAdapter mAdapter;
-    public static final int BLUETOOTH_REQUEST_CODE = 10000;
     private BluetoothManager manager;
 
     @Override
@@ -41,11 +36,6 @@ public class WristbandsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_wristbands);
         manager = (BluetoothManager) mActivity.getSystemService(Context.BLUETOOTH_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!(checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED)) {
-                requestPermissions(new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN}, BLUETOOTH_REQUEST_CODE);
-            }
-        }
         mDevices = new ArrayList<>();
         initView();
     }
@@ -135,13 +125,4 @@ public class WristbandsActivity extends BaseActivity {
         ClientManager.getClient().stopSearch();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == BLUETOOTH_REQUEST_CODE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN}, BLUETOOTH_REQUEST_CODE);
-            }
-        }
-    }
 }

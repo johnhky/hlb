@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
 
@@ -61,11 +60,11 @@ public class AudioRecordUtils {
         mMediaRecorder.setOutputFile(filePath);
         mMediaRecorder.setMaxDuration(MAX_LENGTH);
         try {
+            startTime = System.currentTimeMillis();
             mMediaRecorder.prepare();
             /*4. 开始录音*/
             mMediaRecorder.start();
             updateMicStatus();
-            startTime = System.currentTimeMillis();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IllegalStateException e) {
@@ -102,7 +101,7 @@ public class AudioRecordUtils {
         if (time < 1 * 1000) {
             Toast.makeText(context, "录音时间过短!", Toast.LENGTH_SHORT).show();
             cancelRecord();
-        } else if (time > 60 * 1000) {
+        } else if (time > MAX_LENGTH) {
             Toast.makeText(context, "录音时间不能超过一分钟!", Toast.LENGTH_SHORT).show();
             cancelRecord();
         }
@@ -152,7 +151,6 @@ public class AudioRecordUtils {
      * 更新麦克状态
      */
     private void updateMicStatus() {
-
         if (mMediaRecorder != null) {
             double ratio = (double) mMediaRecorder.getMaxAmplitude() / BASE;
             double db = 0;// 分贝

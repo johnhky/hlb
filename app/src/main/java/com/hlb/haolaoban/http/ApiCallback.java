@@ -32,7 +32,6 @@ public abstract class ApiCallback<T> implements Callback<ApiDTO> {
             onFailure(call, new NullPointerException());
             return;
         }
-        Log.e("eeee",response.body().toString());
         int code = response.body().getCode();
         if (code == 1) {
             Object data = response.body().getData();

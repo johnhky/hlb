@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,9 +41,11 @@ import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
+import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -55,7 +58,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
-
 
 /**
  * Created by heky on 2017/10/31.
@@ -94,7 +96,6 @@ public class MainHomeFragment extends BaseFragment {
         player = new MediaPlayer();
         initView();
         initData();
-        getTodayRemind();
         getArticle();
         return binding.getRoot();
     }
@@ -103,6 +104,7 @@ public class MainHomeFragment extends BaseFragment {
         recordUtils.setOnAudioUpdateListener(new AudioRecordUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
+                Log.e("eeee", db + " , " + time);
                 int dp = (int) db;
                 if (dp <= 30) {
                     iv_state.getDrawable().setLevel(0);
@@ -197,34 +199,37 @@ public class MainHomeFragment extends BaseFragment {
         });
     }
 
+
     /*获取用户信息*/
     private void initData() {
-        api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
-            @Override
-            protected void handleResponse(String response) {
-                UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
-                Settings.setUesrProfile(data);
-            }
-        });
+        if (null != Hawk.get(Constants.MID)) {
+            api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
+                @Override
+                protected void handleResponse(String response) {
+                    UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
+                    Settings.setUesrProfile(data);
+                    getTodayRemind();
+                }
+            });
+        } else {
+            Intent i = new Intent(mActivity, LoginActivity.class);
+            startActivity(i);
+        }
+
     }
 
     /*获取当天提醒事项*/
     private void getTodayRemind() {
-        if (null != Settings.getUserProfile()) {
-            api.getBaseUrl(HttpUrls.getTodayRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
-                @Override
-                protected void handleResponse(String response) {
-                    RemindBean data = gson.fromJson(response, RemindBean.class);
-                    if (!TextUtils.isEmpty(response)) {
-                        MyRemindAdapter myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
-                        binding.listView.setAdapter(myRemindAdapter);
-                    }
+        api.getBaseUrl(HttpUrls.getTodayRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                RemindBean data = gson.fromJson(response, RemindBean.class);
+                if (!TextUtils.isEmpty(response)) {
+                    MyRemindAdapter myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
+                    binding.listView.setAdapter(myRemindAdapter);
                 }
-            });
-        } else {
-            startActivity(LoginActivity.class);
-        }
-
+            }
+        });
     }
 
     /*获取文章*/
@@ -324,6 +329,7 @@ public class MainHomeFragment extends BaseFragment {
         });
         /*startActivity(ChatActivity.class);*/
     }
+
 
     class MyAdapter extends PagerAdapter {
 
