@@ -133,6 +133,9 @@
         <activity
             android:name=".activity.device.DeviceDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.MessageActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <!-- 微信支付回调 -->
         <activity
@@ -144,13 +147,6 @@
         <receiver
             android:name=".service.AlarmReceiver"
             android:process=":remote"></receiver>
-        <service
-            android:name=".service.RemindService"
-            android:enabled="true"
-            android:exported="true"
-            android:persistent="true"
-            android:priority="1000"></service>
-
     </application>
 
 </manifest>

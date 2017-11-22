@@ -1,13 +1,10 @@
 package com.hlb.haolaoban.bean;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Index;
-
 /**
  * Created by heky on 2017/11/15.
  */
 
-public class MsgBean extends RealmObject {
+public class MsgBean  {
 
 
     /**
@@ -19,7 +16,6 @@ public class MsgBean extends RealmObject {
      * time : 1510717318
      * taskid : 9
      */
-    @Index
     private int id;
     private String to;
     private String from;

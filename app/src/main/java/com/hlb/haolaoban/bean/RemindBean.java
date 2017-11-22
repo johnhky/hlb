@@ -3,9 +3,6 @@ package com.hlb.haolaoban.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmObject;
-
 /**
  * Created by heky on 2017/11/9.
  */

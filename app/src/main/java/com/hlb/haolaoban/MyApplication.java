@@ -12,7 +12,10 @@ import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import io.realm.DynamicRealm;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 import okhttp3.OkHttpClient;
 
 /**
@@ -54,8 +57,20 @@ public class MyApplication extends Application {
                 .build();
         Utils.init(this);
         OkHttpUtils.initClient(okHttpClient);
-        Realm.init(this);
         CrashReport.initCrashReport(getApplicationContext(), BuildConfig.buglyId, false);
+        Realm.init(this);
+        RealmConfiguration configuration = new RealmConfiguration.Builder().schemaVersion(2).migration(new HLBMigration()).deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(configuration);
+    }
+
+
+    private static class HLBMigration implements RealmMigration {
+        @Override
+        public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+            if (oldVersion <= 1) {
+                realm.deleteAll();
+            }
+        }
     }
 
 }

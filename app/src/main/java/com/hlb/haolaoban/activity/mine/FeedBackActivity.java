@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -202,6 +203,7 @@ public class FeedBackActivity extends BaseActivity {
         api.uploadImage(HttpUrls.uploadImage(base64)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
+                showToast("上传成功!");
                 DialogUtils.hideLoading(mActivity);
                 ImageBean data = gson.fromJson(response, ImageBean.class);
                 pictureList.add(data.getImage_patg());

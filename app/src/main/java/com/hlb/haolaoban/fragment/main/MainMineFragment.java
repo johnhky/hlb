@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.MessageActivity;
 import com.hlb.haolaoban.activity.device.DeviceManageActivity;
 import com.hlb.haolaoban.activity.mine.AboutActivity;
 import com.hlb.haolaoban.activity.AccountActivity;
@@ -119,6 +120,12 @@ public class MainMineFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 startActivity(DeviceManageActivity.class);
+            }
+        });
+        binding.tvMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(MessageActivity.class);
             }
         });
     }

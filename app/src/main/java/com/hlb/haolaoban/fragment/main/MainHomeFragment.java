@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,10 +30,12 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.adapter.MyRemindAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
+import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.bean.RemindBean;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityHomeBinding;
 import com.hlb.haolaoban.base.BaseFragment;
+import com.hlb.haolaoban.handler.MsgHandler;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
@@ -56,6 +59,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmResults;
 import okhttp3.Call;
 
 /**
@@ -82,7 +86,6 @@ public class MainHomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_home, container, false);
         mActivity = getActivity();
-
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
         View view = LayoutInflater.from(mActivity).inflate(R.layout.pop_voice, null);
@@ -206,6 +209,7 @@ public class MainHomeFragment extends BaseFragment {
                 @Override
                 protected void handleResponse(String response) {
                     UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
+                    MsgHandler.queryMsg(data.getMid() + "",mActivity);
                     Settings.setUesrProfile(data);
                     getTodayRemind();
                 }

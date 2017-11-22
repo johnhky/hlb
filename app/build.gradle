@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 apply plugin: 'bugly'
+apply plugin: 'realm-android'
 bugly {
     appId = '223ddeb462'
     appKey = 'ca9a255e-6bb3-4e4d-a38a-c4c73487885e'

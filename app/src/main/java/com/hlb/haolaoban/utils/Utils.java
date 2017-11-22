@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -115,5 +116,18 @@ public class Utils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         result = format.format(new Date(timeStamp));
         return result;
+    }
+
+    public static long timeToStamp(String timeString) {
+        long timeStamp = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d;
+        try {
+            d = sdf.parse(timeString);
+            timeStamp = d.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timeStamp;
     }
 }

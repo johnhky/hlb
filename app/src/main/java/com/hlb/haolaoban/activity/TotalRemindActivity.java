@@ -6,9 +6,7 @@ import android.text.TextUtils;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.hlb.haolaoban.utils.NotificationUtil;
 
 /**
  * Created by heky on 2017/11/10.
@@ -24,17 +22,19 @@ public class TotalRemindActivity extends BaseActivity {
 
     private void parseData() {
         if (!TextUtils.isEmpty(getData())) {
-                DialogUtils.showRemindMsg(mActivity, getData(), new DialogUtils.OnDialogItemClickListener() {
-                    @Override
-                    public void onItemClick(int which) {
-                        switch (which) {
-                            case 1:
-                                startActivity(PrescriptionActivity.class);
-                                break;
-                        }
+            NotificationUtil.showNotification("", getData());
+            DialogUtils.showRemindMsg(mActivity, getData(), new DialogUtils.OnDialogItemClickListener() {
+                @Override
+                public void onItemClick(int which) {
+                    switch (which) {
+                        case 1:
+                            startActivity(PrescriptionActivity.class);
+                            finish();
+                            break;
                     }
-                });
-            }
+                }
+            });
+        }
     }
 
 

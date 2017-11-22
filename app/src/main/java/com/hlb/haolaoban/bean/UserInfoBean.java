@@ -209,4 +209,29 @@ public class UserInfoBean implements Serializable{
         }
     }
 
+
+    @Override
+    public String toString() {
+        return "UserInfoBean{" +
+                "mid=" + mid +
+                ", username='" + username + '\'' +
+                ", photo='" + photo + '\'' +
+                ", sex='" + sex + '\'' +
+                ", age=" + age +
+                ", name='" + name + '\'' +
+                ", pid=" + pid +
+                ", club_id=" + club_id +
+                ", club_name='" + club_name + '\'' +
+                ", doctor_team_id=" + doctor_team_id +
+                ", doctor_team_name='" + doctor_team_name + '\'' +
+                ", status=" + status +
+                ", lingban=" + lingban +
+                ", birthday='" + birthday + '\'' +
+                ", address='" + address + '\'' +
+                ", device='" + device + '\'' +
+                ", qianmin_img='" + qianmin_img + '\'' +
+                ", addtime='" + addtime + '\'' +
+                ", children=" + children +
+                '}';
+    }
 }
