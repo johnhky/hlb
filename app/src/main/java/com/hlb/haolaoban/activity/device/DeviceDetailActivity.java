@@ -96,7 +96,7 @@ public class DeviceDetailActivity extends BaseActivity {
                 if (code == REQUEST_SUCCESS) {
                     List<DetailItem> list = setItems(data);
                     for (int i = 0; i < list.size(); i++) {
-                        Log.e("eeee", i + "次  serviceId " + list.get(i).getService() + " characterId:  " + list.get(i).getUuid());
+                        Log.e(TAG, i + "次  serviceId " + list.get(i).getService() + " characterId:  " + list.get(i).getUuid());
                     }
                 } else {
                     showToast("设备连接失败!");

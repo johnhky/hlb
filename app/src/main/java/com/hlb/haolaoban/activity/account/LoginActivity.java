@@ -33,6 +33,7 @@ import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.ShowNotificationEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
+import com.hlb.haolaoban.utils.NotificationUtil;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 
@@ -111,7 +112,6 @@ public class LoginActivity extends BaseActivity {
             protected void handleResponse(String response) {
                 DialogUtils.hideLoading(mActivity);
                 Userbean data = gson.fromJson(response, Userbean.class);
-                saveMsg(data.getMid() + "");
                 Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                 Hawk.put(Constants.MID, data.getMid());
@@ -129,52 +129,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void saveMsg(String id) {
-        String s = "{\n" +
-                "    \"from\": \"143\",\n" +
-                "    \"type\": \"2\",\n" +
-                "    \"msg\": \"用药提醒规则,收到后系统配置成闹钟模式\",\n" +
-                "    \"data\": {\n" +
-                "        \"id\": \"15111669839712\",\n" +
-                "        \"msg\": \"1312421414214 的用药提醒~\",\n" +
-                "        \"data\": [\n" +
-                "            {\n" +
-                "                \"msg\": \"养胃宁胶囊(天泰) 3粒\",\n" +
-                "                \"endtime\": \"1511771783\",\n" +
-                "                \"stat_his\": \"20:00\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"msg\": \"养胃宁胶囊(天泰) 3粒\",\n" +
-                "                \"endtime\": \"1511771783\",\n" +
-                "                \"stat_his\": \"09:00\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"msg\": \"摩罗丹(华山牌) 2箱\",\n" +
-                "                \"endtime\": \"1511598983\",\n" +
-                "                \"stat_his\": \"17:00\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"msg\": \"摩罗丹(华山牌) 2箱\",\n" +
-                "                \"endtime\": \"1511598983\",\n" +
-                "                \"stat_his\": \"11:00\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"msg\": \"摩罗丹(华山牌) 2箱\",\n" +
-                "                \"endtime\": \"1511598983\",\n" +
-                "                \"stat_his\": \"07:00\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"msg\": \"达比加群酯胶囊(泰毕全) 6支\",\n" +
-                "                \"endtime\": \"1511595509\",\n" +
-                "                \"stat_his\": \"20:00\"\n" +
-                "            }\n" +
-                "        ]\n" +
-                "    },\n" +
-                "    \"time\": \"1511166983\",\n" +
-                "    \"taskid\": 35,\n" +
-                "    \"mode\": \"message\",\n" +
-                "    \"to\": 143\n" +
-                "}";
+    private void saveMsg(String s,String id) {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(s);
@@ -184,21 +139,6 @@ public class LoginActivity extends BaseActivity {
                 String drugs = jsonObject.getString("data");
                 List<DrugRemind> list = gson.fromJson(drugs, new TypeToken<ArrayList<DrugRemind>>() {
                 }.getType());
-           /*     long currentTime = System.currentTimeMillis();
-                List<DrugRemind> descList = new ArrayList<>();
-                for (int i = 0; i < list.size(); i++) {
-                    DrugRemind drug = new DrugRemind();
-                    String date = Utils.stampToDate(currentTime + "") + " " + list.get(i).getStat_his() + ":00";
-                    long time = Utils.timeToStamp(date);
-                    long endTime = Long.parseLong(list.get(i).getEndtime());
-                    drug.setEndtime(list.get(i).getEndtime());
-                    if (endTime > time) {
-                        drug.setStat_his(list.get(i).getStat_his());
-                        drug.setId(i);
-                        drug.setMid(id);
-                        descList.add(drug);
-                    }
-                }*/
                 MsgHandler.saveMsg(list, id);
             }
 
@@ -246,23 +186,12 @@ public class LoginActivity extends BaseActivity {
                         switch (type) {
                             case "1":
                             case "4":
-
+                                NotificationUtil.showNotification("", msg);
                                 break;
                             case "2":
-                                String data = jsonObject.getString("data");
-                                if (!TextUtils.isEmpty(data)) {
-                                    jsonObject = new JSONObject(data);
-                                    String drugs = jsonObject.getString(data);
-                                    Log.e("eeee", drugs);
-                                }
-                                break;
-                            case "3":
-                                DialogUtils.showRemindMsg(mActivity, msg, new DialogUtils.OnDialogItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int which) {
-
+                                    if (!TextUtils.isEmpty(jsonObject.getString("data"))){
+                                        saveMsg(s,id);
                                     }
-                                });
                                 break;
                         }
                     }

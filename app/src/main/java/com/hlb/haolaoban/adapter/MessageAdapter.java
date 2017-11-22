@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.bean.MessageBean;
+import com.hlb.haolaoban.utils.Utils;
 
 import java.util.List;
 
@@ -18,10 +20,10 @@ import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    List<String> lists;
+    List<MessageBean> lists;
     Context context;
 
-    public MessageAdapter(List<String> lists, Context context) {
+    public MessageAdapter(List<MessageBean> lists, Context context) {
         this.context = context;
         this.lists = lists;
     }
@@ -35,7 +37,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv_type.setText(lists.get(position)+"");
+        if (lists.get(position).getMode().equals("message")) {
+            holder.tv_type.setText("普通消息");
+        } else if (lists.get(position).getMode().equals("system")) {
+            holder.tv_type.setText("系统消息");
+        }
+        holder.tv_content.setText(lists.get(position).getMsg());
+        long timeStamp = Long.parseLong(lists.get(position).getTime());
+        holder.tv_time.setText(Utils.formatData(timeStamp));
     }
 
     @Override

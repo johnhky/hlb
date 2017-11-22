@@ -228,11 +228,29 @@ public class HttpUrls {
         return params;
     }
 
-    /*上传图片*/
+    /*上传语音*/
     public static Map<String, String> uploadPicture(int mid) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "voice.push");
         params.put("mid", mid + "");
         return params;
     }
+
+    /*获取消息列表*/
+    public static Map<String, String> getMessage(String pageNo, String mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "history.infos");
+        params.put("mid", mid);
+        params.put("token", "1");
+        params.put("page", pageNo);
+        return params;
+    }
+
+    public static Map<String, String> getRealtimetypeList() {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("method", "member.realtimetype.list");
+        return params;
+    }
+
 }

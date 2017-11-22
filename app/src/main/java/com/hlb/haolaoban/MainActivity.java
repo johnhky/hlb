@@ -217,8 +217,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void checkPermission() {
-        String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE,
                 Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN};
         List<String> mPermissionList = new ArrayList<>();
@@ -237,6 +236,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit();
             return false;

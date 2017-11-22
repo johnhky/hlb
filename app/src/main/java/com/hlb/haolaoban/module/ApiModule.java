@@ -1,13 +1,6 @@
 package com.hlb.haolaoban.module;
 
-import com.hlb.haolaoban.bean.ArticleBean;
-import com.hlb.haolaoban.bean.ImageBean;
-import com.hlb.haolaoban.bean.TokenBean;
-import com.hlb.haolaoban.bean.UserInfoBean;
-import com.hlb.haolaoban.bean.Userbean;
 import com.hlb.haolaoban.http.ApiDTO;
-
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -15,7 +8,6 @@ import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
@@ -56,5 +48,6 @@ public interface ApiModule {
     @FormUrlEncoded
     @POST("index")
     Call<ApiDTO> uploadImage(@FieldMap Map<String, String> params);
+
 
 }
