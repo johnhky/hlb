@@ -2,8 +2,11 @@ package com.hlb.haolaoban;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.hlb.haolaoban.http.MyInteceptor;
+import com.hlb.haolaoban.service.websocket.ForegroundCallback;
+import com.hlb.haolaoban.service.websocket.WebSocketManager;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -61,6 +64,7 @@ public class MyApplication extends Application {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder().schemaVersion(2).migration(new HLBMigration()).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
+        initAppStatusListener();
     }
 
 
@@ -72,5 +76,18 @@ public class MyApplication extends Application {
             }
         }
     }
+    private void initAppStatusListener() {
+        ForegroundCallback.init(this).addListener(new ForegroundCallback.Listener() {
+            @Override
+            public void onBecameForeground() {
+                Log.e("eeee","应用回到前台调用重连方法");
+                WebSocketManager.getInstance().reconnect();
+            }
 
+            @Override
+            public void onBecameBackground() {
+
+            }
+        });
+    }
 }

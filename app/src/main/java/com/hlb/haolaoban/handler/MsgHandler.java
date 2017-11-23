@@ -5,8 +5,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hlb.haolaoban.bean.DrugRemind;
+import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.service.AlarmReceiver;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Utils;
@@ -33,10 +36,10 @@ public class MsgHandler {
 
     public static final long ONE_DAY = 1000 * 60 * 60 * 24;
 
-    /*将websocket推送过来的信息保存到本地数据库*/
+    /*将websocket推送过来的信息同步保存到本地数据库*/
     public static void saveMsg(final List<DrugRemind> list, final String mid) {
         Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction() {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 realm.deleteAll();
@@ -49,14 +52,7 @@ public class MsgHandler {
                     data.setEndtime(list.get(i).getEndtime());
                     realm.copyToRealm(data);
                 }
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
+                BusProvider.getInstance().postEvent(new QueryMessageEvent());
             }
         });
     }
@@ -96,6 +92,10 @@ public class MsgHandler {
     /*查询今天所有时间段的用药提醒并且设置闹钟提醒*/
     public static void queryMsg(String mid, Context context) {
         final RealmResults<DrugRemind> list = queryAllMsg(mid);
+        Log.e("eeee", list.size() + "查询");
+        for (DrugRemind data : list) {
+            Log.e("eeee", data.toString());
+        }
         long currentTime = System.currentTimeMillis();
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {
@@ -115,6 +115,7 @@ public class MsgHandler {
                     } else {
                         manager.set(AlarmManager.RTC_WAKEUP, doTimeStamp, sender);
                     }
+                    Log.e("eeee", doTime + "  " + msg);
                     break;
                 }
 

@@ -38,10 +38,10 @@ public class HealthRecordAdapter extends RecyclerView.Adapter<HealthRecordAdapte
         holder.tv_data.setText(list.get(position).getType());
         switch (list.get(position).getId()) {
             case 1:
+                holder.tv_data.setBackgroundResource(R.drawable.shape_health_blood_pressure);
                 Drawable rightDrawable = context.getResources().getDrawable(R.drawable.blood_pressure);
                 rightDrawable.setBounds(rightDrawable.getMinimumHeight(), rightDrawable.getMinimumWidth(), 0, 0);
                 holder.tv_data.setCompoundDrawables(null, rightDrawable, null, null);
-                holder.tv_data.setBackgroundResource(R.drawable.shape_health_blood_pressure);
                 break;
             case 2:
                 Drawable rightDrawable2 = context.getResources().getDrawable(R.drawable.blood_pressure);

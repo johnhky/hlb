@@ -144,7 +144,7 @@ public class DialogUtils {
         dialogWindow.setAttributes(p);
         dialog.setContentView(binding.getRoot());
         dialog.show();
-        binding.tvTitle.setText(msg);
+        binding.tvTitle.setText("好老伴提醒消息");
         binding.tvContent.setText(msg);
         binding.btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

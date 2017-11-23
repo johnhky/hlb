@@ -2,6 +2,7 @@ package com.hlb.haolaoban.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tv_type.setText("系统消息");
         }
         holder.tv_content.setText(lists.get(position).getMsg());
-        long timeStamp = Long.parseLong(lists.get(position).getTime());
-        holder.tv_time.setText(Utils.formatData(timeStamp));
+        if (!TextUtils.isEmpty(lists.get(position).getTime())) {
+            long timeStamp = Long.parseLong(lists.get(position).getTime());
+            holder.tv_time.setText(Utils.formatData(timeStamp));
+        }
+
     }
 
     @Override

@@ -10,9 +10,13 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.MyApplication;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.PrescriptionActivity;
 import com.hlb.haolaoban.activity.RemindListActivity;
 
 /**
@@ -23,16 +27,19 @@ public class NotificationUtil {
 
     public static final int NEW_MSG = 100;
 
-    public static void showNotification(String type, String msg) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApplication.mContext);
+    public static void showNotification(Context context, String type, String msg) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle("好老伴新消息");
         builder.setContentText(msg);
         builder.setSmallIcon(R.mipmap.logo);
         builder.setLights(Color.GREEN, 1000, 3000);
-        Intent i = new Intent(MyApplication.mContext, RemindListActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MyApplication.mContext, NEW_MSG, i, 0);
+        Intent i;
+        if (!TextUtils.isEmpty(type)) {
+            i = new Intent(context, PrescriptionActivity.class);
+        } else {
+            i = new Intent(context, MainActivity.class);
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, NEW_MSG, i, 0);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         long[] longs = new long[]{0, 300, 150, 300};
@@ -40,7 +47,7 @@ public class NotificationUtil {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(uri);
         Notification notification = builder.build();
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MyApplication.mContext);
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(NEW_MSG, notification);
     }
 /*

@@ -14,10 +14,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.app.Fragment;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -36,17 +34,17 @@ import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
 import com.hlb.haolaoban.fragment.main.MainHomeFragment;
 import com.hlb.haolaoban.fragment.main.MainMineFragment;
+import com.hlb.haolaoban.handler.MsgHandler;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
-import com.hlb.haolaoban.otto.ShowNotificationEvent;
+import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
-import com.hlb.haolaoban.utils.NotificationUtil;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
@@ -56,6 +54,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
 
 
 /**
@@ -175,22 +175,7 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
-            Utils.showToast("请重新尝试!");
             showToken();
-        }
-    }
-
-
-    @Subscribe
-    public void onReceiveEvent(ShowNotificationEvent event) {
-        switch (event.getType()) {
-            case "1":
-                NotificationUtil.showNotification(event.getType(), event.getMsg());
-                /*NotificationUtil.showNotificationMsg(event.getMsg(), MainActivity.this);*/
-                break;
-            case "2":
-
-                break;
         }
     }
 
@@ -202,8 +187,13 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Subscribe
+    public void onReciveEvent(QueryMessageEvent event) {
+        MsgHandler.queryMsg(com.hlb.haolaoban.utils.Settings.getUserProfile().getMid() + "", MainActivity.this);
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PERMISSON_REQUEST_CODE:
                 for (int i = 0; i < grantResults.length; i++) {
@@ -217,7 +207,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void checkPermission() {
-        String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE,
+        String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE,
                 Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN};
         List<String> mPermissionList = new ArrayList<>();
@@ -236,7 +226,6 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit();
             return false;
@@ -326,5 +315,8 @@ public class MainActivity extends FragmentActivity {
     private String getData() {
         return getIntent().getStringExtra(Constants.DATA);
     }
+
+
+
 
 }

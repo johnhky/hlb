@@ -22,7 +22,7 @@ public class TotalRemindActivity extends BaseActivity {
 
     private void parseData() {
         if (!TextUtils.isEmpty(getData())) {
-            NotificationUtil.showNotification("", getData());
+            NotificationUtil.showNotification(mActivity,"", getData());
             DialogUtils.showRemindMsg(mActivity, getData(), new DialogUtils.OnDialogItemClickListener() {
                 @Override
                 public void onItemClick(int which) {

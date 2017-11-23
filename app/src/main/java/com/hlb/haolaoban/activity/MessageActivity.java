@@ -41,6 +41,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
     MessageAdapter mAdapter;
     Gson gson = new GsonBuilder().create();
     private int pageNo = 1;
+    List<MessageBean> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         binding.titlebar.tbTitle.setText("我的消息");
+        list = new ArrayList<>();
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +62,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
     }
 
     private void initData(int pageNo) {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.getMessage(pageNo + "", "141")).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.getMessage(pageNo + "", Settings.getUserProfile().getMid()+"")).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
 
@@ -75,11 +77,13 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
                     int code = jsonObject.getInt("code");
                     if (code == 1) {
                         String msg = jsonObject.getString("msg");
-                        if (!TextUtils.isEmpty(msg)) {
-                            List<MessageBean> list = gson.fromJson(msg, new TypeToken<ArrayList<MessageBean>>() {
+                        if (null != msg&&!TextUtils.isEmpty(msg)&&!msg.equals("null")) {
+                            list = gson.fromJson(msg, new TypeToken<ArrayList<MessageBean>>() {
                             }.getType());
-                            mAdapter = new MessageAdapter(list, mActivity);
-                            binding.recyclerView.setAdapter(mAdapter);
+                            if (!list.isEmpty()) {
+                                mAdapter = new MessageAdapter(list, mActivity);
+                                binding.recyclerView.setAdapter(mAdapter);
+                            }
                         }
                     }
                 } catch (JSONException e) {
