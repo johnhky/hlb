@@ -39,8 +39,6 @@ public class HealthRecordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_health_record);
         binding.titlebar.tbTitle.setText("健康档案");
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 3);
-        binding.recyclerView.setLayoutManager(gridLayoutManager);
         initView();
         initData();
     }

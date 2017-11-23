@@ -1,5 +1,6 @@
 package com.hlb.haolaoban.activity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -13,10 +14,11 @@ import com.hlb.haolaoban.utils.NotificationUtil;
  */
 
 public class TotalRemindActivity extends BaseActivity {
-
+    MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mediaPlayer = new MediaPlayer();
         parseData();
     }
 
