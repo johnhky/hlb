@@ -19,6 +19,9 @@ import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by heky on 2017/11/6.
  */
@@ -30,6 +33,7 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
     private int pageNo = 1;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
+    List<MedicalBean.ItemsBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,8 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
         binding.swipeRefresh.setOnRefreshListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MedicalCountActivity.this);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
+        mAdapter = new MedicalAdapter(list, mActivity);
+        binding.recyclerView.setAdapter(mAdapter);
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,17 +58,21 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
         });
     }
 
-    private void getMedical(int pageNo) {
+    private void getMedical(final int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getMedical(Settings.getUserProfile().getMid() + "", pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);
                 MedicalBean data = gson.fromJson(response, MedicalBean.class);
-                if (!data.getItems().isEmpty()){
-                    mAdapter = new MedicalAdapter(data.getItems(), MedicalCountActivity.this);
-                    binding.recyclerView.setAdapter(mAdapter);
+                if (!data.getItems().isEmpty()) {
+                    list.addAll(data.getItems());
+                } else {
+                    if (pageNo > 1) {
+                        showToast("暂时没有更多数据了");
+                    }
                 }
+                mAdapter.update(list);
             }
         });
     }

@@ -33,6 +33,7 @@ public class HealthRecordActivity extends BaseActivity {
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     HealthRecordAdapter mAdapter;
+    List<HealthBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +48,20 @@ public class HealthRecordActivity extends BaseActivity {
         api.getBaseUrl(HttpUrls.getRealtimetypeList()).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                List<HealthBean> list = gson.fromJson(response, new TypeToken<ArrayList<HealthBean>>() {
+                List<HealthBean> lists = gson.fromJson(response, new TypeToken<ArrayList<HealthBean>>() {
                 }.getType());
-                mAdapter = new HealthRecordAdapter(list,mActivity);
-                binding.recyclerView.setAdapter(mAdapter);
+                if (!lists.isEmpty()) {
+                    list.addAll(lists);
+                }
+                mAdapter.update(list);
             }
         });
     }
 
 
     protected void initView() {
+        mAdapter = new HealthRecordAdapter(list, mActivity);
+        binding.recyclerView.setAdapter(mAdapter);
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

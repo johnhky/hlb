@@ -2,8 +2,10 @@ package com.hlb.haolaoban.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -20,6 +22,9 @@ import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 
 /**
@@ -33,6 +38,7 @@ public class HealthReportActivity extends BaseActivity implements SwipeRefreshLa
     private int pageNo = 1;
     Gson gson = new GsonBuilder().create();
     HealthReportAdapter mAdapter;
+    List<ReportBean.ItemsBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +59,34 @@ public class HealthReportActivity extends BaseActivity implements SwipeRefreshLa
                 finish();
             }
         });
+        mAdapter = new HealthReportAdapter(mActivity, list);
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == recyclerView.SCROLL_STATE_IDLE && !ViewCompat.canScrollVertically(recyclerView, 1)) {
+                    pageNo++;
+                    initData(pageNo);
+                }
+            }
+        });
     }
 
-    private void initData() {
+    private void initData(final int pageNo) {
         api.getBaseUrl(HttpUrls.getHealthReport(Settings.getUserProfile().getMid(), pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);
                 ReportBean data = gson.fromJson(response, ReportBean.class);
                 if (!data.getItems().isEmpty()) {
-                    mAdapter = new HealthReportAdapter(mActivity, data.getItems());
-                    binding.recyclerView.setAdapter(mAdapter);
+                    list.addAll(data.getItems());
+                } else {
+                    if (pageNo > 1) {
+                        showToast("暂时没有更多数据了");
+                    }
                 }
+                mAdapter.update(list);
             }
 
             @Override
@@ -77,6 +99,6 @@ public class HealthReportActivity extends BaseActivity implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        initData();
+        initData(1);
     }
 }

@@ -26,7 +26,6 @@ public class Constants {
     public static final String TYPE = "TYPE";
     public static final String DATA = "DATA";
     public static final String CHANNEL = "CHANNEL";
-    public static final String WEBSOCKET = Hawk.get(Constants.WEBSOCKET_URL) + "";
     public static final String WEBSOCKET_URL = "WEBSOCKET_URL";
 
     public static Map<String, String> addParams() {

@@ -31,6 +31,11 @@ public class MedicalRecordAdapter extends RecyclerView.Adapter<MedicalRecordAdap
         this.context = context;
     }
 
+    public void update(List<HealthRecordBean.ItemsBean> mDatas) {
+        this.mDatas = mDatas;
+        notifyDataSetChanged();
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());

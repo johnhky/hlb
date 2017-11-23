@@ -26,9 +26,7 @@ public class NetReceiver extends BroadcastReceiver {
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             // 获取当前网络状态信息
             NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-
             if (info != null && info.isAvailable()) {
-                Log.e("eeee", "监听到可用网络切换,调用重连方法");
                 WebSocketManager.getInstance().reconnect();//wify 4g切换重连websocket
             }
         }

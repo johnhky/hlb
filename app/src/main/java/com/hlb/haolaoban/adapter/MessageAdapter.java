@@ -29,6 +29,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.lists = lists;
     }
 
+    public void update(List<MessageBean>list){
+        this.lists = list;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);

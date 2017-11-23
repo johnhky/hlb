@@ -92,10 +92,6 @@ public class MsgHandler {
     /*查询今天所有时间段的用药提醒并且设置闹钟提醒*/
     public static void queryMsg(String mid, Context context) {
         final RealmResults<DrugRemind> list = queryAllMsg(mid);
-        Log.e("eeee", list.size() + "查询");
-        for (DrugRemind data : list) {
-            Log.e("eeee", data.toString());
-        }
         long currentTime = System.currentTimeMillis();
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {

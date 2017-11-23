@@ -3,8 +3,10 @@ package com.hlb.haolaoban.fragment.prescription;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,10 @@ import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
+import com.hlb.haolaoban.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 
@@ -36,6 +42,7 @@ public class PaidFragment extends BaseFragment2 implements SwipeRefreshLayout.On
     private int pageNo = 1;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
+    List<OrderBean.ItemsBean> list = new ArrayList<>();
 
     public static PaidFragment getInstance(String type) {
         PaidFragment paidFragment = new PaidFragment();
@@ -52,20 +59,36 @@ public class PaidFragment extends BaseFragment2 implements SwipeRefreshLayout.On
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         binding.swipeRefresh.setOnRefreshListener(this);
+        mAdapter = new UnpayAdapter(list, mActivity);
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == recyclerView.SCROLL_STATE_IDLE && !ViewCompat.canScrollVertically(recyclerView, 1)) {
+                    pageNo++;
+                    getData(pageNo);
+                }
+            }
+        });
         onRefresh();
         return binding.getRoot();
     }
 
-    private void getData() {
+    private void getData(final int pageNo) {
         api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, getType())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);
                 OrderBean data = gson.fromJson(response, OrderBean.class);
                 if (!data.getItems().isEmpty()) {
-                    mAdapter = new UnpayAdapter(data.getItems(), mActivity);
-                    binding.recyclerView.setAdapter(mAdapter);
+                    list.addAll(data.getItems());
+                }else {
+                    if (pageNo>1){
+                        Utils.showToast("暂时没有更多数据了");
+                    }
                 }
+                mAdapter.update(list);
             }
 
             @Override
@@ -78,7 +101,7 @@ public class PaidFragment extends BaseFragment2 implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        getData();
+        getData(1);
     }
 
     private String getType() {

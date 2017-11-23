@@ -6,8 +6,10 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,6 +49,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 
@@ -66,6 +70,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     TextView tv_voice;
     LinearLayoutManager linearLayoutManager;
     private float startY, endY;
+    List<ArticleBean.ItemsBean> datas = new ArrayList<>();
 
     @Nullable
     @Override
@@ -150,12 +155,28 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 return true;
             }
         });
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && !ViewCompat.canScrollVertically(recyclerView, 1)) {
+                    pageNo++;
+                    getClub(pageNo);
+                }
+            }
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        mAdapter = new ClubAdapter(datas, mActivity);
+        binding.recyclerView.setAdapter(mAdapter);
     }
 
     /*上传语音*/
     public void uploadAudio(String fileName) {
-        DialogUtils.showLoading(mActivity,"语音上传中...");
+        DialogUtils.showLoading(mActivity, "语音上传中...");
         /*String fileName = Environment.getExternalStorageDirectory()+"/Recordings/REC20171113163916.mp3";*/
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
@@ -188,15 +209,22 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
 
-    private void getClub() {
+    private void getClub(final int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);
                 ArticleBean data = gson.fromJson(response, ArticleBean.class);
-                mAdapter = new ClubAdapter(data.getItems(), mActivity);
-                binding.recyclerView.setAdapter(mAdapter);
+                if (!data.getItems().isEmpty()) {
+                    datas.addAll(data.getItems());
+                } else {
+                    if (pageNo > 1) {
+                        Utils.showToast("暂时没有更多数据了");
+                    }
+                }
+                mAdapter.update(datas);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -209,8 +237,8 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        pageNo = 1;
-        getClub();
+        datas = new ArrayList<>();
+        getClub(1);
     }
 
     private void contactClub() {

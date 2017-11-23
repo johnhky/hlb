@@ -32,6 +32,11 @@ public class HealthReportAdapter extends RecyclerView.Adapter<HealthReportAdapte
         this.lists = lists;
     }
 
+    public void update(List<ReportBean.ItemsBean> lists) {
+        this.lists = lists;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());

@@ -80,7 +80,6 @@ public class MyApplication extends Application {
         ForegroundCallback.init(this).addListener(new ForegroundCallback.Listener() {
             @Override
             public void onBecameForeground() {
-                Log.e("eeee","应用回到前台调用重连方法");
                 WebSocketManager.getInstance().reconnect();
             }
 

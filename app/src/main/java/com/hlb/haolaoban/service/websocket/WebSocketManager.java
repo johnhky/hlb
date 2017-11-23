@@ -45,7 +45,7 @@ public class WebSocketManager {
     private WebSocket ws;
     private WsListener mListener;
     private WsStatus wsStatus;
-    private String url = Constants.WEBSOCKET;
+    private String url = Hawk.get(Constants.WEBSOCKET_URL) + "";
     Gson gson = new GsonBuilder().create();
 
     public static WebSocketManager getInstance() {
@@ -73,7 +73,6 @@ public class WebSocketManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e("eeee", "第一次连接");
     }
 
     private Handler mHandler = new Handler();
@@ -85,7 +84,6 @@ public class WebSocketManager {
     public void reconnect() {
         if (!isNetConnect()) {
             reconnectCount = 0;
-            Log.e("eeee", "重连失败网络不可用");
             return;
         }
 
@@ -105,7 +103,6 @@ public class WebSocketManager {
             }
 
             ;
-            Log.e("eeee", "准备开始第%d次重连,重连间隔%d -- url:" + reconnectCount + "  " + reconnectTime + "  " + url);
             mHandler.postDelayed(mReconnectTask, reconnectTime);
         }
     }

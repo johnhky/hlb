@@ -28,6 +28,11 @@ public class MedicalAdapter extends RecyclerView.Adapter<MedicalAdapter.ViewHold
         this.context = context;
     }
 
+    public void update(List<MedicalBean.ItemsBean> myDatas){
+        this.myDatas  = myDatas;
+        notifyDataSetChanged();
+    }
+
     @Override
     public MedicalAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_medical_count,null);

@@ -27,6 +27,11 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
         this.context = context;
     }
 
+    public void update(List<ArticleBean.ItemsBean>myDatas){
+        this.myDatas = myDatas;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_club, null);
