@@ -26,7 +26,7 @@ public class UserInfoBean implements Serializable{
     private String qianmin_img;
     private String addtime;
     private Children children;
-
+    private String service_out_time;
     public int getMid() {
         return mid;
     }
@@ -171,6 +171,14 @@ public class UserInfoBean implements Serializable{
         this.addtime = addtime;
     }
 
+    public String getService_out_time() {
+        return service_out_time;
+    }
+
+    public void setService_out_time(String service_out_time) {
+        this.service_out_time = service_out_time;
+    }
+
     public Children getChildren() {
         return children;
     }
@@ -178,6 +186,7 @@ public class UserInfoBean implements Serializable{
     public void setChildren(Children children) {
         this.children = children;
     }
+
 
     public class Children implements Serializable {
         private String mid;

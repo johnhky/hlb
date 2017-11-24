@@ -181,7 +181,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
-                .params(HttpUrls.uploadPicture(Settings.getUserProfile().getMid()))
+                .params(HttpUrls.uploadAudio(Settings.getUserProfile().getMid(), Settings.getUserProfile().getDoctor_team_id()+""))
                 .addFile("file", newFileName, file).build().execute(new StringCallback() {
             @Override
             public void onError(okhttp3.Call call, Exception e, int id) {

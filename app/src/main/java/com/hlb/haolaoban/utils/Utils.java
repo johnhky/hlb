@@ -105,6 +105,17 @@ public class Utils {
         res = simpleDateFormat.format(date);
         return res;
     }
+    /*
+     * 将时间戳转换为月日
+     */
+    public static String stampToMonth(String s) {
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
 
     /*将时间戳转换为日期格式的字符串*/
     public static String formatData(long timeStamp) {

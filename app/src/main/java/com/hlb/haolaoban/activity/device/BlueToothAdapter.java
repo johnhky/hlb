@@ -8,26 +8,23 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
-import com.inuker.bluetooth.library.search.SearchResult;
-
-import java.util.List;
 
 /**
  * Created by heky on 2017/11/17.
  */
 
 public class BlueToothAdapter extends BaseAdapter {
-    List<SearchResult> lists;
+    /*List<SearchResult> lists;*/
     Context context;
 
-    public BlueToothAdapter(List<SearchResult> lists, Context context) {
+  /*  public BlueToothAdapter(List<SearchResult> lists, Context context) {
         this.context = context;
         this.lists = lists;
-    }
+    }*/
 
     @Override
     public int getCount() {
-        return lists.size();
+        return 0;
     }
 
     @Override
@@ -53,8 +50,8 @@ public class BlueToothAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_name.setText("蓝牙名称: " + lists.get(position).getName());
-        holder.tv_address.setText(lists.get(position).getAddress());
+/*        holder.tv_name.setText("蓝牙名称: " + lists.get(position).getName());
+        holder.tv_address.setText(lists.get(position).getAddress());*/
         return convertView;
     }
 

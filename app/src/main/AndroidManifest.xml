@@ -136,7 +136,9 @@
         <activity
             android:name=".activity.MessageActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
+        <activity
+            android:name=".activity.device.BloodPressureActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 微信支付回调 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
@@ -144,6 +146,7 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+
         <receiver
             android:name=".service.AlarmReceiver"
             android:process=":remote"></receiver>

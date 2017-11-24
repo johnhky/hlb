@@ -12,7 +12,7 @@
     <string name="email">邮箱</string>
     <string name="phone">电话</string>
     <string name="service_email">service@haolaoban99.com</string>
-    <string name="service_phone">020-31560779</string>
+    <string name="service_phone"><u>020-31560779</u></string>
     <string name="copylight">广州市好老伴科技有限公司 版权所有</string>
     <string name="copyright">Copyright © haolanban inc.All Reserved</string>
     <string name="text_precription">处方信息</string>

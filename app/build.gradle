@@ -79,6 +79,7 @@ android {
             jniLibs.srcDirs = ['libs']
             res.srcDirs =
                     [
+                            'src/main/res/layout/device',
                             'src/main/res/layout/mine',
                             'src/main/res/layout/account',
                             'src/main/res/layout/activity',
@@ -96,7 +97,12 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/license.txt'
     }
+    lintOptions{
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -118,6 +124,5 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'com.neovisionaries:nv-websocket-client:2.2'
-    compile project(':library')
     compile files('libs/libammsdk.jar')
 }

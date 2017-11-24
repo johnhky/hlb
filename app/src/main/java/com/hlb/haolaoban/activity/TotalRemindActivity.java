@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.hlb.haolaoban.base.BaseActivity;
+import com.hlb.haolaoban.handler.MsgHandler;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.NotificationUtil;
+import com.orhanobut.hawk.Hawk;
 
 /**
  * Created by heky on 2017/11/10.
@@ -15,6 +17,7 @@ import com.hlb.haolaoban.utils.NotificationUtil;
 
 public class TotalRemindActivity extends BaseActivity {
     MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +27,6 @@ public class TotalRemindActivity extends BaseActivity {
 
     private void parseData() {
         if (!TextUtils.isEmpty(getData())) {
-            NotificationUtil.showNotification(mActivity,"", getData());
             DialogUtils.showRemindMsg(mActivity, getData(), new DialogUtils.OnDialogItemClickListener() {
                 @Override
                 public void onItemClick(int which) {
@@ -36,6 +38,7 @@ public class TotalRemindActivity extends BaseActivity {
                     }
                 }
             });
+            MsgHandler.queryMsg(Hawk.get(Constants.MID) + "", mActivity);
         }
     }
 

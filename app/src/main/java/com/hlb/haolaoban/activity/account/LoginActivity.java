@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -13,7 +12,7 @@ import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.bean.Userbean;
+import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
@@ -85,13 +84,13 @@ public class LoginActivity extends BaseActivity {
             @Override
             protected void handleResponse(String response) {
                 DialogUtils.hideLoading(mActivity);
-                Userbean data = gson.fromJson(response, Userbean.class);
-                Hawk.put(Constants.WEBSOCKET_URL, BuildConfig.BASE_WEBSOCKET_URL + "mid=" + data.getMid() + "&club_id=" + data.getClub_id());
+                UserBean data = gson.fromJson(response, UserBean.class);
                 Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                WebSocketManager.getInstance().init();
+                String webUrl = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + data.getMid() + "&club_id=" + data.getClub_id();
+                WebSocketManager.getInstance().init(webUrl);
                 startActivity(MainActivity.class);
                 finish();
             }

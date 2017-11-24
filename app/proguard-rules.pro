@@ -40,22 +40,28 @@
 -keep public class * extends android.support.v7.**
 -keep public class * extends android.app.Fragment
 -keep class * extends java.lang.annotation.Annotation { *; }#注解包下的所有内容不要混淆
+
 -keepclasseswithmembernames class * {
     native <methods>;
 }
+
 -keepclasseswithmembernames class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }
+
 -keepclasseswithmembernames class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
+
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
 }
+
 #保持 Serializable 不被混淆
 -keepnames class * implements java.io.Serializable
 # 同上
@@ -71,24 +77,59 @@
 -keepclassmembers class * {
    public <init>(org.json.JSONObject);
 }
+
 -keep public class com.hlb.haolaoban.R$*{
     public static final int *;
 }
+
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
+-keep class com.fasterxml.jackson.databind.ObjectMapper {
+    public <methods>;
+    protected <methods>;
+}
+
+-keep class com.fasterxml.jackson.databind.ObjectWriter {
+    public ** writeValueAsString(**);
+}
+
+ -keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
+ public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *; }
+ -keep public class * implements com.bumptech.glide.module.GlideModule
+ -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+     **[] $VALUES;
+     public *;
+ }
+
 # 不混淆的第三方
 -keepattributes *Annotation*
 -keepattributes Signature
 
--keep class com.google.gson.**{*;}
--keep io.agora.rtc.**{*;}
--keep org.java_websocket.**{*;}
--keep public class com.tencent.bugly.**{*;}
--keep class retrofit2.** { *; }
--keep com.tencent.mm.opensdk.**{*;}
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontnote okhttp3.**
 
--dontwarn com.tencent.mm.opensdk.**{*;}
+-keepnames class com.fasterxml.jackson.** { *; }
+ -dontwarn com.fasterxml.jackson.databind.**
+-keep class com.google.gson.**{*;}
+-keep class io.agora.rtc.**{*;}
+-keep class com.tencent.bugly.**{*;}
+-keep class retrofit2.** { *; }
+-keep class com.tencent.mm.opensdk.**{*;}
+
+-dontwarn com.tencent.mm.opensdk.**
 -dontwarn retrofit2.**
 -dontwarn com.google.**
 -dontwarn com.tencent.bugly.**
 -dontwarn io.agora.rtc.**
--dontwarn org.java_websocket.**
+-dontwarn okio.**
+# Okio
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+ -keep class org.codehaus.** { *; }
+
 

@@ -3,7 +3,6 @@ package com.hlb.haolaoban.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.bean.UserInfoBean;
-import com.hlb.haolaoban.bean.Userbean;
 import com.orhanobut.hawk.Hawk;
 
 /**

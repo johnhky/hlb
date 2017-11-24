@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by heky on 2017/11/8.
  */
 
-public class Userbean implements Serializable{
+public class UserBean implements Serializable{
 
     /**
      * mid : 99

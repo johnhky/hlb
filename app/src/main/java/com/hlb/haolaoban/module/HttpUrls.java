@@ -1,5 +1,7 @@
 package com.hlb.haolaoban.module;
 
+import android.util.Log;
+
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
@@ -229,10 +231,12 @@ public class HttpUrls {
     }
 
     /*上传语音*/
-    public static Map<String, String> uploadPicture(int mid) {
+    public static Map<String, String> uploadAudio(int mid,String club_id) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "voice.push");
         params.put("mid", mid + "");
+        params.put("team",club_id);
+        Log.e("eeee",params.toString());
         return params;
     }
 
@@ -246,6 +250,7 @@ public class HttpUrls {
         return params;
     }
 
+    /*获取体征项列表*/
     public static Map<String, String> getRealtimetypeList() {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
@@ -253,4 +258,17 @@ public class HttpUrls {
         return params;
     }
 
+    /*获取老人血压值
+    * @param device   1.血压计  2.血糖仪  3.手环 4.体温计 5.体脂称
+    * */
+    public static Map<String, String> getRealTime(String id, String device, String start_time,String end_time) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", id);
+        params.put("param[type]", device);
+        params.put("param[start_time]", start_time);
+        params.put("param[end_time]", end_time);
+        params.put("method", "member.realtime.chart");
+        return params;
+    }
 }

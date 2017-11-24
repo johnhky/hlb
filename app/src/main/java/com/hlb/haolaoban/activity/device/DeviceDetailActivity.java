@@ -13,19 +13,19 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.databinding.ActivityDeviceDetailBinding;
 import com.hlb.haolaoban.utils.DialogUtils;
-import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
+/*import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattCharacter;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.model.BleGattService;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
-import com.inuker.bluetooth.library.utils.BluetoothUtils;
+import com.inuker.bluetooth.library.utils.BluetoothUtils;*/
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
+//import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
 /**
  * Created by heky on 2017/11/17.
@@ -56,8 +56,8 @@ public class DeviceDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(mActivity, R.layout.activity_device_detail);
         initView();
-        mDevice = BluetoothUtils.getRemoteDevice(getAddress());
-        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+   /*     mDevice = BluetoothUtils.getRemoteDevice(getAddress());
+        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);*/
         connectDevice();
     }
 
@@ -71,18 +71,18 @@ public class DeviceDetailActivity extends BaseActivity {
         });
     }
 
-    private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
+/*    private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
         @Override
         public void onConnectStatusChanged(String mac, int status) {
             BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
                     status, Thread.currentThread().getName()));
             connectDevice();
         }
-    };
+    };*/
 
     private void connectDevice() {
         DialogUtils.showLoading(mActivity,"正在连接设备...");
-        BleConnectOptions options = new BleConnectOptions.Builder()
+    /*    BleConnectOptions options = new BleConnectOptions.Builder()
                 .setConnectRetry(3)
                 .setConnectTimeout(20000)
                 .setServiceDiscoverRetry(3)
@@ -103,11 +103,11 @@ public class DeviceDetailActivity extends BaseActivity {
                 }
             }
 
-        });
+        });*/
 
     }
 
-    public List<DetailItem> setItems(BleGattProfile profile) {
+ /*   public List<DetailItem> setItems(BleGattProfile profile) {
         List<DetailItem> items = new ArrayList<>();
         List<BleGattService> services = profile.getServices();
         for (BleGattService service : services) {
@@ -118,16 +118,16 @@ public class DeviceDetailActivity extends BaseActivity {
             }
         }
         return items;
-    }
+    }*/
 
     private String getAddress() {
         return getIntent().getStringExtra("mac");
     }
 
-    @Override
+/*    @Override
     protected void onDestroy() {
         super.onDestroy();
         ClientManager.getClient().disconnect(mDevice.getAddress());
         ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
-    }
+    }*/
 }

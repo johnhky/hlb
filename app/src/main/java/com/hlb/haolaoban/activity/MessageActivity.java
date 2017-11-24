@@ -43,7 +43,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
     MessageAdapter mAdapter;
     Gson gson = new GsonBuilder().create();
     private int pageNo = 1;
-    List<MessageBean> list;
+    List<MessageBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,6 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         binding.titlebar.tbTitle.setText("我的消息");
-        list = new ArrayList<>();
         mAdapter = new MessageAdapter(list, mActivity);
         binding.recyclerView.setAdapter(mAdapter);
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -94,7 +93,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
                         if (null != msg && !TextUtils.isEmpty(msg) && !msg.equals("null")) {
                             List<MessageBean> lists = gson.fromJson(msg, new TypeToken<ArrayList<MessageBean>>() {
                             }.getType());
-                            if (!list.isEmpty()) {
+                            if (!lists.isEmpty()) {
                                 list.addAll(lists);
                             } else {
                                 if (pageNo > 1) {

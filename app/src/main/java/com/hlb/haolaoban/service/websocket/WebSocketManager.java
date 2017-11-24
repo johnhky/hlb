@@ -3,6 +3,7 @@ package com.hlb.haolaoban.service.websocket;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -45,7 +46,7 @@ public class WebSocketManager {
     private WebSocket ws;
     private WsListener mListener;
     private WsStatus wsStatus;
-    private String url = Hawk.get(Constants.WEBSOCKET_URL) + "";
+    private String url = "";
     Gson gson = new GsonBuilder().create();
 
     public static WebSocketManager getInstance() {
@@ -59,10 +60,8 @@ public class WebSocketManager {
         return mInstance;
     }
 
-    public void init() {
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
+    public void init(String url) {
+        this.url = url;
         try {
             ws = new WebSocketFactory().createSocket(url, CONNECT_TIMEOUT)
                     .setFrameQueueSize(FRAME_QUEUE_SIZE)//设置帧队列最大值为5
@@ -71,6 +70,8 @@ public class WebSocketManager {
                     .connectAsynchronously();//异步连接
             setWsStatus(WsStatus.CONNECTING);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
             e.printStackTrace();
         }
     }

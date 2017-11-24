@@ -1,6 +1,7 @@
 package com.hlb.haolaoban.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.device.BloodPressureActivity;
 import com.hlb.haolaoban.bean.HealthBean;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class HealthRecordAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void update(List<HealthBean> list){
+    public void update(List<HealthBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -52,7 +54,7 @@ public class HealthRecordAdapter extends BaseAdapter {
     ViewHolder holder;
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_health_record, null);
@@ -62,6 +64,14 @@ public class HealthRecordAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.tv_data.setText(list.get(position).getType());
+        holder.tv_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = BloodPressureActivity.intentFor(v.getContext(), list.get(position).getId() + "");
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(i);
+            }
+        });
         switch (list.get(position).getId()) {
             case 1:
                 holder.tv_data.setBackgroundResource(R.drawable.shape_health_blood_pressure);
@@ -122,9 +132,7 @@ public class HealthRecordAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-
         TextView tv_data;
-
     }
 
 }

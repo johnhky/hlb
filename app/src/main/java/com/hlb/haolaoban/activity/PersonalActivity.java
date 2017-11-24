@@ -54,6 +54,7 @@ public class PersonalActivity extends BaseActivity {
         binding.etChildren.setText(data.getChildren().getUsername());
         binding.etTeam.setText(data.getDoctor_team_name());
         binding.etClub.setText(data.getClub_name());
+        binding.etServiceTime.setText(Utils.stampToDate(data.getService_out_time()+"000"));
     }
 
     protected void initView() {

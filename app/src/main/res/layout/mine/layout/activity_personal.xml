@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/white"
         >
         <include layout="@layout/titlebar"
             android:id="@+id/titlebar"
@@ -217,7 +218,34 @@
                     android:gravity="right|center_vertical"
                     android:text="" />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_8">
+
+                <TextView
+                    android:layout_width="@dimen/dp_150"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="服务截止时间"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/et_service_time"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="right|center_vertical"
+                    android:text="" />
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
