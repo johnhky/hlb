@@ -108,17 +108,17 @@ public class MainHomeFragment extends BaseFragment {
             @Override
             public void onUpdate(double db, long time) {
                 int dp = (int) db;
-                if (dp <= 30) {
+                if (dp <= 40) {
                     iv_state.getDrawable().setLevel(0);
-                } else if (dp <= 45 && dp > 30) {
+                } else if (dp <= 55 && dp > 40) {
                     iv_state.getDrawable().setLevel(1);
-                } else if (dp <= 60 && dp > 45) {
+                } else if (dp <= 70 && dp > 55) {
                     iv_state.getDrawable().setLevel(2);
-                } else if (dp <= 75 && dp > 60) {
+                } else if (dp <= 85 && dp > 70) {
                     iv_state.getDrawable().setLevel(3);
-                } else if (dp <= 90 && dp > 75) {
+                } else if (dp <= 100 && dp > 85) {
                     iv_state.getDrawable().setLevel(4);
-                } else if (dp > 90) {
+                } else if (dp > 100) {
                     iv_state.getDrawable().setLevel(5);
                 }
                 tv_voice.setText(Utils.getTime(time));
@@ -174,7 +174,7 @@ public class MainHomeFragment extends BaseFragment {
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
-                .params(HttpUrls.uploadAudio(Settings.getUserProfile().getMid(),Settings.getUserProfile().getDoctor_team_id()+""))
+                .params(HttpUrls.uploadAudio(Settings.getUserProfile().getMid(), Settings.getUserProfile().getDoctor_team_id() + ""))
                 .addFile("file", newFileName, file).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -209,7 +209,7 @@ public class MainHomeFragment extends BaseFragment {
                 @Override
                 protected void handleResponse(String response) {
                     UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
-                    MsgHandler.queryMsg(data.getMid() + "",mActivity);
+                    MsgHandler.queryMsg(data.getMid() + "", mActivity);
                     Settings.setUesrProfile(data);
                     getTodayRemind();
                 }

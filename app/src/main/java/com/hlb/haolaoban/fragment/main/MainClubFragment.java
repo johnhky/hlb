@@ -99,17 +99,17 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             public void onUpdate(double db, long time) {
                 int dp = (int) db;
-                if (dp <= 30) {
+                if (dp <= 40) {
                     iv_state.getDrawable().setLevel(0);
-                } else if (dp <= 45 && dp > 30) {
+                } else if (dp <= 55 && dp > 40) {
                     iv_state.getDrawable().setLevel(1);
-                } else if (dp <= 60 && dp > 45) {
+                } else if (dp <= 70 && dp > 55) {
                     iv_state.getDrawable().setLevel(2);
-                } else if (dp <= 75 && dp > 60) {
+                } else if (dp <= 85 && dp > 70) {
                     iv_state.getDrawable().setLevel(3);
-                } else if (dp <= 90 && dp > 75) {
+                } else if (dp <= 100 && dp > 85) {
                     iv_state.getDrawable().setLevel(4);
-                } else if (dp > 90) {
+                } else if (dp > 100) {
                     iv_state.getDrawable().setLevel(5);
                 }
                 tv_voice.setText(Utils.getTime(time));
