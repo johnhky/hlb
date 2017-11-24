@@ -27,6 +27,7 @@ import com.hlb.haolaoban.otto.RefreshOrderEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
 
     private void getData(final int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
-        api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, getType())).enqueue(new SimpleCallback() {
+        api.getBaseUrl(HttpUrls.getOrderList(Hawk.get(Constants.MID) + "", pageNo, getType())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);

@@ -25,6 +25,8 @@ public class AudioRecordUtils {
 
     public static final int MAX_LENGTH = 1000 * 60;// 最大录音时长1000*60;
 
+    public static final int MIX_LENGTH = 1 * 1000;
+
     private OnAudioStatusUpdateListener audioUpdateListtener;
 
     private long startTime;
@@ -49,24 +51,29 @@ public class AudioRecordUtils {
         if (mMediaRecorder == null) {
             mMediaRecorder = new MediaRecorder();
         }
-       /* 2. 设置麦克风*/
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        /*设置录音文件编码*/
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-        /*设置录音文件格式*/
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        filePath = folderPath + getCurrentTime() + ".amr";
-        /*3. 准备录音*/
-        mMediaRecorder.setOutputFile(filePath);
-        mMediaRecorder.setMaxDuration(MAX_LENGTH);
+
         try {
+            mMediaRecorder.reset();
+               /* 2. 设置麦克风*/
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        /*设置录音文件编码*/
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        /*设置录音文件格式*/
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            filePath = folderPath + getCurrentTime() + ".amr";
+        /*3. 准备录音*/
+            mMediaRecorder.setOutputFile(filePath);
+            mMediaRecorder.setMaxDuration(MAX_LENGTH);
             startTime = System.currentTimeMillis();
             mMediaRecorder.prepare();
-            /*4. 开始录音*/
-            mMediaRecorder.start();
-            updateMicStatus();
         } catch (IOException e) {
             e.printStackTrace();
+            mMediaRecorder.release();
+        }
+        try {
+                /*4. 开始录音*/
+            mMediaRecorder.start();
+            updateMicStatus();
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
@@ -93,12 +100,11 @@ public class AudioRecordUtils {
             File file = new File(filePath);
             if (file.exists())
                 file.delete();
-
             filePath = "";
 
         }
         long time = endTime - startTime;
-        if (time < 1 * 1000) {
+        if (time < MIX_LENGTH) {
             Toast.makeText(context, "录音时间过短!", Toast.LENGTH_SHORT).show();
             cancelRecord();
         } else if (time > MAX_LENGTH) {
