@@ -36,7 +36,6 @@ public class WechatCallback extends SimpleCallback {
     @Override
     protected void handleResponse(String response) {
         PayReq req = new PayReq();
-        Log.e("eeee", response);
   /*      IWXAPI msgApi = WXAPIFactory.createWXAPI(activity, response.getAppid());
         msgApi.registerApp(response.getAppid());
         msgApi.sendReq(req);*/

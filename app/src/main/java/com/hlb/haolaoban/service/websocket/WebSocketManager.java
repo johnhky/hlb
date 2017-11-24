@@ -150,7 +150,6 @@ public class WebSocketManager {
         @Override
         public void onTextMessage(WebSocket websocket, String text) throws Exception {
             super.onTextMessage(websocket, text);
-            Log.e("eeee", "onMessage:" + text);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(text);
@@ -210,7 +209,6 @@ public class WebSocketManager {
         @Override
         public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
             super.onConnected(websocket, headers);
-            Log.e("eeee", "连接成功");
             setWsStatus(WsStatus.CONNECT_SUCCESS);
             cancelReconnect();
         }
@@ -225,7 +223,6 @@ public class WebSocketManager {
         @Override
         public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
             super.onDisconnected(websocket, serverCloseFrame, clientCloseFrame, closedByServer);
-            Log.e("eeee", "连接断开");
             setWsStatus(WsStatus.CONNECT_FAIL);
             reconnect();
         }

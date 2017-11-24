@@ -236,7 +236,6 @@ public class HttpUrls {
         params.put("method", "voice.push");
         params.put("mid", mid + "");
         params.put("team",club_id);
-        Log.e("eeee",params.toString());
         return params;
     }
 

@@ -96,8 +96,6 @@ public class MainActivity extends FragmentActivity {
                 if (null != data) {
                     Hawk.put(Constants.TOKEN, data.getToken());
                     Hawk.put(Constants.TOKENOUT, data.getTokenout());
-                } else {
-                    Log.e("eeee", "服务器异常");
                 }
             }
         });

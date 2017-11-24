@@ -111,7 +111,6 @@ public class MsgHandler {
                     } else {
                         manager.set(AlarmManager.RTC_WAKEUP, doTimeStamp, sender);
                     }
-                    Log.e("eeee", doTime + "  " + msg);
                     break;
                 }
 

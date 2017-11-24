@@ -40,7 +40,6 @@ public class DeviceDetailActivity extends BaseActivity {
     /**
      * 默认异常处理器
      */
-    private static final String TAG = "eeee";
     List<DetailItem> items;
     private BluetoothDevice mDevice;
 
