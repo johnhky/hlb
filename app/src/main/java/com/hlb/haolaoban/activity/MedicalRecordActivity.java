@@ -100,6 +100,7 @@ public class MedicalRecordActivity extends BaseActivity implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
+        list = new ArrayList<>();
         getMedicalRecord(1);
     }
 }

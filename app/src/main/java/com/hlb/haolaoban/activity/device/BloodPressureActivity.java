@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -106,11 +108,14 @@ public class BloodPressureActivity extends BaseActivity {
         api.getBaseUrl(HttpUrls.getRealTime(Settings.getUserProfile().getMid() + "", getType(), sevenDayTimeStamp + "", currentTime + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                list = gson.fromJson(response, new TypeToken<ArrayList<BloodPressureBean>>() {
-                }.getType());
-                getAxisXLables();
-                getAxisPoints();
-                initLineChart();
+                if (response.length() > 7) {
+                    binding.llChart.setVisibility(View.VISIBLE);
+                    list = gson.fromJson(response, new TypeToken<ArrayList<BloodPressureBean>>() {
+                    }.getType());
+                    getAxisXLables();
+                    getAxisPoints();
+                    initLineChart();
+                }
             }
         });
     }

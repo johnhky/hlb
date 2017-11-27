@@ -63,6 +63,7 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         binding.swipeRefresh.setOnRefreshListener(this);
+        onRefresh();
         mAdapter = new UnpayAdapter(list, mActivity);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -75,12 +76,10 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
                 }
             }
         });
-        onRefresh();
         return binding.getRoot();
     }
 
     private void getData(final int pageNo) {
-        binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getOrderList(Hawk.get(Constants.MID) + "", pageNo, getType())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
@@ -107,6 +106,8 @@ public class UnPayFragment extends BaseFragment2 implements SwipeRefreshLayout.O
 
     @Override
     public void onRefresh() {
+        binding.swipeRefresh.setRefreshing(true);
+        list = new ArrayList<>();
         getData(1);
     }
 

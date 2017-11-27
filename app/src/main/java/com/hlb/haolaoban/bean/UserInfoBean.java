@@ -68,7 +68,7 @@ public class UserInfoBean implements Serializable{
     }
 
     public String getSex() {
-        return sex;
+        return sex+"";
     }
 
     public void setSex(String sex) {

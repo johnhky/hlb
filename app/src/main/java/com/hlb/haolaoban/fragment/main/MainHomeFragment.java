@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,7 +30,6 @@ import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.adapter.MyRemindAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
-import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.bean.RemindBean;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityHomeBinding;
@@ -58,7 +58,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmResults;
 import okhttp3.Call;
 
 /**
@@ -79,6 +78,8 @@ public class MainHomeFragment extends BaseFragment {
     ImageView iv_state;
     TextView tv_voice;
     private float startY, endY;
+    List<RemindBean.ItemsBean> data;
+    MyRemindAdapter myRemindAdapter;
 
     @Nullable
     @Override
@@ -103,6 +104,7 @@ public class MainHomeFragment extends BaseFragment {
     }
 
     private void initView() {
+
         recordUtils.setOnAudioUpdateListener(new AudioRecordUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
@@ -227,7 +229,7 @@ public class MainHomeFragment extends BaseFragment {
             protected void handleResponse(String response) {
                 RemindBean data = gson.fromJson(response, RemindBean.class);
                 if (!TextUtils.isEmpty(response)) {
-                    MyRemindAdapter myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
+                    myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
                     binding.listView.setAdapter(myRemindAdapter);
                 }
             }

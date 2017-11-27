@@ -62,6 +62,7 @@ public class ExpiredFragment extends BaseFragment2 implements SwipeRefreshLayout
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         binding.swipeRefresh.setOnRefreshListener(this);
+        onRefresh();
         mAdapter = new UnpayAdapter(list, mActivity);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -74,12 +75,10 @@ public class ExpiredFragment extends BaseFragment2 implements SwipeRefreshLayout
                 }
             }
         });
-        onRefresh();
         return binding.getRoot();
     }
 
     private void getData(final int pageNo) {
-        binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, getType())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
@@ -106,6 +105,8 @@ public class ExpiredFragment extends BaseFragment2 implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
+        binding.swipeRefresh.setRefreshing(true);
+        list = new ArrayList<>();
         getData(1);
     }
 

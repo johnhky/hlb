@@ -7,26 +7,22 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.MessageAdapter;
 import com.hlb.haolaoban.base.BaseActivity;
-import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.bean.MessageBean;
 import com.hlb.haolaoban.databinding.ActivityMsgBinding;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Settings;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +39,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
     MessageAdapter mAdapter;
     Gson gson = new GsonBuilder().create();
     private int pageNo = 1;
-    List<MessageBean> list = new ArrayList<>();
+    List<MessageBean.MsgBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,33 +74,24 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.getMessage(pageNo + "", Settings.getUserProfile().getMid() + "")).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-
+                binding.swipeRefresh.setRefreshing(false);
             }
 
             @Override
             public void onResponse(String response, int id) {
                 binding.swipeRefresh.setRefreshing(false);
-                JSONObject jsonObject;
-                try {
-                    jsonObject = new JSONObject(response);
-                    int code = jsonObject.getInt("code");
-                    if (code == 1) {
-                        String msg = jsonObject.getString("msg");
-                        if (null != msg && !TextUtils.isEmpty(msg) && !msg.equals("null")) {
-                            List<MessageBean> lists = gson.fromJson(msg, new TypeToken<ArrayList<MessageBean>>() {
-                            }.getType());
-                            if (!lists.isEmpty()) {
-                                list.addAll(lists);
-                            } else {
-                                if (pageNo > 1) {
-                                    showToast("暂时没有更多数据了");
-                                }
-                                mAdapter.update(list);
-                            }
+                MessageBean data = gson.fromJson(response, MessageBean.class);
+                if (data.getCode() == 1) {
+                    if (!data.getMsg().equals("null") && null!=data.getMsg()) {
+                        list.addAll(data.getMsg());
+                    } else {
+                        if (pageNo > 1) {
+                            showToast("暂时没有更多数据了");
                         }
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    mAdapter.update(list);
+                } else if (data.getCode() == -99) {
+                    BusProvider.getInstance().postEvent(new TokenOutEvent(data.getCode()));
                 }
             }
         });
@@ -113,6 +100,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         binding.swipeRefresh.setRefreshing(true);
+        list = new ArrayList<>();
         initData(1);
     }
 }

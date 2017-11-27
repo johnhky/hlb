@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.RemindBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,11 @@ public class MyRemindAdapter extends BaseAdapter {
     public MyRemindAdapter(List<RemindBean.ItemsBean> lists, Context context) {
         this.lists = lists;
         this.context = context;
+    }
+
+    public void update(List<RemindBean.ItemsBean> lists){
+        this.lists = lists;
+        notifyDataSetChanged();
     }
 
     @Override

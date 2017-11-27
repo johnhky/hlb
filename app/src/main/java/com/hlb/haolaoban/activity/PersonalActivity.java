@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -33,28 +33,32 @@ public class PersonalActivity extends BaseActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_personal);
-        UserInfoBean data = (UserInfoBean) getIntent().getSerializableExtra(Constants.USER_PROFILE);
-        initData(data);
+        initData(getData());
         initView();
     }
 
     private void initData(UserInfoBean data) {
+        if (null == data) {
+            return;
+        }
         Glide.with(this).load(data.getPhoto()).into(binding.ivAvater);
         String birthDay = Utils.stampToDate(data.getBirthday() + "000");
         binding.etBirthday.setText(birthDay);
         binding.etName.setText(data.getName());
         String gender = "";
-        if (data.getSex().equals("0")) {
-            gender = "男";
-        } else {
-            gender = "女";
+        if (!TextUtils.isEmpty(data.getSex())) {
+            if (data.getSex().equals("0")) {
+                gender = "男";
+            } else {
+                gender = "女";
+            }
         }
         binding.etGender.setText(gender);
         binding.etAddress.setText(data.getAddress());
         binding.etChildren.setText(data.getChildren().getUsername());
         binding.etTeam.setText(data.getDoctor_team_name());
         binding.etClub.setText(data.getClub_name());
-        binding.etServiceTime.setText(Utils.stampToDate(data.getService_out_time()+"000"));
+        binding.etServiceTime.setText(Utils.stampToDate(data.getService_out_time() + "000"));
     }
 
     protected void initView() {
@@ -65,6 +69,10 @@ public class PersonalActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    private UserInfoBean getData() {
+        return (UserInfoBean) getIntent().getSerializableExtra(Constants.USER_PROFILE);
     }
 
 }

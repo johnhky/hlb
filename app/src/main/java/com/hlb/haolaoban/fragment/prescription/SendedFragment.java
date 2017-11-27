@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.UnpayAdapter;
-import com.hlb.haolaoban.base.BaseFragment;
 import com.hlb.haolaoban.base.BaseFragment2;
 import com.hlb.haolaoban.bean.OrderBean;
 import com.hlb.haolaoban.databinding.FragmentUnpayBinding;
@@ -63,6 +62,7 @@ public class SendedFragment extends BaseFragment2 implements SwipeRefreshLayout.
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
         binding.swipeRefresh.setOnRefreshListener(this);
+        onRefresh();
         mAdapter = new UnpayAdapter(list, mActivity);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -75,12 +75,10 @@ public class SendedFragment extends BaseFragment2 implements SwipeRefreshLayout.
                 }
             }
         });
-        onRefresh();
         return binding.getRoot();
     }
 
     private void getData(final int pageNo) {
-        binding.swipeRefresh.setRefreshing(true);
         api.getBaseUrl(HttpUrls.getOrderList(Settings.getUserProfile().getMid() + "", pageNo, getType())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
@@ -93,6 +91,7 @@ public class SendedFragment extends BaseFragment2 implements SwipeRefreshLayout.
                         Utils.showToast("暂时没有更多数据了");
                     }
                 }
+                mAdapter.update(list);
             }
 
             @Override
@@ -106,6 +105,8 @@ public class SendedFragment extends BaseFragment2 implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
+        binding.swipeRefresh.setRefreshing(true);
+        list = new ArrayList<>();
         getData(1);
     }
 

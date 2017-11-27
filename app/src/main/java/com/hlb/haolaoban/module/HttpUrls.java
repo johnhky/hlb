@@ -1,7 +1,5 @@
 package com.hlb.haolaoban.module;
 
-import android.util.Log;
-
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;

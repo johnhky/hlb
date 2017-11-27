@@ -67,7 +67,7 @@ public class MainActivity extends FragmentActivity {
     Fragment mainHome, mainClub, mainMine;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
-    public static final int PERMISSON_REQUEST_CODE = 2002;
+    public static final int PERMISSION_REQUEST_CODE = 2002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +82,7 @@ public class MainActivity extends FragmentActivity {
         if (mainHome == null) {
             mainHome = new MainHomeFragment();
             transaction.add(R.id.fragment_container, mainHome);
+
             binding.titlebar.toolBar.setNavigationIcon(null);
         }
         transaction.commit();
@@ -193,7 +194,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case PERMISSON_REQUEST_CODE:
+            case PERMISSION_REQUEST_CODE:
                 for (int i = 0; i < grantResults.length; i++) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         checkPermission();
@@ -217,7 +218,7 @@ public class MainActivity extends FragmentActivity {
         }
         if (!mPermissionList.isEmpty()) {
             String[] permission = mPermissionList.toArray(new String[mPermissionList.size()]);
-            ActivityCompat.requestPermissions(MainActivity.this, permission, PERMISSON_REQUEST_CODE);
+            ActivityCompat.requestPermissions(MainActivity.this, permission, PERMISSION_REQUEST_CODE);
         }
         Utils.mkDirs(Environment.getExternalStorageDirectory().getPath() + "/hlb/record/");
     }

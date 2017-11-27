@@ -6,7 +6,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -99,6 +98,7 @@ public class HealthReportActivity extends BaseActivity implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
+        list  = new ArrayList<>();
         initData(1);
     }
 }

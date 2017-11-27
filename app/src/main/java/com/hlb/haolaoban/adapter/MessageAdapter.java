@@ -21,15 +21,15 @@ import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    List<MessageBean> lists;
+    List<MessageBean.MsgBean> lists;
     Context context;
 
-    public MessageAdapter(List<MessageBean> lists, Context context) {
+    public MessageAdapter(List<MessageBean.MsgBean> lists, Context context) {
         this.context = context;
         this.lists = lists;
     }
 
-    public void update(List<MessageBean>list){
+    public void update(List<MessageBean.MsgBean>list){
         this.lists = list;
         notifyDataSetChanged();
     }

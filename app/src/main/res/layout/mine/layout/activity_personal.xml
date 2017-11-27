@@ -274,6 +274,10 @@
                     android:gravity="right|center_vertical"
                     android:text="" />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/main_bg"></View>
         </LinearLayout>
     </ScrollView>
     </LinearLayout>
