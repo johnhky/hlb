@@ -91,12 +91,10 @@ public class AudioRecordUtils {
             mMediaRecorder = null;
             audioUpdateListtener.onStop(filePath);
             filePath = "";
-
         } catch (RuntimeException e) {
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
-
             File file = new File(filePath);
             if (file.exists())
                 file.delete();
@@ -109,6 +107,7 @@ public class AudioRecordUtils {
             cancelRecord();
         } else if (time > MAX_LENGTH) {
             Toast.makeText(context, "录音时间不能超过一分钟!", Toast.LENGTH_SHORT).show();
+            audioUpdateListtener.onStop(filePath);
             cancelRecord();
         }
         return time;

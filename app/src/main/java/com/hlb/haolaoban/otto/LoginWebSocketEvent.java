@@ -6,27 +6,17 @@ package com.hlb.haolaoban.otto;
 
 public class LoginWebSocketEvent extends Event {
 
-    private String clubId;
-    private String mId;
+    private String url;
 
-    public LoginWebSocketEvent(String clubId, String mId) {
-        this.clubId = clubId;
-        this.mId = mId;
+    public LoginWebSocketEvent(String url) {
+        this.url = url;
     }
 
-    public String getClubId() {
-        return clubId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setClubId(String clubId) {
-        this.clubId = clubId;
-    }
-
-    public String getmId() {
-        return mId;
-    }
-
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

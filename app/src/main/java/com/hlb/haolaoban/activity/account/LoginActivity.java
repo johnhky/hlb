@@ -18,11 +18,14 @@ import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
+import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.service.websocket.WebSocketManager;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
+import com.squareup.otto.Bus;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -107,7 +110,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void uploadData(final String mid, String name, String photo) {
-
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.uploadData(mid, name, photo)).build().execute(new StringCallback() {
             @Override
             public void onError(okhttp3.Call call, Exception e, int id) {
@@ -116,16 +118,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                String webUrl = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + mid;
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
-                        WebSocketManager.getInstance().init(webUrl);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
     }

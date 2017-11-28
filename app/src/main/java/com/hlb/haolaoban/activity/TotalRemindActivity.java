@@ -27,13 +27,13 @@ public class TotalRemindActivity extends BaseActivity {
 
     private void parseData() {
         if (!TextUtils.isEmpty(getData())) {
+            NotificationUtil.showNotification(mActivity, "", getData());
             DialogUtils.showRemindMsg(mActivity, getData(), new DialogUtils.OnDialogItemClickListener() {
                 @Override
                 public void onItemClick(int which) {
                     switch (which) {
                         case 1:
                             startActivity(PrescriptionActivity.class);
-
                             finish();
                             break;
                     }

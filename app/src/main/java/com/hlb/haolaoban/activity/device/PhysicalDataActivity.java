@@ -162,9 +162,9 @@ public class PhysicalDataActivity extends BaseActivity {
         data.setAxisYLeft(axisY);  //Y轴设置在左边
         //data.setAxisYRight(axisY);  //y轴设置在右边
         //设置行为属性，支持缩放、滑动以及平移
-        binding.lineChart.setInteractive(true);
-        binding.lineChart.setZoomType(ZoomType.HORIZONTAL_AND_VERTICAL);  //缩放类型，水平
-        binding.lineChart.setMaxZoom((float) 0);//缩放比例
+        binding.lineChart.setInteractive(false);
+        binding.lineChart.setZoomType(ZoomType.VERTICAL);  //缩放类型，水平
+        binding.lineChart.setMaxZoom((float) 1);//缩放比例
         binding.lineChart.setLineChartData(data);
         binding.lineChart.setVisibility(View.VISIBLE);
         Viewport v = new Viewport(binding.lineChart.getMaximumViewport());

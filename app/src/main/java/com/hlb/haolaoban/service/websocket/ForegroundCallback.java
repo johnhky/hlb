@@ -139,8 +139,8 @@ public class ForegroundCallback implements Application.ActivityLifecycleCallback
     }
 
     public interface Listener {
-        public void onBecameForeground();
+        void onBecameForeground();
 
-        public void onBecameBackground();
+        void onBecameBackground();
     }
 }

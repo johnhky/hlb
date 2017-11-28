@@ -16,6 +16,7 @@ import com.hlb.haolaoban.handler.MsgHandler;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.FinishChatEvent;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
+import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.NotificationUtil;
 import com.neovisionaries.ws.client.WebSocket;
@@ -23,6 +24,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketFrame;
+import com.neovisionaries.ws.client.WebSocketState;
 import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONException;
@@ -42,8 +44,7 @@ public class WebSocketManager {
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int FRAME_QUEUE_SIZE = 5;
     private static WebSocketManager mInstance;
-    private WebSocket ws;
-    private WsListener mListener;
+    public WebSocket ws;
     private WsStatus wsStatus;
     private String url = "";
     Gson gson = new GsonBuilder().create();
@@ -65,7 +66,7 @@ public class WebSocketManager {
             ws = new WebSocketFactory().createSocket(url, CONNECT_TIMEOUT)
                     .setFrameQueueSize(FRAME_QUEUE_SIZE)//设置帧队列最大值为5
                     .setMissingCloseFrameAllowed(false)//设置不允许服务端关闭连接却未发送关闭帧
-                    .addListener(mListener = new WsListener())//添加回调监听
+                    .addListener(new WsListener())//添加回调监听
                     .connectAsynchronously();//异步连接
             setWsStatus(WsStatus.CONNECTING);
         } catch (IOException e) {
@@ -86,22 +87,16 @@ public class WebSocketManager {
             reconnectCount = 0;
             return;
         }
-
         //这里其实应该还有个用户是否登录了的判断 因为当连接成功后我们需要发送用户信息到服务端进行校验
         //由于我们这里是个demo所以省略了
-        if (ws != null &&
-                !ws.isOpen() &&//当前连接断开了
-                getWsStatus() != WsStatus.CONNECTING) {//不是正在重连状态
-
+        if (ws != null && !ws.isOpen() && getWsStatus() != WsStatus.CONNECTING) {//不是正在重连状态
             reconnectCount++;
             setWsStatus(WsStatus.CONNECTING);
-
             long reconnectTime = minInterval;
             if (reconnectCount > 2000) {
                 long temp = minInterval * (reconnectCount - 2);
                 reconnectTime = temp > maxInterval ? maxInterval : temp;
             }
-
             mHandler.postDelayed(mReconnectTask, reconnectTime);
         }
     }
@@ -114,7 +109,7 @@ public class WebSocketManager {
                 ws = new WebSocketFactory().createSocket(url, CONNECT_TIMEOUT)
                         .setFrameQueueSize(FRAME_QUEUE_SIZE)//设置帧队列最大值为5
                         .setMissingCloseFrameAllowed(false)//设置不允许服务端关闭连接却未发送关闭帧
-                        .addListener(mListener = new WsListener())//添加回调监听
+                        .addListener(new WsListener())//添加回调监听
                         .connectAsynchronously();//异步连接
             } catch (IOException e) {
                 e.printStackTrace();
@@ -143,12 +138,12 @@ public class WebSocketManager {
     }
 
 
-    class WsListener extends WebSocketAdapter {
+    public class WsListener extends WebSocketAdapter {
 
         @Override
         public void onTextMessage(WebSocket websocket, String text) throws Exception {
             super.onTextMessage(websocket, text);
-            Log.e("eeee",text);
+            Log.e("eeee", text);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(text);
@@ -205,6 +200,7 @@ public class WebSocketManager {
             }
         }
 
+
         @Override
         public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
             super.onConnected(websocket, headers);
@@ -216,7 +212,15 @@ public class WebSocketManager {
         public void onConnectError(WebSocket websocket, WebSocketException exception) throws Exception {
             super.onConnectError(websocket, exception);
             setWsStatus(WsStatus.CONNECT_FAIL);
-            Log.e("eeee",exception.getMessage());
+            Log.e("eeee", exception.getMessage());
+            /*reconnect();*/
+            BusProvider.getInstance().postEvent(new LoginWebSocketEvent(url));
+        }
+
+        @Override
+        public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
+            super.onError(websocket, cause);
+            setWsStatus(WsStatus.CONNECT_FAIL);
             reconnect();
         }
 
@@ -225,6 +229,15 @@ public class WebSocketManager {
             super.onDisconnected(websocket, serverCloseFrame, clientCloseFrame, closedByServer);
             setWsStatus(WsStatus.CONNECT_FAIL);
             reconnect();
+        }
+
+        @Override
+        public void onStateChanged(WebSocket websocket, WebSocketState newState) throws Exception {
+            super.onStateChanged(websocket, newState);
+            if (newState == WebSocketState.CLOSED) {
+                setWsStatus(WsStatus.CONNECT_FAIL);
+                reconnect();
+            }
         }
 
     }

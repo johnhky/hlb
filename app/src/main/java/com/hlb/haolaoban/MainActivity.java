@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -26,9 +27,11 @@ import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.PrescriptionActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
+import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
@@ -40,20 +43,33 @@ import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.FinishChatEvent;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
+import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
+import com.hlb.haolaoban.utils.NotificationUtil;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
+import de.tavendo.autobahn.WebSocketOptions;
 
 
 /**
@@ -66,10 +82,16 @@ public class MainActivity extends FragmentActivity {
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     public static final int PERMISSION_REQUEST_CODE = 2002;
+    private long time = 100000000000L;
+    WebSocketConnection webSocketConnection = new WebSocketConnection();
+    private WebSocketOptions mWebSocketOptions = new WebSocketOptions();
+    String webStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mWebSocketOptions.setSocketConnectTimeout(30000);
+        mWebSocketOptions.setSocketReceiveTimeout(10000);
         BusProvider.getInstance().register(this);
         parseData();
         showToken();
@@ -80,11 +102,113 @@ public class MainActivity extends FragmentActivity {
         if (mainHome == null) {
             mainHome = new MainHomeFragment();
             transaction.add(R.id.fragment_container, mainHome);
-
             binding.titlebar.toolBar.setNavigationIcon(null);
         }
         transaction.commit();
         initView();
+        if (null != Hawk.get(Constants.MID)) {
+            webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID);
+            login(webStr);
+        }
+    }
+
+    private void login(final String url) {
+        try {
+            webSocketConnection.connect(url, new WebSocketHandler() {
+                @Override
+                public void onOpen() {
+                    super.onOpen();
+                    sendMsg();
+                }
+
+                @Override
+                public void onClose(int code, String reason) {
+                    super.onClose(code, reason);
+                    if (code==2){
+                        BusProvider.getInstance().postEvent(new LoginWebSocketEvent(webStr));
+                    }
+                }
+
+                @Override
+                public void onTextMessage(String payload) {
+                    super.onTextMessage(payload);
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(payload);
+                        int code = jsonObject.optInt("nFlag");
+                        String type = jsonObject.getString("type");
+                        String channel = "";
+                        if (code == 1) {
+                            if (!TextUtils.isEmpty(type)) {
+                                if (type.equals("calling")) {
+                                    channel = jsonObject.getString("channel");
+                                }
+                                switch (type) {
+                                    case "meet":
+                                        BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
+                                        break;
+                                    case "refuse":
+                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
+                                        break;
+                                    case "calling":
+                                        BusProvider.getInstance().postEvent(new JoinVideoEvent(type, channel));
+                                        break;
+                                }
+                            }
+                        } else {
+                            String msg = jsonObject.getString("msg");
+                            String mode = jsonObject.getString("mode");
+                            if (mode.equals("order")) {
+                                switch (type) {
+                                    case "1":
+                                    case "2":
+                                    case "3":
+                                    case "4":
+                                    case "5":
+                                        NotificationUtil.showNotification(MyApplication.mContext, type, msg);
+                                        break;
+                                }
+                            } else if (mode.equals("message")) {
+                                switch (type) {
+                                    case "1":
+                                    case "4":
+                                        NotificationUtil.showNotification(MyApplication.mContext, "", msg);
+                                        break;
+                                    case "2":
+                                        if (!TextUtils.isEmpty(jsonObject.getString("data"))) {
+                                            saveMsg(payload, Hawk.get(Constants.MID) + "");
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, mWebSocketOptions);
+        } catch (WebSocketException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void sendMsg() {
+        CountDownTimer timer = new CountDownTimer(time, 5000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                webSocketConnection.sendTextMessage("");
+                Log.e("eeee", System.currentTimeMillis() + "");
+            }
+
+            @Override
+            public void onFinish() {
+                time = 10000000000L;
+                sendMsg();
+            }
+        };
+        timer.start();
     }
 
     public void showToken() {
@@ -182,6 +306,11 @@ public class MainActivity extends FragmentActivity {
             Intent i = ChatActivity.intentFor(MainActivity.this, event.getChannel());
             startActivity(i);
         }
+    }
+
+    @Subscribe
+    public void onReciveEvent(LoginWebSocketEvent event) {
+        login(event.getUrl());
     }
 
     @Subscribe
@@ -308,12 +437,27 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    private void saveMsg(String s, String id) {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(s);
+            String data = jsonObject.getString("data");
+            if (!TextUtils.isEmpty(data)) {
+                jsonObject = new JSONObject(data);
+                String drugs = jsonObject.getString("data");
+                List<DrugRemind> list = gson.fromJson(drugs, new TypeToken<ArrayList<DrugRemind>>() {
+                }.getType());
+                MsgHandler.saveMsg(list, id);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     private String getData() {
         return getIntent().getStringExtra(Constants.DATA);
     }
-
-
 
 
 }
