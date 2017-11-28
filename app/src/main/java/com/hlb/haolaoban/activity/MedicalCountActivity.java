@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -63,6 +64,7 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
         api.getBaseUrl(HttpUrls.getMedical(Settings.getUserProfile().getMid() + "", pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
+                Log.e("eeee",response);
                 binding.swipeRefresh.setRefreshing(false);
                 MedicalBean data = gson.fromJson(response, MedicalBean.class);
                 if (!data.getItems().isEmpty()) {

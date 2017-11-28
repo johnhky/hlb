@@ -34,6 +34,12 @@ public class BindPhoneActivity1 extends BaseActivity {
                 finish();
             }
         });
+        binding.titlebar.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         binding.tvForget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

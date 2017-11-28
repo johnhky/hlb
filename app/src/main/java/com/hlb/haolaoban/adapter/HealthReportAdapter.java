@@ -47,7 +47,7 @@ public class HealthReportAdapter extends RecyclerView.Adapter<HealthReportAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.tv_report.setText(lists.get(position).getContent());
-        holder.tv_name.setText(lists.get(position).getDoctor_name());
+        holder.tv_name.setText(lists.get(position).getDoctor_name()+"医生");
         holder.tv_time.setText(Utils.stampToDate(lists.get(position).getAddtime() + "000"));
         holder.ll_report.setOnClickListener(new View.OnClickListener() {
             @Override

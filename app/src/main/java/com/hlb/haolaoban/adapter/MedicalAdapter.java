@@ -28,14 +28,14 @@ public class MedicalAdapter extends RecyclerView.Adapter<MedicalAdapter.ViewHold
         this.context = context;
     }
 
-    public void update(List<MedicalBean.ItemsBean> myDatas){
-        this.myDatas  = myDatas;
+    public void update(List<MedicalBean.ItemsBean> myDatas) {
+        this.myDatas = myDatas;
         notifyDataSetChanged();
     }
 
     @Override
     public MedicalAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_medical_count,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_medical_count, null);
         return new ViewHolder(view);
     }
 
@@ -43,7 +43,8 @@ public class MedicalAdapter extends RecyclerView.Adapter<MedicalAdapter.ViewHold
     public void onBindViewHolder(MedicalAdapter.ViewHolder holder, int position) {
         Glide.with(context).load(myDatas.get(position).getImages()).centerCrop().into(holder.iv_image);
         holder.tv_name.setText(myDatas.get(position).getName());
-        holder.tv_num.setText(myDatas.get(position).getNum()+"");
+        holder.tv_num.setText(myDatas.get(position).getNum() + "");
+        holder.tv_specification.setText(myDatas.get(position).getSpec()+"");
     }
 
     @Override
@@ -51,15 +52,17 @@ public class MedicalAdapter extends RecyclerView.Adapter<MedicalAdapter.ViewHold
         return myDatas.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View view){
+        public ViewHolder(View view) {
             super(view);
             iv_image = (ImageView) view.findViewById(R.id.iv_image);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
             tv_num = (TextView) view.findViewById(R.id.tv_num);
+            tv_specification = (TextView) view.findViewById(R.id.tv_specification);
         }
+
         ImageView iv_image;
-        TextView tv_name, tv_num;
+        TextView tv_name, tv_num, tv_specification;
     }
 }

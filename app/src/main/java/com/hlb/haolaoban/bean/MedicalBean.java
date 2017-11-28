@@ -72,7 +72,7 @@ public class MedicalBean {
         private int id;
         private int mid;
         private int did;
-        private int num;
+        private String num;
         private int addtime;
         private String name;
         private String images;
@@ -102,11 +102,11 @@ public class MedicalBean {
             this.did = did;
         }
 
-        public int getNum() {
+        public String getNum() {
             return num;
         }
 
-        public void setNum(int num) {
+        public void setNum(String num) {
             this.num = num;
         }
 

@@ -109,7 +109,6 @@ public class ForgetPasswordActivity2 extends BaseActivity {
         api.noResponse(HttpUrls.getCheck(getPhone())).enqueue(new Callback<ApiDTO>() {
             @Override
             public void onResponse(retrofit2.Call<ApiDTO> call, Response<ApiDTO> response) {
-                binding.tvMsg.setText(response.body().toString());
             }
 
             @Override

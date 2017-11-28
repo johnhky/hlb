@@ -35,6 +35,12 @@ public class BindPhoneActivity2 extends BaseActivity {
                 finish();
             }
         });
+        binding.titlebar.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         binding.titlebar.tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

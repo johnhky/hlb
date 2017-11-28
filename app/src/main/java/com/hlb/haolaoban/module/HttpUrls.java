@@ -35,6 +35,15 @@ public class HttpUrls {
         params.put("method", "article.get.list");
         return params;
     }
+    /*首页文章列表参数*/
+    public static Map<String, String> getHelpCenter(int pageNo) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[catid]", 12 + "");
+        params.put("param[pageno]", pageNo + "");
+        params.put("method", "article.get.list");
+        return params;
+    }
 
     /*用户个人信息参数*/
     public static Map<String, String> getUserInfo() {
@@ -102,6 +111,17 @@ public class HttpUrls {
         params.put("method", "member.modify.password");
         return params;
     }
+
+    /*发起视频通话请求*/
+    public static Map<String, String> uploadData(String mid, String name, String photo) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "user.infos");
+        params.put("mid", mid);
+        params.put("name", name);
+        params.put("photo", photo);
+        return params;
+    }
+
 
     /*药品存量列表*/
     public static Map<String, String> getMedical(String mid, int pageNo) {
@@ -229,11 +249,11 @@ public class HttpUrls {
     }
 
     /*上传语音*/
-    public static Map<String, String> uploadAudio(int mid,String club_id) {
+    public static Map<String, String> uploadAudio(int mid, String club_id) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "voice.push");
         params.put("mid", mid + "");
-        params.put("team",club_id);
+        params.put("team", club_id);
         return params;
     }
 
@@ -258,7 +278,7 @@ public class HttpUrls {
     /*获取老人血压值
     * @param device   1.血压计  2.血糖仪  3.手环 4.体温计 5.体脂称
     * */
-    public static Map<String, String> getRealTime(String id, String device, String start_time,String end_time) {
+    public static Map<String, String> getRealTime(String id, String device, String start_time, String end_time) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
         params.put("param[mid]", id);

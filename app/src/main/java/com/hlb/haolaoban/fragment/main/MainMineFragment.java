@@ -24,6 +24,7 @@ import com.hlb.haolaoban.activity.PersonalActivity;
 import com.hlb.haolaoban.activity.RemindListActivity;
 import com.hlb.haolaoban.databinding.ActivityMineBinding;
 import com.hlb.haolaoban.base.BaseFragment;
+
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;

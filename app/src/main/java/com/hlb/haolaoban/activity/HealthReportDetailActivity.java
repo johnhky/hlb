@@ -35,7 +35,7 @@ public class HealthReportDetailActivity extends BaseActivity {
     }
 
     protected void initView() {
-        binding.titlebar.tbTitle.setText(getName());
+        binding.titlebar.tbTitle.setText(getName()+"的健康报告");
         binding.tvContent.setText(getContent());
         binding.tvTime.setText(getTime());
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {

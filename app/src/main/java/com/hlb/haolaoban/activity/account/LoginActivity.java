@@ -23,6 +23,11 @@ import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 
@@ -34,7 +39,6 @@ public class LoginActivity extends BaseActivity {
     Gson gson;
     ActivityLoginBinding binding;
     ApiModule api = Api.of(ApiModule.class);
-    private final String TAG = this.getClass().getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,8 +93,7 @@ public class LoginActivity extends BaseActivity {
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                String webUrl = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + data.getMid() + "&team_id=" + data.getDoctor_team_id();
-                WebSocketManager.getInstance().init(webUrl);
+                uploadData(data.getMid() + "", data.getName(), data.getPhoto());
                 startActivity(MainActivity.class);
                 finish();
             }
@@ -99,6 +102,30 @@ public class LoginActivity extends BaseActivity {
             public void onFailure(Call call, Throwable t) {
                 super.onFailure(call, t);
                 DialogUtils.hideLoading(mActivity);
+            }
+        });
+    }
+
+    private void uploadData(final String mid, String name, String photo) {
+
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.uploadData(mid, name, photo)).build().execute(new StringCallback() {
+            @Override
+            public void onError(okhttp3.Call call, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                String webUrl = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + mid;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    int code = jsonObject.optInt("code");
+                    if (code == 1) {
+                        WebSocketManager.getInstance().init(webUrl);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

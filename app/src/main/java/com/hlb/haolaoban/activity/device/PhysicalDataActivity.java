@@ -104,7 +104,7 @@ public class PhysicalDataActivity extends BaseActivity {
 
     private void initData() {
         long currentTime = System.currentTimeMillis() / 1000;
-        long sevenDayTimeStamp = currentTime - 86400 * 7;
+        long sevenDayTimeStamp = currentTime - 86400 * 6;
         api.getBaseUrl(HttpUrls.getRealTime(Settings.getUserProfile().getMid() + "", getType(), sevenDayTimeStamp + "", currentTime + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {

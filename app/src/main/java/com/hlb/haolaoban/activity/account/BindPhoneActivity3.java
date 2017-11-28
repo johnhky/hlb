@@ -59,7 +59,12 @@ public class BindPhoneActivity3 extends BaseActivity {
                 finish();
             }
         });
-
+        binding.titlebar.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         binding.titlebar.tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +75,16 @@ public class BindPhoneActivity3 extends BaseActivity {
             @Override
             public void onClick(View v) {
                 countUtil.start();
+                getCheck();
+            }
+        });
+    }
+
+    private void getCheck() {
+        api.getBaseUrl(HttpUrls.getCheck(getPhone())).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+
             }
         });
     }

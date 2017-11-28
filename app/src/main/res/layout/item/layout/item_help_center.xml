@@ -66,6 +66,11 @@
                 android:text="就开始加快卡死了施蒂利克拉克四大皆空萨拉上来看见索拉卡了开sad 算啦是是的路上看到索拉卡"
                 android:textColor="@color/gray_33"
                 android:textSize="@dimen/sp_18" />
+
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/main_bg"></View>
     </LinearLayout>
 </LinearLayout>
