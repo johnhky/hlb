@@ -13,11 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.MessageActivity;
-import com.hlb.haolaoban.activity.device.DeviceManageActivity;
 import com.hlb.haolaoban.activity.mine.AboutActivity;
 import com.hlb.haolaoban.activity.AccountActivity;
 import com.hlb.haolaoban.activity.mine.FeedBackActivity;
@@ -25,13 +22,8 @@ import com.hlb.haolaoban.activity.HealthRecordActivity;
 import com.hlb.haolaoban.activity.mine.HelpCenterActivity;
 import com.hlb.haolaoban.activity.PersonalActivity;
 import com.hlb.haolaoban.activity.RemindListActivity;
-import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMineBinding;
 import com.hlb.haolaoban.base.BaseFragment;
-import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.http.SimpleCallback;
-import com.hlb.haolaoban.module.ApiModule;
-import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
@@ -42,8 +34,6 @@ import com.hlb.haolaoban.utils.Utils;
 
 public class MainMineFragment extends BaseFragment {
     ActivityMineBinding binding;
-    ApiModule api = Api.of(ApiModule.class);
-    Gson gson = new GsonBuilder().create();
 
     @Nullable
     @Override
@@ -116,12 +106,12 @@ public class MainMineFragment extends BaseFragment {
                 startActivity(RemindListActivity.class);
             }
         });
-        binding.tvDevice.setOnClickListener(new View.OnClickListener() {
+  /*      binding.tvDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(DeviceManageActivity.class);
             }
-        });
+        });*/
         binding.tvMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

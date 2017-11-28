@@ -105,7 +105,7 @@
         <activity
             android:name=".activity.mine.FeedBackActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"></activity>\]
+            android:windowSoftInputMode="stateHidden|adjustPan"></activity>\]
         <activity
             android:name=".activity.mine.BigImageActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
@@ -137,7 +137,7 @@
             android:name=".activity.MessageActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.device.BloodPressureActivity"
+            android:name=".activity.device.PhysicalDataActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 微信支付回调 -->
         <activity

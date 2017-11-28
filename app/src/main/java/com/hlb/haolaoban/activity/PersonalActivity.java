@@ -48,9 +48,9 @@ public class PersonalActivity extends BaseActivity {
         String gender = "";
         if (!TextUtils.isEmpty(data.getSex())) {
             if (data.getSex().equals("0")) {
-                gender = "男";
-            } else {
                 gender = "女";
+            } else {
+                gender = "男";
             }
         }
         binding.etGender.setText(gender);

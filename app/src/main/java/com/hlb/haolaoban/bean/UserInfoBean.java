@@ -27,6 +27,9 @@ public class UserInfoBean implements Serializable{
     private String addtime;
     private Children children;
     private String service_out_time;
+    private String club_username;
+    private String doctor_team_username;
+
     public int getMid() {
         return mid;
     }
@@ -177,6 +180,22 @@ public class UserInfoBean implements Serializable{
 
     public void setService_out_time(String service_out_time) {
         this.service_out_time = service_out_time;
+    }
+
+    public String getClub_username() {
+        return club_username;
+    }
+
+    public void setClub_username(String club_username) {
+        this.club_username = club_username;
+    }
+
+    public String getDoctor_team_username() {
+        return doctor_team_username;
+    }
+
+    public void setDoctor_team_username(String doctor_team_username) {
+        this.doctor_team_username = doctor_team_username;
     }
 
     public Children getChildren() {

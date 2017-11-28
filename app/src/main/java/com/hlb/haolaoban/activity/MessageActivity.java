@@ -6,7 +6,9 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -57,7 +59,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
                 finish();
             }
         });
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+  /*      binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -66,7 +68,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
                     initData(pageNo);
                 }
             }
-        });
+        });*/
         onRefresh();
     }
 

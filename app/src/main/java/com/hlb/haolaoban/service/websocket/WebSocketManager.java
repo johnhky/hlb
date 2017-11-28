@@ -3,7 +3,6 @@ package com.hlb.haolaoban.service.websocket;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -79,7 +78,7 @@ public class WebSocketManager {
     private Handler mHandler = new Handler();
 
     private int reconnectCount = 0;//重连次数
-    private long minInterval = 3000;//重连最小时间间隔
+    private long minInterval = 5000;//重连最小时间间隔
     private long maxInterval = 60000;//重连最大时间间隔
 
     public void reconnect() {
@@ -98,12 +97,11 @@ public class WebSocketManager {
             setWsStatus(WsStatus.CONNECTING);
 
             long reconnectTime = minInterval;
-            if (reconnectCount > 3) {
+            if (reconnectCount > 2000) {
                 long temp = minInterval * (reconnectCount - 2);
                 reconnectTime = temp > maxInterval ? maxInterval : temp;
             }
 
-            ;
             mHandler.postDelayed(mReconnectTask, reconnectTime);
         }
     }
@@ -150,6 +148,7 @@ public class WebSocketManager {
         @Override
         public void onTextMessage(WebSocket websocket, String text) throws Exception {
             super.onTextMessage(websocket, text);
+            Log.e("eeee",text);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(text);
@@ -217,6 +216,7 @@ public class WebSocketManager {
         public void onConnectError(WebSocket websocket, WebSocketException exception) throws Exception {
             super.onConnectError(websocket, exception);
             setWsStatus(WsStatus.CONNECT_FAIL);
+            Log.e("eeee",exception.getMessage());
             reconnect();
         }
 

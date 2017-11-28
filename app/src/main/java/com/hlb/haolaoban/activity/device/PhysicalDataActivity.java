@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -15,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.bean.device.BloodPressureBean;
-import com.hlb.haolaoban.databinding.ActivityBloodPressureBinding;
+import com.hlb.haolaoban.databinding.ActivityPhysicalDataBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
@@ -26,6 +25,7 @@ import com.hlb.haolaoban.utils.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.formatter.AxisValueFormatter;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -40,8 +40,8 @@ import lecho.lib.hellocharts.model.Viewport;
  * Created by heky on 2017/11/24.
  */
 
-public class BloodPressureActivity extends BaseActivity {
-    ActivityBloodPressureBinding binding;
+public class PhysicalDataActivity extends BaseActivity {
+    ActivityPhysicalDataBinding binding;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     List<BloodPressureBean> list = new ArrayList<>();
@@ -49,7 +49,7 @@ public class BloodPressureActivity extends BaseActivity {
     private List<AxisValue> mAxisXValues = new ArrayList<>();
 
     public static Intent intentFor(Context context, String type) {
-        Intent i = new Intent(context, BloodPressureActivity.class);
+        Intent i = new Intent(context, PhysicalDataActivity.class);
         i.putExtra(Constants.TYPE, type);
         return i;
     }
@@ -57,7 +57,7 @@ public class BloodPressureActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_blood_pressure);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_physical_data);
         initView();
         initData();
     }
@@ -108,7 +108,10 @@ public class BloodPressureActivity extends BaseActivity {
         api.getBaseUrl(HttpUrls.getRealTime(Settings.getUserProfile().getMid() + "", getType(), sevenDayTimeStamp + "", currentTime + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                if (response.length() > 7) {
+                if (response.length() < 7) {
+                    showToast("暂无相关数据");
+                    return;
+                }else {
                     binding.llChart.setVisibility(View.VISIBLE);
                     list = gson.fromJson(response, new TypeToken<ArrayList<BloodPressureBean>>() {
                     }.getType());
@@ -116,10 +119,10 @@ public class BloodPressureActivity extends BaseActivity {
                     getAxisPoints();
                     initLineChart();
                 }
+
             }
         });
     }
-
 
     /**
      * 初始化LineChart的一些设置
@@ -152,7 +155,6 @@ public class BloodPressureActivity extends BaseActivity {
         data.setAxisXBottom(axisX); //x 轴在底部
 //	    data.setAxisXTop(axisX);  //x 轴在顶部
         axisX.setHasLines(true); //x 轴分割线
-
 
         Axis axisY = new Axis();  //Y轴
         axisY.setTextColor(Color.parseColor("#333333"));

@@ -27,7 +27,7 @@ public class MessageBean {
     }
 
     public List<MsgBean> getMsg() {
-        if (null==msg){
+        if (null == msg) {
             return new ArrayList<>();
         }
         return msg;
@@ -53,7 +53,7 @@ public class MessageBean {
         private String from;
         private String type;
         private String msg;
-        private String data;
+        private MyData data;
         private String time;
         private int taskid;
         private String mode;
@@ -90,11 +90,11 @@ public class MessageBean {
             this.msg = msg;
         }
 
-        public String getData() {
+        public MyData getData() {
             return data;
         }
 
-        public void setData(String data) {
+        public void setData(MyData data) {
             this.data = data;
         }
 
@@ -121,5 +121,36 @@ public class MessageBean {
         public void setMode(String mode) {
             this.mode = mode;
         }
+
+        public static class MyData {
+            public String id;
+            public String msg;
+            public int status;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getMsg() {
+                return msg;
+            }
+
+            public void setMsg(String msg) {
+                this.msg = msg;
+            }
+
+            public int getStatus() {
+                return status;
+            }
+
+            public void setStatus(int status) {
+                this.status = status;
+            }
+        }
     }
+
 }

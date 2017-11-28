@@ -13,8 +13,12 @@
         <item name="colorPrimary">@color/main_tab_color</item>
         <item name="colorPrimaryDark">@color/main_tab_color</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
-
+    <style name="NewAppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

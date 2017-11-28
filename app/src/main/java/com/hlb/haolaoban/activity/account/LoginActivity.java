@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActivity {
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                String webUrl = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + data.getMid() + "&club_id=" + data.getClub_id();
+                String webUrl = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + data.getMid() + "&team_id=" + data.getDoctor_team_id();
                 WebSocketManager.getInstance().init(webUrl);
                 startActivity(MainActivity.class);
                 finish();

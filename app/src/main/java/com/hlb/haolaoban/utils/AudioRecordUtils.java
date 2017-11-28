@@ -25,7 +25,7 @@ public class AudioRecordUtils {
 
     public static final int MAX_LENGTH = 1000 * 60;// 最大录音时长1000*60;
 
-    public static final int MIX_LENGTH = 1 * 1000;
+    public static final int MIX_LENGTH = 1500;
 
     private OnAudioStatusUpdateListener audioUpdateListtener;
 

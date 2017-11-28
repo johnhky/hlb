@@ -41,6 +41,9 @@
 -keep public class * extends android.app.Fragment
 -keep class * extends java.lang.annotation.Annotation { *; }#注解包下的所有内容不要混淆
 
+-keep class com.hlb.haolaoban.bean.**{*;}
+-keep class com.hlb.haolaoban.utils.**{*;}
+
 -keepclasseswithmembernames class * {
     native <methods>;
 }
@@ -119,6 +122,7 @@
 -keep class com.tencent.bugly.**{*;}
 -keep class retrofit2.** { *; }
 -keep class com.tencent.mm.opensdk.**{*;}
+-keep class lecho.lib.hellocharts.**{*;}
 
 -dontwarn com.tencent.mm.opensdk.**
 -dontwarn retrofit2.**
@@ -126,6 +130,7 @@
 -dontwarn com.tencent.bugly.**
 -dontwarn io.agora.rtc.**
 -dontwarn okio.**
+-dontwarn lecho.lib.hellocharts.**
 # Okio
 -keep class sun.misc.Unsafe { *; }
 -dontwarn java.nio.file.*

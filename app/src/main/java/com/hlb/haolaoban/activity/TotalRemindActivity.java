@@ -33,6 +33,7 @@ public class TotalRemindActivity extends BaseActivity {
                     switch (which) {
                         case 1:
                             startActivity(PrescriptionActivity.class);
+
                             finish();
                             break;
                     }

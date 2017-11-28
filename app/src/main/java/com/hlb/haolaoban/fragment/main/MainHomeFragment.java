@@ -1,12 +1,15 @@
 package com.hlb.haolaoban.fragment.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.util.Log;
@@ -78,7 +81,6 @@ public class MainHomeFragment extends BaseFragment {
     ImageView iv_state;
     TextView tv_voice;
     private float startY, endY;
-    List<RemindBean.ItemsBean> data;
     MyRemindAdapter myRemindAdapter;
 
     @Nullable
@@ -104,7 +106,6 @@ public class MainHomeFragment extends BaseFragment {
     }
 
     private void initView() {
-
         recordUtils.setOnAudioUpdateListener(new AudioRecordUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
@@ -147,22 +148,30 @@ public class MainHomeFragment extends BaseFragment {
                 }
             }
         });
+
         binding.listItem.mainLlContactTeam.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        startY = event.getY();
-                        popupWindow.showAtLocation(binding.llRemind, Gravity.CENTER, 0, 0);
-                        recordUtils.startRecord();
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            startY = event.getY();
+                            popupWindow.showAtLocation(binding.llRemind, Gravity.CENTER, 0, 0);
+                            recordUtils.startRecord();
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            endY = event.getY();
+                            recordUtils.stopRecord();
+                            recordUtils.cancelRecord();
+                            popupWindow.dismiss();
+                            break;
+                        case MotionEvent.ACTION_CANCEL:
+                            endY = 0;
+                            recordUtils.stopRecord();
+                            recordUtils.cancelRecord();
+                            popupWindow.dismiss();
                         break;
-                    case MotionEvent.ACTION_UP:
-                        endY = event.getY();
-                        recordUtils.stopRecord();
-                        recordUtils.cancelRecord();
-                        popupWindow.dismiss();
-                        break;
-                }
+                    }
+
                 return true;
             }
         });
@@ -181,6 +190,7 @@ public class MainHomeFragment extends BaseFragment {
             public void onError(Call call, Exception e, int id) {
                 DialogUtils.hideLoading(mActivity);
             }
+
 
             @Override
             public void onResponse(String response, int id) {
@@ -320,13 +330,13 @@ public class MainHomeFragment extends BaseFragment {
 
     /*联系俱乐部*/
     private void contactClub() {
-        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
+        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getClub_name(), new DialogUtils.OnDialogItemClickListener() {
             @Override
             public void onItemClick(int which) {
                 if (which == 1) {
                     Intent i = new Intent();
                     i.setAction(Intent.ACTION_CALL);
-                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getUsername()));
+                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getClub_username()));
                     startActivity(i);
                 }
             }

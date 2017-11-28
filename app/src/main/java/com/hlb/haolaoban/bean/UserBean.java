@@ -9,13 +9,16 @@ import java.io.Serializable;
 public class UserBean implements Serializable{
 
     /**
-     * mid : 99
-     * username : 13660053578
-     * invalidtime : 1510210979
-     * club_id : 46
-     * doctor_team_id : 37
+     * mid : 272
+     * username : 13560553124
+     * invalidtime : 1511942183
+     * club_id : 240
+     * doctor_team_id : 242
      * pid : 0
-     * voucherid : 1330fd53779b40fbb84c85fb93b5fbdb
+     * voucherid : 448a3a1203bacddf0620e7b7e15eeadd
+     * photo : http://test.haolaoban99.com/uploads/20171128/1511846919.jpeg
+     * name : 陈梦瑶
+     * addtime : 1511847075
      */
 
     private int mid;
@@ -25,6 +28,9 @@ public class UserBean implements Serializable{
     private int doctor_team_id;
     private int pid;
     private String voucherid;
+    private String photo;
+    private String name;
+    private int addtime;
 
     public int getMid() {
         return mid;
@@ -80,5 +86,29 @@ public class UserBean implements Serializable{
 
     public void setVoucherid(String voucherid) {
         this.voucherid = voucherid;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAddtime() {
+        return addtime;
+    }
+
+    public void setAddtime(int addtime) {
+        this.addtime = addtime;
     }
 }

@@ -124,5 +124,4 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'com.neovisionaries:nv-websocket-client:2.2'
-    compile files('libs/libammsdk.jar')
 }

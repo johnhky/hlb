@@ -1,16 +1,19 @@
 package com.hlb.haolaoban.fragment.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -181,7 +184,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
-                .params(HttpUrls.uploadAudio(Settings.getUserProfile().getMid(), Settings.getUserProfile().getDoctor_team_id()+""))
+                .params(HttpUrls.uploadAudio(Settings.getUserProfile().getMid(), Settings.getUserProfile().getDoctor_team_id() + ""))
                 .addFile("file", newFileName, file).build().execute(new StringCallback() {
             @Override
             public void onError(okhttp3.Call call, Exception e, int id) {
@@ -242,13 +245,13 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void contactClub() {
-        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getUsername(), new DialogUtils.OnDialogItemClickListener() {
+        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getClub_name(), new DialogUtils.OnDialogItemClickListener() {
             @Override
             public void onItemClick(int which) {
                 if (which == 1) {
                     Intent i = new Intent();
                     i.setAction(Intent.ACTION_CALL);
-                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getUsername()));
+                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getClub_username()));
                     startActivity(i);
                 }
             }

@@ -36,9 +36,9 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Ho
     public void onBindViewHolder(Holder holder, int position) {
         holder.tv_title.setText(myDatas.get(position).getContent());
         if (myDatas.get(position).getStart_day() == 0) {
-            holder.tv_time.setText(myDatas.get(position).getStart_his());
+            holder.tv_time.setText("每天 " + myDatas.get(position).getStart_his());
         } else {
-            holder.tv_time.setText(myDatas.get(position).getStart_his());
+            holder.tv_time.setText(myDatas.get(position).getStart_day() + "号 " + myDatas.get(position).getStart_his());
         }
 
     }
