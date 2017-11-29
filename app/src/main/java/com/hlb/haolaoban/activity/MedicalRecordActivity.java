@@ -52,7 +52,7 @@ public class MedicalRecordActivity extends BaseActivity implements SwipeRefreshL
         binding.swipeRefresh.setOnRefreshListener(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         binding.recyclerView.setLayoutManager(gridLayoutManager);
-        binding.recyclerView.addItemDecoration(new SpaceItemDecoration(20));
+        /*binding.recyclerView.addItemDecoration(new SpaceItemDecoration(20));*/
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

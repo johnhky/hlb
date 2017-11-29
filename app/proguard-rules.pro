@@ -122,7 +122,7 @@
 -keep class com.tencent.bugly.**{*;}
 -keep class retrofit2.** { *; }
 -keep class com.tencent.mm.opensdk.**{*;}
--keep class lecho.lib.hellocharts.**{*;}
+-keep class de.tavendo.autobahn.**{*;}
 
 -dontwarn com.tencent.mm.opensdk.**
 -dontwarn retrofit2.**
@@ -130,7 +130,7 @@
 -dontwarn com.tencent.bugly.**
 -dontwarn io.agora.rtc.**
 -dontwarn okio.**
--dontwarn lecho.lib.hellocharts.**
+-dontwarn de.tavendo.autobahn.**
 # Okio
 -keep class sun.misc.Unsafe { *; }
 -dontwarn java.nio.file.*

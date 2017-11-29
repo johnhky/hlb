@@ -8,6 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -21,20 +28,10 @@ import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
+import com.hlb.haolaoban.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import lecho.lib.hellocharts.formatter.AxisValueFormatter;
-import lecho.lib.hellocharts.gesture.ZoomType;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.ValueShape;
-import lecho.lib.hellocharts.model.Viewport;
-
 
 /**
  * Created by heky on 2017/11/24.
@@ -45,8 +42,6 @@ public class PhysicalDataActivity extends BaseActivity {
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     List<BloodPressureBean> list = new ArrayList<>();
-    private List<PointValue> mPointValues = new ArrayList<>();
-    private List<AxisValue> mAxisXValues = new ArrayList<>();
 
     public static Intent intentFor(Context context, String type) {
         Intent i = new Intent(context, PhysicalDataActivity.class);
@@ -103,92 +98,93 @@ public class PhysicalDataActivity extends BaseActivity {
     }
 
     private void initData() {
-        long currentTime = System.currentTimeMillis() / 1000;
-        long sevenDayTimeStamp = currentTime - 86400 * 6;
+        final long currentTime = System.currentTimeMillis() / 1000;
+        final long sevenDayTimeStamp = currentTime - 86400 * 6;
         api.getBaseUrl(HttpUrls.getRealTime(Settings.getUserProfile().getMid() + "", getType(), sevenDayTimeStamp + "", currentTime + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
+                Log.e("eeee", response);
                 if (response.length() < 7) {
                     showToast("暂无相关数据");
                     return;
-                }else {
+                } else {
                     binding.llChart.setVisibility(View.VISIBLE);
                     list = gson.fromJson(response, new TypeToken<ArrayList<BloodPressureBean>>() {
                     }.getType());
-                    getAxisXLables();
-                    getAxisPoints();
-                    initLineChart();
+
+                    List<String> lists = new ArrayList<>();
+                    lists.add(Utils.stampToMonth(sevenDayTimeStamp + "000"));
+                    lists.add(Utils.stampToMonth((currentTime - 86400 * 5) + "000"));
+                    lists.add(Utils.stampToMonth((currentTime - 86400 * 4) + "000"));
+                    lists.add(Utils.stampToMonth((currentTime - 86400 * 3) + "000"));
+                    lists.add(Utils.stampToMonth((currentTime - 86400 * 2) + "000"));
+                    lists.add(Utils.stampToMonth((currentTime - 86400 * 1) + "000"));
+                    lists.add(Utils.stampToMonth(currentTime + "000"));
+                    setupChart(binding.lineChart, lists);
                 }
 
             }
         });
     }
 
-    /**
-     * 初始化LineChart的一些设置
-     */
-    private void initLineChart() {
-        Line line = new Line(mPointValues).setColor(Color.parseColor("#FFCD41"));  //折线的颜色
-        List<Line> lines = new ArrayList<Line>();
-        line.setShape(ValueShape.CIRCLE);//折线图上每个数据点的形状  这里是圆形 （有三种 ：ValueShape.SQUARE  ValueShape.CIRCLE  ValueShape.SQUARE）
-        line.setCubic(false);//曲线是否平滑
-        line.setStrokeWidth(1);//线条的粗细，默认是3
-        line.setFilled(false);//是否填充曲线的面积
-        line.setHasLabels(true);//曲线的数据坐标是否加上备注
-//		line.setHasLabelsOnlyForSelected(true);//点击数据坐标提示数据（设置了这个line.setHasLabels(true);就无效）
-        line.setHasLines(true);//是否用直线显示。如果为false 则没有曲线只有点显示
-        line.setHasPoints(true);//是否显示圆点 如果为false 则没有原点只有点显示
-        lines.add(line);
-        LineChartData data = new LineChartData();
-        data.setLines(lines);
-
-        //坐标轴
-        Axis axisX = new Axis(); //X轴
-        axisX.setHasTiltedLabels(true);  //X轴下面坐标轴字体是斜的显示还是直的，true是斜的显示
-//	    axisX.setTextColor(Color.WHITE);  //设置字体颜色
-        axisX.setTextColor(Color.parseColor("#333333"));//灰色
-
-//	    axisX.setName("未来几天的天气");  //表格名称
-        axisX.setTextSize(11);//设置字体大小
-        axisX.setMaxLabelChars(7); //最多几个X轴坐标，意思就是你的缩放让X轴上数据的个数7<=x<=mAxisValues.length
-        axisX.setValues(mAxisXValues);  //填充X轴的坐标名称
-        data.setAxisXBottom(axisX); //x 轴在底部
-//	    data.setAxisXTop(axisX);  //x 轴在顶部
-        axisX.setHasLines(true); //x 轴分割线
-
-        Axis axisY = new Axis();  //Y轴
-        axisY.setTextColor(Color.parseColor("#333333"));
-        axisY.setTextSize(11);//设置字体大小
-        data.setAxisYLeft(axisY);  //Y轴设置在左边
-        //data.setAxisYRight(axisY);  //y轴设置在右边
-        //设置行为属性，支持缩放、滑动以及平移
-        binding.lineChart.setInteractive(false);
-        binding.lineChart.setZoomType(ZoomType.VERTICAL);  //缩放类型，水平
-        binding.lineChart.setMaxZoom((float) 1);//缩放比例
-        binding.lineChart.setLineChartData(data);
-        binding.lineChart.setVisibility(View.VISIBLE);
-        Viewport v = new Viewport(binding.lineChart.getMaximumViewport());
-        v.left = 0;
-        v.right = 7;
-        binding.lineChart.setCurrentViewport(v);
-    }
-
-    /**
-     * X 轴的显示
-     */
-    private void getAxisXLables() {
+    // 设置显示的样式
+    void setupChart(LineChart chart, final List<String> lists) {
+        ArrayList<Entry> values = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            mAxisXValues.add(new AxisValue(i).setLabel(list.get(i).getDate()));
+            values.add(new Entry(i, list.get(i).getValue()));
         }
-    }
+        IAxisValueFormatter formatter = new IAxisValueFormatter() {
 
-    /**
-     * 图表的每个点的显示
-     */
-    private void getAxisPoints() {
-        for (int i = 0; i < list.size(); i++) {
-            mPointValues.add(new PointValue(i, list.get(i).getValue()));
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (list.size() == 1) {
+                    value = 0;
+                }
+                return lists.get((int) value);
+            }
+
+        };
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setGranularity(1f);  //最小轴步骤（间隔）为1
+        xAxis.setValueFormatter(formatter);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        String title = "";
+        switch (getType()) {
+            case "1":
+                title = "七日最高血压值变化";
+                break;
+            case "2":
+                title = "七日最低血压值变化";
+                break;
+            case "3":
+                title = "7日心率变化";
+                break;
+            case "4":
+                title = "7日血糖变化";
+                break;
+            case "5":
+                title = "7日体重变化(kg)";
+                break;
+            case "6":
+                title = "7日BMI变化";
+                break;
+            case "7":
+                title = "7日体脂率变化";
+                break;
+            case "8":
+                title = "7日体水分变化";
+                break;
+            case "14":
+                title = "7日蛋白质变化";
+                break;
         }
+        LineDataSet set1 = new LineDataSet(values, title);
+        LineData data = new LineData(set1);
+        data.setValueTextColor(Color.BLACK);
+        data.setValueTextSize(9f);
+        chart.setData(data);
     }
 
     private String getType() {

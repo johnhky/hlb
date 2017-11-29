@@ -125,4 +125,5 @@ dependencies {
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'com.neovisionaries:nv-websocket-client:2.2'
     compile files('libs/autobahn-0.5.0.jar')
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 }

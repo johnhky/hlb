@@ -1,15 +1,14 @@
 package com.hlb.haolaoban.fragment.main;
 
-import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.util.Log;
@@ -87,6 +86,9 @@ public class MainHomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_home, container, false);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.TYPE);
+        getActivity().registerReceiver(broadcastReceiver, filter);
         mActivity = getActivity();
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
@@ -117,6 +119,7 @@ public class MainHomeFragment extends BaseFragment {
                 } else if (dp <= 70 && dp > 55) {
                     iv_state.getDrawable().setLevel(2);
                 } else if (dp <= 85 && dp > 70) {
+
                     iv_state.getDrawable().setLevel(3);
                 } else if (dp <= 100 && dp > 85) {
                     iv_state.getDrawable().setLevel(4);
@@ -149,28 +152,29 @@ public class MainHomeFragment extends BaseFragment {
             }
         });
 
+
         binding.listItem.mainLlContactTeam.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            startY = event.getY();
-                            popupWindow.showAtLocation(binding.llRemind, Gravity.CENTER, 0, 0);
-                            recordUtils.startRecord();
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            endY = event.getY();
-                            recordUtils.stopRecord();
-                            recordUtils.cancelRecord();
-                            popupWindow.dismiss();
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                            endY = 0;
-                            recordUtils.stopRecord();
-                            recordUtils.cancelRecord();
-                            popupWindow.dismiss();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        popupWindow.showAtLocation(binding.llRemind, Gravity.CENTER, 0, 0);
+                        recordUtils.startRecord();
                         break;
-                    }
+                    case MotionEvent.ACTION_UP:
+                        endY = event.getY();
+                        recordUtils.stopRecord();
+                        recordUtils.cancelRecord();
+                        popupWindow.dismiss();
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        endY = 0;
+                        recordUtils.stopRecord();
+                        recordUtils.cancelRecord();
+                        popupWindow.dismiss();
+                        break;
+                }
 
                 return true;
             }
@@ -233,10 +237,15 @@ public class MainHomeFragment extends BaseFragment {
     }
 
     /*获取当天提醒事项*/
-    private void getTodayRemind() {
-        api.getBaseUrl(HttpUrls.getTodayRemind(Settings.getUserProfile().getMid())).enqueue(new SimpleCallback() {
+    public void getTodayRemind() {
+        if (null == Hawk.get(Constants.MID)) {
+            return;
+        }
+        int id = Hawk.get(Constants.MID);
+        api.getBaseUrl(HttpUrls.getTodayRemind(id)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
+                Log.e("eeee", response);
                 RemindBean data = gson.fromJson(response, RemindBean.class);
                 if (!TextUtils.isEmpty(response)) {
                     myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
@@ -247,10 +256,11 @@ public class MainHomeFragment extends BaseFragment {
     }
 
     /*获取文章*/
-    private void getArticle() {
+    public void getArticle() {
         api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
+                Log.e("eeee", response);
                 ArticleBean data = gson.fromJson(response, ArticleBean.class);
                 initData(data.getItems());
             }
@@ -375,4 +385,19 @@ public class MainHomeFragment extends BaseFragment {
         }
     }
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.TYPE)) {
+                getArticle();
+                getTodayRemind();
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
+    }
 }

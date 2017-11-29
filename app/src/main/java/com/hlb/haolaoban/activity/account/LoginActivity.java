@@ -18,19 +18,12 @@ import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
-import com.hlb.haolaoban.otto.BusProvider;
-import com.hlb.haolaoban.otto.LoginWebSocketEvent;
-import com.hlb.haolaoban.service.websocket.WebSocketManager;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
-import com.squareup.otto.Bus;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import retrofit2.Call;
 

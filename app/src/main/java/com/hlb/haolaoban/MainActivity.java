@@ -48,6 +48,7 @@ import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
+import com.hlb.haolaoban.otto.UpdateRemindEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.NotificationUtil;
@@ -63,8 +64,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
@@ -83,8 +82,11 @@ public class MainActivity extends FragmentActivity {
     Gson gson = new GsonBuilder().create();
     public static final int PERMISSION_REQUEST_CODE = 2002;
     private long time = 100000000000L;
+
     WebSocketConnection webSocketConnection = new WebSocketConnection();
     private WebSocketOptions mWebSocketOptions = new WebSocketOptions();
+    CountDownTimer timer;
+
     String webStr;
 
     @Override
@@ -124,9 +126,13 @@ public class MainActivity extends FragmentActivity {
                 @Override
                 public void onClose(int code, String reason) {
                     super.onClose(code, reason);
-                    if (code==2){
-                        BusProvider.getInstance().postEvent(new LoginWebSocketEvent(webStr));
+                    if (null != timer) {
+                        timer.cancel();
                     }
+                    if (!TextUtils.isEmpty(webStr)) {
+                        BusProvider.getInstance().postEvent(new LoginWebSocketEvent(webStr + ""));
+                    }
+
                 }
 
                 @Override
@@ -165,7 +171,7 @@ public class MainActivity extends FragmentActivity {
                                     case "3":
                                     case "4":
                                     case "5":
-                                        NotificationUtil.showNotification(MyApplication.mContext, type, msg);
+                                        NotificationUtil.showNotification(MainActivity.this, type, msg);
                                         break;
                                 }
                             } else if (mode.equals("message")) {
@@ -195,11 +201,10 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void sendMsg() {
-        CountDownTimer timer = new CountDownTimer(time, 5000) {
+        timer = new CountDownTimer(time, 5000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 webSocketConnection.sendTextMessage("");
-                Log.e("eeee", System.currentTimeMillis() + "");
             }
 
             @Override
@@ -241,6 +246,9 @@ public class MainActivity extends FragmentActivity {
                         } else {
                             transaction.show(mainHome);
                         }
+                        Intent post = new Intent();
+                        post.setAction(Constants.TYPE);
+                        sendBroadcast(post);
                         binding.titlebar.tbTitle.setText("好老伴");
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
                         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));

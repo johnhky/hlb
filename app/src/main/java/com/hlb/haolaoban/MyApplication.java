@@ -80,7 +80,7 @@ public class MyApplication extends Application {
         ForegroundCallback.init(this).addListener(new ForegroundCallback.Listener() {
             @Override
             public void onBecameForeground() {
-                WebSocketManager.getInstance().reconnect();
+            /*    WebSocketManager.getInstance().reconnect();*/
             }
 
             @Override

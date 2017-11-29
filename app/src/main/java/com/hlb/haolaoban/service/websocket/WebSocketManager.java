@@ -214,7 +214,7 @@ public class WebSocketManager {
             setWsStatus(WsStatus.CONNECT_FAIL);
             Log.e("eeee", exception.getMessage());
             /*reconnect();*/
-            BusProvider.getInstance().postEvent(new LoginWebSocketEvent(url));
+            /*BusProvider.getInstance().postEvent(new LoginWebSocketEvent(url));*/
         }
 
         @Override
