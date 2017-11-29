@@ -245,7 +245,6 @@ public class MainHomeFragment extends BaseFragment {
         api.getBaseUrl(HttpUrls.getTodayRemind(id)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.e("eeee", response);
                 RemindBean data = gson.fromJson(response, RemindBean.class);
                 if (!TextUtils.isEmpty(response)) {
                     myRemindAdapter = new MyRemindAdapter(data.getItems(), mActivity);
@@ -260,7 +259,6 @@ public class MainHomeFragment extends BaseFragment {
         api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.e("eeee", response);
                 ArticleBean data = gson.fromJson(response, ArticleBean.class);
                 initData(data.getItems());
             }

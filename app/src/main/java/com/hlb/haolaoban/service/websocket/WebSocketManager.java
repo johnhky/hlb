@@ -143,7 +143,6 @@ public class WebSocketManager {
         @Override
         public void onTextMessage(WebSocket websocket, String text) throws Exception {
             super.onTextMessage(websocket, text);
-            Log.e("eeee", text);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(text);
@@ -212,7 +211,6 @@ public class WebSocketManager {
         public void onConnectError(WebSocket websocket, WebSocketException exception) throws Exception {
             super.onConnectError(websocket, exception);
             setWsStatus(WsStatus.CONNECT_FAIL);
-            Log.e("eeee", exception.getMessage());
             /*reconnect();*/
             /*BusProvider.getInstance().postEvent(new LoginWebSocketEvent(url));*/
         }

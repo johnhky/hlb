@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 
@@ -48,7 +47,6 @@ import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
-import com.hlb.haolaoban.otto.UpdateRemindEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.NotificationUtil;
