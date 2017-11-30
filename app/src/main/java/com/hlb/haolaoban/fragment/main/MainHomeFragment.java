@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
@@ -48,6 +49,7 @@ import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.hlb.haolaoban.widget.ImageLoader;
 import com.orhanobut.hawk.Hawk;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -273,9 +275,9 @@ public class MainHomeFragment extends BaseFragment {
             TextView tv_read = (TextView) view.findViewById(R.id.tv_read);
             final TextView tv_voice = (TextView) view.findViewById(R.id.tv_voice);
             ImageView iv_title = (ImageView) view.findViewById(R.id.iv_title);
-            if (null != mActivity) {
-                Glide.with(mActivity).load(list.get(i).getImage()).centerCrop().into(iv_title);
-            }
+            ImageLoader loader = new ImageLoader(mActivity);
+            loader.loadImage(list.get(i).getImage(),iv_title);
+            /*Glide.with(mActivity).load(list.get(i).getImage()).centerCrop().into(iv_title);*/
             mViewList.add(view);
             final int position = i;
             tv_read.setOnClickListener(new View.OnClickListener() {
@@ -392,6 +394,7 @@ public class MainHomeFragment extends BaseFragment {
             }
         }
     };
+
 
     @Override
     public void onDestroy() {

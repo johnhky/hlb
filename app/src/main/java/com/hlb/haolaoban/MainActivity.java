@@ -2,6 +2,7 @@ package com.hlb.haolaoban;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -199,7 +200,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void sendMsg() {
-        timer = new CountDownTimer(time, 5000) {
+
+                timer = new CountDownTimer(time, 60000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 webSocketConnection.sendTextMessage("");

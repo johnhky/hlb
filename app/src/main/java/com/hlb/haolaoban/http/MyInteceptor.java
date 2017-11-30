@@ -55,8 +55,6 @@ public class MyInteceptor implements Interceptor  {
                             String resp = body.string();
                             body = ResponseBody.create(mediaType, resp);
                             return response.newBuilder().body(body).build();
-                        } else {
-                            Log.w( TAG,"HttpReceiver responseBody's content : " + " maybe [file part] , too large too print , ignored!");
                         }
                     }
                 }
