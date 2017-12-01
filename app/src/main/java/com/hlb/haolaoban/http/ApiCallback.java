@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.MyApplication;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.TokenOutEvent;
+import com.hlb.haolaoban.utils.Utils;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -43,8 +44,8 @@ public abstract class ApiCallback<T> implements Callback<ApiDTO> {
         } else if (code == -99) {
             BusProvider.getInstance().postEvent(new TokenOutEvent(code));
         } else {
-            String msg = response.body().getMsg();
-            Toast.makeText(MyApplication.mContext, msg, Toast.LENGTH_SHORT).show();
+       /*     String msg = response.body().getMsg();
+            Utils.showToast(msg);*/
             onFailure(call, new NetworkErrorException());
         }
     }

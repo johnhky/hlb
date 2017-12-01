@@ -42,6 +42,9 @@
 -keep class * extends java.lang.annotation.Annotation { *; }#注解包下的所有内容不要混淆
 
 -keep class com.hlb.haolaoban.bean.**{*;}
+-keep class com.hlb.haolaoban.http.**{*;}
+-keep class com.hlb.haolaoban.module.**{*;}
+-keep class com.hlb.haolaoban.otto.**{*;}
 -keep class com.hlb.haolaoban.utils.**{*;}
 
 -keepclasseswithmembernames class * {
@@ -59,6 +62,9 @@
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
+}
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
 }
 
 -keep class * implements android.os.Parcelable {
@@ -123,14 +129,17 @@
 -keep class retrofit2.** { *; }
 -keep class com.tencent.mm.opensdk.**{*;}
 -keep class de.tavendo.autobahn.**{*;}
+-keep class com.orhanobut.hawk.**{*;}
 
 -dontwarn com.tencent.mm.opensdk.**
+-dontwarn com.orhanobut.hawk.**
 -dontwarn retrofit2.**
 -dontwarn com.google.**
 -dontwarn com.tencent.bugly.**
 -dontwarn io.agora.rtc.**
 -dontwarn okio.**
 -dontwarn de.tavendo.autobahn.**
+-dontwarn com.google.**
 # Okio
 -keep class sun.misc.Unsafe { *; }
 -dontwarn java.nio.file.*

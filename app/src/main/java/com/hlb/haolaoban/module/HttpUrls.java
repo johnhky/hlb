@@ -1,8 +1,13 @@
 package com.hlb.haolaoban.module;
 
+import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
+import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Calendar;
@@ -35,6 +40,7 @@ public class HttpUrls {
         params.put("method", "article.get.list");
         return params;
     }
+
     /*首页文章列表参数*/
     public static Map<String, String> getHelpCenter(int pageNo) {
         Map<String, String> params = new LinkedHashMap<>();
@@ -64,6 +70,7 @@ public class HttpUrls {
         params.put("param[type]", BuildConfig.USER_TYPE + "");
         params.put("param[device]", "mobile");
         params.put("method", "member.login");
+        Utils.showToast(params.toString());
         return params;
     }
 
@@ -286,6 +293,16 @@ public class HttpUrls {
         params.put("param[start_time]", start_time);
         params.put("param[end_time]", end_time);
         params.put("method", "member.realtime.chart");
+        return params;
+    }
+
+    /*微信支付*/
+    public static Map<String, String> wechatPay(String mid, String orderId) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[oid]", orderId);
+        params.put("param[mid]", mid);
+        params.put("method", "payment.weixin.order.creater");
         return params;
     }
 }

@@ -18,6 +18,7 @@ import com.hlb.haolaoban.bean.PrescriptionDetailBean;
 import com.hlb.haolaoban.databinding.ActivityPrescriptionDetailBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
+import com.hlb.haolaoban.http.WechatCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
@@ -108,7 +109,6 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
                         @Override
                         public void onFinish() {
-                            /*finish();*/
                             showToast("订单已过期!");
                             BusProvider.getInstance().postEvent(new RefreshOrderEvent());
                         }
@@ -167,6 +167,10 @@ public class PrescriptionDetailActivity extends BaseActivity {
                                 break;
                             case 3:
                                 /*支付*/
+                                if (type==1){
+                                }else {
+                                    wechatPay(data.getMid() + "", data.getOid());
+                                }
                                 break;
                         }
                     }
@@ -175,6 +179,9 @@ public class PrescriptionDetailActivity extends BaseActivity {
         });
     }
 
+    private void wechatPay(String mid, String oid) {
+        api.getBaseUrl(HttpUrls.wechatPay(mid, oid)).enqueue(new WechatCallback(this));
+    }
 
     private String getOid() {
         return getIntent().getStringExtra(Constants.DATA);

@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 
@@ -68,6 +69,7 @@ import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
 import de.tavendo.autobahn.WebSocketHandler;
 import de.tavendo.autobahn.WebSocketOptions;
+import retrofit2.Call;
 
 
 /**
@@ -201,7 +203,7 @@ public class MainActivity extends FragmentActivity {
 
     private void sendMsg() {
 
-                timer = new CountDownTimer(time, 60000) {
+        timer = new CountDownTimer(time, 60000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 webSocketConnection.sendTextMessage("");
@@ -221,13 +223,21 @@ public class MainActivity extends FragmentActivity {
             @Override
             protected void handleResponse(String response) {
                 TokenBean data = gson.fromJson(response, TokenBean.class);
-                if (null != data) {
+                if (data != null) {
                     Hawk.put(Constants.TOKEN, data.getToken());
                     Hawk.put(Constants.TOKENOUT, data.getTokenout());
                 }
             }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+
+
+            }
         });
     }
+
 
     public void initView() {
         if (!isNotificationEnabled(MainActivity.this)) {

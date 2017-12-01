@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
 import com.hlb.haolaoban.http.Api;
