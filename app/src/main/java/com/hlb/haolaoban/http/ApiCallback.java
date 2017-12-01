@@ -44,8 +44,8 @@ public abstract class ApiCallback<T> implements Callback<ApiDTO> {
         } else if (code == -99) {
             BusProvider.getInstance().postEvent(new TokenOutEvent(code));
         } else {
-       /*     String msg = response.body().getMsg();
-            Utils.showToast(msg);*/
+            String msg = response.body().getMsg();
+            Utils.showToast(msg);
             onFailure(call, new NetworkErrorException());
         }
     }

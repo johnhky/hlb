@@ -1,14 +1,17 @@
 package com.hlb.haolaoban.http;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.RefreshOrderEvent;
+import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.PayCallback;
 import com.hlb.haolaoban.utils.Utils;
 import com.hlb.haolaoban.wxapi.WXPayEntryActivity;
+import com.orhanobut.hawk.Hawk;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -21,6 +24,7 @@ public class WechatCallback extends SimpleCallback {
 
     Activity activity;
     PayCallback callback;
+
     Gson gson = new GsonBuilder().create();
 
     public WechatCallback(Activity activity) {
@@ -34,8 +38,13 @@ public class WechatCallback extends SimpleCallback {
             }
 
             @Override
-            public void onPayFail() {
-                Utils.showToast("支付失败!");
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onPayFail(int code, String msg) {
+                Utils.showToast("支付失败  " + code + " " + msg);
             }
         };
         WXPayEntryActivity.setCallback(callback);
@@ -45,14 +54,16 @@ public class WechatCallback extends SimpleCallback {
     protected void handleResponse(String response) {
         PayReq req = new PayReq();
         WeChatDTO data = gson.fromJson(response, WeChatDTO.class);
-        IWXAPI msgApi = WXAPIFactory.createWXAPI(activity, data.getAppid());
+        Hawk.put(Constants.APP_ID, data.getAppid());
         req.appId = data.getAppid();
-        req.partnerId = data.getPartnerid();
-        req.prepayId = data.getPrepayid();
-        req.packageValue = data.getPackageX();
-        req.nonceStr = data.getNoncestr();
-        req.timeStamp = data.getTimestamp();
+        req.nonceStr = data.getNonce_str();
         req.sign = data.getSign();
+        req.prepayId = data.getPrepay_id();
+        req.packageValue = data.getPackageX();
+        req.partnerId = data.getMch_id();
+        req.timeStamp = data.getTimestamp();
+
+        IWXAPI msgApi = WXAPIFactory.createWXAPI(activity, data.getAppid());
         msgApi.registerApp(data.getAppid());
         msgApi.sendReq(req);
     }

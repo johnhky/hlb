@@ -70,7 +70,6 @@ public class HttpUrls {
         params.put("param[type]", BuildConfig.USER_TYPE + "");
         params.put("param[device]", "mobile");
         params.put("method", "member.login");
-        Utils.showToast(params.toString());
         return params;
     }
 

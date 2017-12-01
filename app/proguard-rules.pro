@@ -127,11 +127,9 @@
 -keep class io.agora.rtc.**{*;}
 -keep class com.tencent.bugly.**{*;}
 -keep class retrofit2.** { *; }
--keep class com.tencent.mm.opensdk.**{*;}
 -keep class de.tavendo.autobahn.**{*;}
 -keep class com.orhanobut.hawk.**{*;}
 
--dontwarn com.tencent.mm.opensdk.**
 -dontwarn com.orhanobut.hawk.**
 -dontwarn retrofit2.**
 -dontwarn com.google.**
@@ -145,5 +143,15 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
  -keep class org.codehaus.** { *; }
+
+ -keep class com.tencent.mm.opensdk.** {
+    *;
+ }
+ -keep class com.tencent.wxop.** {
+    *;
+ }
+ -keep class com.tencent.mm.sdk.** {
+    *;
+ }
 
 

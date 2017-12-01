@@ -229,12 +229,6 @@ public class MainActivity extends FragmentActivity {
                 }
             }
 
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                super.onFailure(call, t);
-
-
-            }
         });
     }
 
@@ -291,6 +285,7 @@ public class MainActivity extends FragmentActivity {
                         } else {
                             Intent i = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(i);
+                            finish();
                         }
                         break;
                 }

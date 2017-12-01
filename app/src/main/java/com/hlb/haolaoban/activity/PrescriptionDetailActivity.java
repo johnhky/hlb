@@ -169,7 +169,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
                                 /*支付*/
                                 if (type==1){
                                 }else {
-                                    wechatPay(data.getMid() + "", data.getOid());
+                                    wechatPay(String.valueOf(data.getMid()), data.getOid());
                                 }
                                 break;
                         }

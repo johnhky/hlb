@@ -8,5 +8,7 @@ public interface PayCallback {
 
     void onPaySuccess();
 
-    void onPayFail();
+    void onPayFail(int code,String msg);
+
+    void onCancel();
 }

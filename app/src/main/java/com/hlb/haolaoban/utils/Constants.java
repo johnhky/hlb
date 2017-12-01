@@ -26,6 +26,8 @@ public class Constants {
     public static final String TYPE = "TYPE";
     public static final String DATA = "DATA";
     public static final String CHANNEL = "CHANNEL";
+    public static final String MCH_ID = "MCH_ID";
+    public static final String APP_ID = "APP_ID";
 
     public static Map<String, String> addParams() {
         long timestamp = System.currentTimeMillis() / 1000;
