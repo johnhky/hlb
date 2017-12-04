@@ -219,10 +219,10 @@ public class DialogUtils {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
-                    case R.id.radio_ali:
+                    case R.id.radio_wechat:
                         itemClickListener.onItemClick(1);
                         break;
-                    case R.id.radio_wechat:
+                    case R.id.radio_ali:
                         itemClickListener.onItemClick(2);
                         break;
                 }

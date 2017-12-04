@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.PaySuccessEvent;
 import com.hlb.haolaoban.otto.RefreshOrderEvent;
 import com.hlb.haolaoban.utils.PayCallback;
 import com.hlb.haolaoban.utils.Utils;
@@ -30,18 +31,17 @@ public class WechatCallback extends SimpleCallback {
         callback = new PayCallback() {
             @Override
             public void onPaySuccess() {
-                Utils.showToast("支付成功!");
+                BusProvider.getInstance().postEvent(new PaySuccessEvent());
                 BusProvider.getInstance().postEvent(new RefreshOrderEvent());
             }
 
             @Override
             public void onCancel() {
-
+                Utils.showToast("取消支付!");
             }
 
             @Override
             public void onPayFail(int code, String msg) {
-                Utils.showToast("支付失败  " + code + " " + msg);
             }
         };
         WXPayEntryActivity.setCallback(callback);
@@ -49,20 +49,19 @@ public class WechatCallback extends SimpleCallback {
 
     @Override
     protected void handleResponse(String response) {
-        PayReq req = new PayReq();
-
         WeChatDTO data = gson.fromJson(response, WeChatDTO.class);
-        req.appId = data.getAppid();
-        req.nonceStr = data.getNonce_str();
-        req.sign = data.getSign();
-        req.prepayId = data.getPrepay_id();
-        req.packageValue = data.getPackageX();
-        req.partnerId = data.getMch_id();
-        req.timeStamp = data.getTimestamp();
-
-        final IWXAPI msgApi = WXAPIFactory.createWXAPI(activity, data.getAppid());
+        final IWXAPI msgApi = WXAPIFactory.createWXAPI(activity, null);
         msgApi.registerApp(data.getAppid());
 
+        PayReq req = new PayReq();
+        req.appId = data.getAppid();
+        req.partnerId = data.getPartnerid();
+        req.prepayId = data.getPrepayid();
+        req.packageValue = data.getPackageX();
+        req.nonceStr = data.getNoncestr();
+        req.timeStamp = data.getTimestamp();
+        req.sign = data.getSign();
         msgApi.sendReq(req);
+
     }
 }

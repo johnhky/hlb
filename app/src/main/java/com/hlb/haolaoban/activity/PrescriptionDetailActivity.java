@@ -22,10 +22,12 @@ import com.hlb.haolaoban.http.WechatCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.PaySuccessEvent;
 import com.hlb.haolaoban.otto.RefreshOrderEvent;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
+import com.squareup.otto.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -166,9 +168,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
                                 type = 2;
                                 break;
                             case 3:
-                                /*支付*/
-                                if (type==1){
-                                }else {
+                                if (type == 1) {
                                     wechatPay(String.valueOf(data.getMid()), data.getOid());
                                 }
                                 break;
@@ -185,6 +185,13 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
     private String getOid() {
         return getIntent().getStringExtra(Constants.DATA);
+    }
+
+
+    @Subscribe
+    public void receiveEvent(PaySuccessEvent event) {
+        Utils.showToast("支付成功!");
+        finish();
     }
 
 }

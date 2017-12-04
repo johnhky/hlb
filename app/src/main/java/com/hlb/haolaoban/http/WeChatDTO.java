@@ -21,10 +21,9 @@ public class WeChatDTO {
      */
 
     private String appid;
-    private String mch_id;
-    private String prepay_id;
-    private String trade_type;
-    private String nonce_str;
+    private String partnerid;
+    private String prepayid;
+    private String noncestr;
     @SerializedName("package")
     private String packageX;
     private String timestamp;
@@ -38,36 +37,28 @@ public class WeChatDTO {
         this.appid = appid;
     }
 
-    public String getMch_id() {
-        return mch_id;
+    public String getPartnerid() {
+        return partnerid;
     }
 
-    public void setMch_id(String mch_id) {
-        this.mch_id = mch_id;
+    public void setPartnerid(String partnerid) {
+        this.partnerid = partnerid;
     }
 
-    public String getPrepay_id() {
-        return prepay_id;
+    public String getPrepayid() {
+        return prepayid;
     }
 
-    public void setPrepay_id(String prepay_id) {
-        this.prepay_id = prepay_id;
+    public void setPrepayid(String prepayid) {
+        this.prepayid = prepayid;
     }
 
-    public String getTrade_type() {
-        return trade_type;
+    public String getNoncestr() {
+        return noncestr;
     }
 
-    public void setTrade_type(String trade_type) {
-        this.trade_type = trade_type;
-    }
-
-    public String getNonce_str() {
-        return nonce_str;
-    }
-
-    public void setNonce_str(String nonce_str) {
-        this.nonce_str = nonce_str;
+    public void setNoncestr(String noncestr) {
+        this.noncestr = noncestr;
     }
 
     public String getPackageX() {
@@ -94,16 +85,16 @@ public class WeChatDTO {
         this.sign = sign;
     }
 
+
     @Override
     public String toString() {
         return "WeChatDTO{" +
                 "appid='" + appid + '\'' +
-                ", mch_id='" + mch_id + '\'' +
-                ", prepay_id='" + prepay_id + '\'' +
-                ", trade_type='" + trade_type + '\'' +
-                ", nonce_str='" + nonce_str + '\'' +
+                ", partnerid='" + partnerid + '\'' +
+                ", prepayid='" + prepayid + '\'' +
+                ", noncestr='" + noncestr + '\'' +
                 ", packageX='" + packageX + '\'' +
-                ", timestamp=" + timestamp +
+                ", timestamp='" + timestamp + '\'' +
                 ", sign='" + sign + '\'' +
                 '}';
     }

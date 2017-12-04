@@ -1,15 +1,11 @@
 package com.hlb.haolaoban.fragment.main;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -150,6 +146,12 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                         break;
                     case MotionEvent.ACTION_UP:
                         endY = event.getY();
+                        recordUtils.stopRecord();
+                        recordUtils.cancelRecord();
+                        popupWindow.dismiss();
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        endY = 0;
                         recordUtils.stopRecord();
                         recordUtils.cancelRecord();
                         popupWindow.dismiss();

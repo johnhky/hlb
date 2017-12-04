@@ -28,7 +28,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        api = WXAPIFactory.createWXAPI(this,"wx2936ba651e971bb4");
+        api = WXAPIFactory.createWXAPI(this,null);
         api.handleIntent(getIntent(), this);
     }
 
@@ -41,7 +41,6 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                     case BaseResp.ErrCode.ERR_OK:
                         callback.onPaySuccess();
                         finish();
-
                     case BaseResp.ErrCode.ERR_COMM:
                         callback.onPayFail(errCode,baseResp.errStr);
                         finish();
