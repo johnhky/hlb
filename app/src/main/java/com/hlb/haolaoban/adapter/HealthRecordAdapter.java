@@ -62,7 +62,7 @@ public class HealthRecordAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_data.setText(list.get(position).getType());
+        holder.tv_data.setText(list.get(position).getName());
         holder.tv_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

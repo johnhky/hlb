@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -70,15 +71,18 @@ public class LoginActivity extends BaseActivity {
     private void login() {
         DialogUtils.showLoading(mActivity, "正在登录...");
         if (TextUtils.isEmpty(binding.etPhone.getText().toString().trim()) || binding.etPhone.getText().toString().trim().length() < 1) {
+            DialogUtils.hideLoading(mActivity);
             showToast("手机号码不能为空!");
             return;
         }
 
         if (!Utils.isMobile(binding.etPhone.getText().toString().trim())) {
+            DialogUtils.hideLoading(mActivity);
             showToast("请输入正确的手机号码!");
             return;
         }
         if (TextUtils.isEmpty(binding.etPassword.getText().toString().trim()) || binding.etPassword.getText().toString().trim().length() < 1) {
+            DialogUtils.hideLoading(mActivity);
             showToast("密码不能为空!");
             return;
         }
@@ -118,4 +122,14 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                finish();
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 }

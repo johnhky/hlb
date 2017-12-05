@@ -189,7 +189,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
 
     @Subscribe
-    public void receiveEvent(PaySuccessEvent event) {
+    public void onReceiveEvent(PaySuccessEvent event) {
         Utils.showToast("支付成功!");
         finish();
     }

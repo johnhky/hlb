@@ -7,8 +7,8 @@ package com.hlb.haolaoban.bean;
 public class HealthBean {
 
     private int id;
-    private String type;
-
+    private String name;
+    private String openid;
     public int getId() {
         return id;
     }
@@ -17,12 +17,21 @@ public class HealthBean {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 }
 
