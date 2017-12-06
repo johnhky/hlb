@@ -37,11 +37,11 @@ public class WechatCallback extends SimpleCallback {
 
             @Override
             public void onCancel() {
-                Utils.showToast("取消支付!");
+                Utils.showToastLong("取消支付!");
             }
 
             @Override
-            public void onPayFail(int code, String msg) {
+            public void onPayFail() {
             }
         };
         WXPayEntryActivity.setCallback(callback);

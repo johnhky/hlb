@@ -66,7 +66,7 @@ public class HealthRecordAdapter extends BaseAdapter {
         holder.tv_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = PhysicalDataActivity.intentFor(v.getContext(), list.get(position).getId() + "");
+                Intent i = PhysicalDataActivity.intentFor(v.getContext(), list.get(position).getOpenid() + "");
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(i);
             }

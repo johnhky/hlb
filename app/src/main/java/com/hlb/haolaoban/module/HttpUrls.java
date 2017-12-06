@@ -291,6 +291,7 @@ public class HttpUrls {
         params.put("param[type]", device);
         params.put("param[start_time]", start_time);
         params.put("param[end_time]", end_time);
+        params.put("param[ds]","0");
         params.put("method", "member.realtime.chart");
         return params;
     }

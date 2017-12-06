@@ -42,7 +42,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                         callback.onPaySuccess();
                         finish();
                     case BaseResp.ErrCode.ERR_COMM:
-                        callback.onPayFail(errCode,baseResp.errStr);
+                        callback.onPayFail();
                         finish();
                         break;
                     case BaseResp.ErrCode.ERR_USER_CANCEL:

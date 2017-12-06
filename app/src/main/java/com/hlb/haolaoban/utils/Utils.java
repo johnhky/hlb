@@ -28,6 +28,9 @@ public class Utils {
     public static void showToast(String msg) {
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
+    public static void showToastLong(String msg) {
+        Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+    }
 
     /*将px值转换为dip或dp值，保证尺寸大小不变*/
     public static int px2dip(float pxValue, float scale) {
@@ -105,6 +108,16 @@ public class Utils {
         res = simpleDateFormat.format(date);
         return res;
     }
+        /*将时间戳转化为月日*/
+    public static String stampToDates(String s) {
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
+
     /*
      * 将时间戳转换为月日
      */

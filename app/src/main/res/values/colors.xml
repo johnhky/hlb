@@ -17,4 +17,6 @@
     <color name="gray_33">#333333</color>
     <color name="blue_login">#6FABEE</color>
     <color name="chat_main_color">#1A2126</color>
+    <color name="blue">#4F9FEE</color>
+    <color name="green">#2BB731</color>
 </resources>

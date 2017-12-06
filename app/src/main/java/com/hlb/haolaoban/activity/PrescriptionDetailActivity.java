@@ -74,7 +74,6 @@ public class PrescriptionDetailActivity extends BaseActivity {
             protected void handleResponse(String response) {
                 PrescriptionDetailBean data = gson.fromJson(response, PrescriptionDetailBean.class);
                 initData(data);
-
             }
         });
     }
@@ -111,7 +110,8 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
                         @Override
                         public void onFinish() {
-                            showToast("订单已过期!");
+                            finish();
+                            Utils.showToastLong("订单已过期!");
                             BusProvider.getInstance().postEvent(new RefreshOrderEvent());
                         }
                     };
@@ -190,8 +190,8 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
     @Subscribe
     public void onReceiveEvent(PaySuccessEvent event) {
-        Utils.showToast("支付成功!");
-        finish();
+        Utils.showToastLong("支付成功!");
+        getData();
     }
 
 }

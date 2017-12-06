@@ -110,7 +110,7 @@ public class MainActivity extends FragmentActivity {
         transaction.commit();
         initView();
         if (null != Hawk.get(Constants.MID)) {
-            webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID);
+            webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID)+"&type=member";
             login(webStr);
         }
     }
@@ -202,8 +202,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void sendMsg() {
-
-        timer = new CountDownTimer(time, 60000) {
+        timer = new CountDownTimer(time, 30000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 webSocketConnection.sendTextMessage("");
