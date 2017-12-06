@@ -32,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.activity.ChatActivity;
 import com.hlb.haolaoban.activity.PrescriptionActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
+import com.hlb.haolaoban.base.websocket.WebSocketUtil;
 import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
@@ -82,21 +83,12 @@ public class MainActivity extends FragmentActivity {
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     public static final int PERMISSION_REQUEST_CODE = 2002;
-    private long time = 100000000000L;
-
-    WebSocketConnection webSocketConnection = new WebSocketConnection();
-    private WebSocketOptions mWebSocketOptions = new WebSocketOptions();
-    CountDownTimer timer;
-
     String webStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWebSocketOptions.setSocketConnectTimeout(30000);
-        mWebSocketOptions.setSocketReceiveTimeout(10000);
         BusProvider.getInstance().register(this);
-        parseData();
         showToken();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         checkPermission();
@@ -107,114 +99,12 @@ public class MainActivity extends FragmentActivity {
             transaction.add(R.id.fragment_container, mainHome);
             binding.titlebar.toolBar.setNavigationIcon(null);
         }
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
         initView();
         if (null != Hawk.get(Constants.MID)) {
             webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID)+"&type=member";
-            login(webStr);
+            WebSocketUtil.getInstance().login(webStr);
         }
-    }
-
-    private void login(final String url) {
-        try {
-            webSocketConnection.connect(url, new WebSocketHandler() {
-                @Override
-                public void onOpen() {
-                    super.onOpen();
-                    sendMsg();
-                }
-
-                @Override
-                public void onClose(int code, String reason) {
-                    super.onClose(code, reason);
-                    if (null != timer) {
-                        timer.cancel();
-                    }
-                    if (!TextUtils.isEmpty(webStr)) {
-                        BusProvider.getInstance().postEvent(new LoginWebSocketEvent(webStr + ""));
-                    }
-
-                }
-
-                @Override
-                public void onTextMessage(String payload) {
-                    super.onTextMessage(payload);
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = new JSONObject(payload);
-                        int code = jsonObject.optInt("nFlag");
-                        String type = jsonObject.getString("type");
-                        String channel = "";
-                        if (code == 1) {
-                            if (!TextUtils.isEmpty(type)) {
-                                if (type.equals("calling")) {
-                                    channel = jsonObject.getString("channel");
-                                }
-                                switch (type) {
-                                    case "meet":
-                                        BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
-                                        break;
-                                    case "refuse":
-                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
-                                        break;
-                                    case "calling":
-                                        BusProvider.getInstance().postEvent(new JoinVideoEvent(type, channel));
-                                        break;
-                                }
-                            }
-                        } else {
-                            String msg = jsonObject.getString("msg");
-                            String mode = jsonObject.getString("mode");
-                            if (mode.equals("order")) {
-                                switch (type) {
-                                    case "1":
-                                    case "2":
-                                    case "3":
-                                    case "4":
-                                    case "5":
-                                        NotificationUtil.showNotification(MainActivity.this, type, msg);
-                                        break;
-                                }
-                            } else if (mode.equals("message")) {
-                                switch (type) {
-                                    case "1":
-                                    case "4":
-                                        NotificationUtil.showNotification(MyApplication.mContext, "", msg);
-                                        break;
-                                    case "2":
-                                        if (!TextUtils.isEmpty(jsonObject.getString("data"))) {
-                                            saveMsg(payload, Hawk.get(Constants.MID) + "");
-                                        }
-                                        break;
-                                }
-                            }
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, mWebSocketOptions);
-        } catch (WebSocketException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void sendMsg() {
-        timer = new CountDownTimer(time, 30000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                webSocketConnection.sendTextMessage("");
-            }
-
-            @Override
-            public void onFinish() {
-                time = 10000000000L;
-                sendMsg();
-            }
-        };
-        timer.start();
     }
 
     public void showToken() {
@@ -230,7 +120,6 @@ public class MainActivity extends FragmentActivity {
 
         });
     }
-
 
     public void initView() {
         if (!isNotificationEnabled(MainActivity.this)) {
@@ -288,7 +177,7 @@ public class MainActivity extends FragmentActivity {
                         }
                         break;
                 }
-                transaction.commit();
+                transaction.commitAllowingStateLoss();
             }
         });
     }
@@ -322,7 +211,7 @@ public class MainActivity extends FragmentActivity {
 
     @Subscribe
     public void onReciveEvent(LoginWebSocketEvent event) {
-        login(event.getUrl());
+        WebSocketUtil.getInstance().login(event.getUrl());
     }
 
     @Subscribe
@@ -434,44 +323,5 @@ public class MainActivity extends FragmentActivity {
         }
         return false;
     }
-
-    private void parseData() {
-        if (!TextUtils.isEmpty(getData())) {
-            DialogUtils.showRemindMsg(MainActivity.this, getData(), new DialogUtils.OnDialogItemClickListener() {
-                @Override
-                public void onItemClick(int which) {
-                    switch (which) {
-                        case 1:
-                            Intent i = new Intent(MainActivity.this, PrescriptionActivity.class);
-                            startActivity(i);
-                            break;
-                    }
-                }
-            });
-        }
-    }
-
-    private void saveMsg(String s, String id) {
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(s);
-            String data = jsonObject.getString("data");
-            if (!TextUtils.isEmpty(data)) {
-                jsonObject = new JSONObject(data);
-                String drugs = jsonObject.getString("data");
-                List<DrugRemind> list = gson.fromJson(drugs, new TypeToken<ArrayList<DrugRemind>>() {
-                }.getType());
-                MsgHandler.saveMsg(list, id);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getData() {
-        return getIntent().getStringExtra(Constants.DATA);
-    }
-
 
 }

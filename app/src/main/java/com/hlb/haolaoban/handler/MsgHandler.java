@@ -5,14 +5,19 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
-import com.hlb.haolaoban.service.AlarmReceiver;
+import com.hlb.haolaoban.receiver.AlarmReceiver;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +40,7 @@ import static android.content.Context.ALARM_SERVICE;
 public class MsgHandler {
 
     public static final long ONE_DAY = 1000 * 60 * 60 * 24;
+    static Gson gson = new GsonBuilder().create();
 
     /*将websocket推送过来的信息同步保存到本地数据库*/
     public static void saveMsg(final List<DrugRemind> list, final String mid) {
@@ -115,6 +121,24 @@ public class MsgHandler {
                 }
 
             }
+        }
+    }
+
+    public static void saveMsg(String s, String id) {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(s);
+            String data = jsonObject.getString("data");
+            if (!TextUtils.isEmpty(data)) {
+                jsonObject = new JSONObject(data);
+                String drugs = jsonObject.getString("data");
+                List<DrugRemind> list = gson.fromJson(drugs, new TypeToken<ArrayList<DrugRemind>>() {
+                }.getType());
+                MsgHandler.saveMsg(list, id);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

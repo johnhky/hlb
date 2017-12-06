@@ -123,7 +123,6 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    compile 'com.neovisionaries:nv-websocket-client:2.2'
     compile files('libs/autobahn-0.5.0.jar')
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 }

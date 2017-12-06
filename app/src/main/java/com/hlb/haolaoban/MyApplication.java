@@ -2,11 +2,8 @@ package com.hlb.haolaoban;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.hlb.haolaoban.http.MyInteceptor;
-import com.hlb.haolaoban.service.websocket.ForegroundCallback;
-import com.hlb.haolaoban.service.websocket.WebSocketManager;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -54,9 +51,6 @@ public class MyApplication extends Application {
                 .connectTimeout(60000L, TimeUnit.MILLISECONDS)
                 .readTimeout(60000L, TimeUnit.MILLISECONDS)
                 .writeTimeout(60000L, TimeUnit.MILLISECONDS)
-                //.addNetworkInterceptor(new CacheInterceptor())
-                // .cache(cache)
-                //其他配置
                 .build();
         Utils.init(this);
         OkHttpUtils.initClient(okHttpClient);
@@ -64,7 +58,6 @@ public class MyApplication extends Application {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder().schemaVersion(2).migration(new HLBMigration()).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
-        initAppStatusListener();
     }
 
 
@@ -76,17 +69,5 @@ public class MyApplication extends Application {
             }
         }
     }
-    private void initAppStatusListener() {
-        ForegroundCallback.init(this).addListener(new ForegroundCallback.Listener() {
-            @Override
-            public void onBecameForeground() {
-            /*    WebSocketManager.getInstance().reconnect();*/
-            }
 
-            @Override
-            public void onBecameBackground() {
-
-            }
-        });
-    }
 }

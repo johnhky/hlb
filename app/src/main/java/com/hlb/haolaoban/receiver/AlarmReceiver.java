@@ -1,4 +1,4 @@
-package com.hlb.haolaoban.service;
+package com.hlb.haolaoban.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

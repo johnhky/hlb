@@ -147,16 +147,9 @@
             android:screenOrientation="portrait" />
 
         <receiver
-            android:name=".service.AlarmReceiver"
+            android:name=".receiver.AlarmReceiver"
             android:process=":remote"></receiver>
-        <receiver android:name=".service.NetReceiver">
-            <intent-filter>
-                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
 
-        </receiver>
     </application>
 
 </manifest>
