@@ -2,7 +2,6 @@ package com.hlb.haolaoban;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -21,19 +19,14 @@ import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.hlb.haolaoban.activity.ChatActivity;
-import com.hlb.haolaoban.activity.PrescriptionActivity;
+import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
-import com.hlb.haolaoban.bean.DrugRemind;
 import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
@@ -45,32 +38,21 @@ import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
-import com.hlb.haolaoban.otto.FinishChatEvent;
+import com.hlb.haolaoban.otto.HomeRefreshEvent;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.Constants;
-import com.hlb.haolaoban.utils.DialogUtils;
-import com.hlb.haolaoban.utils.NotificationUtil;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.tavendo.autobahn.WebSocketConnection;
-import de.tavendo.autobahn.WebSocketException;
-import de.tavendo.autobahn.WebSocketHandler;
-import de.tavendo.autobahn.WebSocketOptions;
-import retrofit2.Call;
 
 
 /**
@@ -138,9 +120,10 @@ public class MainActivity extends FragmentActivity {
                         } else {
                             transaction.show(mainHome);
                         }
-                        Intent post = new Intent();
+                    /*    Intent post = new Intent();
                         post.setAction(Constants.TYPE);
-                        sendBroadcast(post);
+                        sendBroadcast(post);*/
+                    BusProvider.getInstance().postEvent(new HomeRefreshEvent());
                         binding.titlebar.tbTitle.setText("好老伴");
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
                         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
@@ -204,7 +187,7 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onReciveEvent(JoinVideoEvent event) {
         if (event.getType().equals("calling")) {
-            Intent i = ChatActivity.intentFor(MainActivity.this, event.getChannel());
+            Intent i = VideoActivity.intentFor(MainActivity.this, event.getChannel());
             startActivity(i);
         }
     }
@@ -266,7 +249,6 @@ public class MainActivity extends FragmentActivity {
         if (!isExit) {
             isExit = true;
             Utils.showToast("再按一次退出程序");
-            // 利用handler延迟发送更改状态信息
             mHandler.sendEmptyMessageDelayed(0, 2000);
         } else {
             Intent intent = new Intent(Intent.ACTION_MAIN);

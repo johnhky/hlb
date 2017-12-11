@@ -1,9 +1,7 @@
 package com.hlb.haolaoban.fragment.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -26,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.adapter.ClubAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
@@ -41,6 +40,7 @@ import com.hlb.haolaoban.utils.AudioRecordUtils;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.hlb.haolaoban.widget.RecyclerViewScroller;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -160,19 +160,11 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 return true;
             }
         });
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerView.addOnScrollListener(new RecyclerViewScroller(linearLayoutManager,mAdapter) {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && !ViewCompat.canScrollVertically(recyclerView, 1)) {
-                    pageNo++;
-                    getClub(pageNo);
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public void onLoadMore() {
+                pageNo++;
+                getClub(pageNo);
             }
         });
         mAdapter = new ClubAdapter(datas, mActivity);
@@ -182,7 +174,6 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     /*上传语音*/
     public void uploadAudio(String fileName) {
         DialogUtils.showLoading(mActivity, "语音上传中...");
-        /*String fileName = Environment.getExternalStorageDirectory()+"/Recordings/REC20171113163916.mp3";*/
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
@@ -247,7 +238,8 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void contactClub() {
-        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getClub_name(), new DialogUtils.OnDialogItemClickListener() {
+        startActivity(VideoActivity.class);
+/*        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getClub_name(), new DialogUtils.OnDialogItemClickListener() {
             @Override
             public void onItemClick(int which) {
                 if (which == 1) {
@@ -257,7 +249,7 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                     startActivity(i);
                 }
             }
-        });
+        });*/
     }
 
 }

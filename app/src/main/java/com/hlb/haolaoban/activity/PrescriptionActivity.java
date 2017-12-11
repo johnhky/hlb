@@ -2,22 +2,18 @@ package com.hlb.haolaoban.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.TypedValue;
 import android.view.View;
-import android.widget.LinearLayout;
 
-import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.PrescriptionAdapter;
+import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.databinding.ActivityPrescriptionBinding;
 import com.hlb.haolaoban.utils.Constants;
 
-import java.lang.reflect.Field;
 
 /**
  * Created by heky on 2017/11/10.

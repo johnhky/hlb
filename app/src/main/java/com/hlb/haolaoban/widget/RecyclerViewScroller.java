@@ -9,13 +9,12 @@ import android.support.v7.widget.RecyclerView;
 
 public abstract class RecyclerViewScroller extends RecyclerView.OnScrollListener {
 
-    int lastVisibleItem  = 0;
+    int lastVisibleItem = 0;
 
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView.Adapter mAdapter;
 
-    public RecyclerViewScroller(
-            LinearLayoutManager linearLayoutManager, RecyclerView.Adapter mAdapter) {
+    public RecyclerViewScroller(LinearLayoutManager linearLayoutManager, RecyclerView.Adapter mAdapter) {
         this.mLinearLayoutManager = linearLayoutManager;
         this.mAdapter = mAdapter;
     }
@@ -23,7 +22,7 @@ public abstract class RecyclerViewScroller extends RecyclerView.OnScrollListener
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        if (newState ==RecyclerView.SCROLL_STATE_IDLE&&lastVisibleItem+1==mAdapter.getItemCount()){
+        if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mAdapter.getItemCount()) {
             onLoadMore();
         }
     }
@@ -31,7 +30,7 @@ public abstract class RecyclerViewScroller extends RecyclerView.OnScrollListener
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        lastVisibleItem  = mLinearLayoutManager.findLastVisibleItemPosition();
+        lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
     }
 
     public abstract void onLoadMore();

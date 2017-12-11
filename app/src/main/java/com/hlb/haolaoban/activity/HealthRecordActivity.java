@@ -3,8 +3,6 @@ package com.hlb.haolaoban.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -14,7 +12,6 @@ import com.hlb.haolaoban.adapter.HealthRecordAdapter;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.bean.HealthBean;
-import com.hlb.haolaoban.bean.MessageBean;
 import com.hlb.haolaoban.databinding.ActivityHealthRecordBinding;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;

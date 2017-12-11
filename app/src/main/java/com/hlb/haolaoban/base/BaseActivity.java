@@ -67,7 +67,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void startActivity(Class clazz) {
-        ;
         Intent i = new Intent();
         i.setClass(this, clazz);
         startActivity(i);

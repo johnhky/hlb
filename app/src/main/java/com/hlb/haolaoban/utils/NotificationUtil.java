@@ -1,7 +1,6 @@
 package com.hlb.haolaoban.utils;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,13 +10,10 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hlb.haolaoban.MainActivity;
-import com.hlb.haolaoban.MyApplication;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.PrescriptionActivity;
-import com.hlb.haolaoban.activity.RemindListActivity;
 
 /**
  * Created by heky on 2017/11/15.
@@ -50,23 +46,5 @@ public class NotificationUtil {
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(NEW_MSG, notification);
     }
-/*
-
-    public static void showNotificationMsg(String msg, Context context) {
-        NotificationManager notifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        //实例化NotificationCompat.Builde并设置相关属性
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                //设置小图标
-                .setSmallIcon(R.mipmap.logo)
-                //设置通知标题
-                .setContentTitle("好老伴新消息")
-                //设置通知内容
-                .setContentText(msg);
-        //设置通知时间，默认为系统发出通知的时间，通常不用设置
-        //.setWhen(System.currentTimeMillis());
-        //通过builder.build()方法生成Notification对象,并发送通知,id=1
-        notifyManager.notify(1, builder.build());
-    }
-*/
 
 }

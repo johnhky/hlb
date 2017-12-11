@@ -1,9 +1,7 @@
 package com.hlb.haolaoban.fragment.main;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,12 +21,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.adapter.MyRemindAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
@@ -43,6 +39,7 @@ import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
+import com.hlb.haolaoban.otto.HomeRefreshEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
 import com.hlb.haolaoban.utils.Constants;
@@ -51,6 +48,7 @@ import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.hlb.haolaoban.widget.ImageLoader;
 import com.orhanobut.hawk.Hawk;
+import com.squareup.otto.Subscribe;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -88,9 +86,6 @@ public class MainHomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_home, container, false);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.TYPE);
-        getActivity().registerReceiver(broadcastReceiver, filter);
         mActivity = getActivity();
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
@@ -197,7 +192,6 @@ public class MainHomeFragment extends BaseFragment {
                 DialogUtils.hideLoading(mActivity);
             }
 
-
             @Override
             public void onResponse(String response, int id) {
                 DialogUtils.hideLoading(mActivity);
@@ -277,7 +271,6 @@ public class MainHomeFragment extends BaseFragment {
             ImageView iv_title = (ImageView) view.findViewById(R.id.iv_title);
             ImageLoader loader = new ImageLoader(mActivity);
             loader.loadImage(list.get(i).getImage(),iv_title);
-            /*Glide.with(mActivity).load(list.get(i).getImage()).centerCrop().into(iv_title);*/
             mViewList.add(view);
             final int position = i;
             tv_read.setOnClickListener(new View.OnClickListener() {
@@ -340,18 +333,7 @@ public class MainHomeFragment extends BaseFragment {
 
     /*联系俱乐部*/
     private void contactClub() {
-        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getClub_name(), new DialogUtils.OnDialogItemClickListener() {
-            @Override
-            public void onItemClick(int which) {
-                if (which == 1) {
-                    Intent i = new Intent();
-                    i.setAction(Intent.ACTION_CALL);
-                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getClub_username()));
-                    startActivity(i);
-                }
-            }
-        });
-        /*startActivity(ChatActivity.class);*/
+        startActivity(VideoActivity.class);
     }
 
 
@@ -384,21 +366,9 @@ public class MainHomeFragment extends BaseFragment {
             container.removeView(mViewList.get(position));
         }
     }
-
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.TYPE)) {
-                getArticle();
-                getTodayRemind();
-            }
-        }
-    };
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
+    @Subscribe
+    public void onReceiveEvent(HomeRefreshEvent event){
+        getArticle();
+        getTodayRemind();
     }
 }

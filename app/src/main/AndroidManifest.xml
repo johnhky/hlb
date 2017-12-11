@@ -91,7 +91,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".activity.VideoActivity"
             android:theme="@style/FullScreenVideoTheme"></activity>
         <activity
             android:name=".activity.MedicalRecordActivity"
@@ -113,7 +113,7 @@
             android:name=".activity.RemindListActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.PrescriptionActivity"
+            android:name="com.hlb.haolaoban.activity.PrescriptionActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.HealthReportActivity"

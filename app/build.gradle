@@ -50,6 +50,7 @@ android {
             buildConfigField "String", "BASE_VIDEO_URL", '"http://39.108.126.238:9502/"'
             buildConfigField "String", "BASE_WEBSOCKET_URL", '"ws://39.108.126.238:9502?"'
             buildConfigField "String", "APPKEY", '"f34505123c454421a2f0145f61be0f0f"'
+
             debuggable false
             zipAlignEnabled true
             shrinkResources true

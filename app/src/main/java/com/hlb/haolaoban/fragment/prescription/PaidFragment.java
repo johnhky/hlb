@@ -26,6 +26,7 @@ import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.hlb.haolaoban.widget.RecyclerViewScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +64,11 @@ public class PaidFragment extends BaseFragment2 implements SwipeRefreshLayout.On
         onRefresh();
         mAdapter = new UnpayAdapter(list, mActivity);
         binding.recyclerView.setAdapter(mAdapter);
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerView.addOnScrollListener(new RecyclerViewScroller(linearLayoutManager,mAdapter) {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == recyclerView.SCROLL_STATE_IDLE && !ViewCompat.canScrollVertically(recyclerView, 1)) {
-                    pageNo++;
-                    getData(pageNo);
-                }
+            public void onLoadMore() {
+                pageNo++;
+                getData(pageNo);
             }
         });
         return binding.getRoot();

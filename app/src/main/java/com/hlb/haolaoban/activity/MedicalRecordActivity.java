@@ -21,6 +21,7 @@ import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Settings;
+import com.hlb.haolaoban.widget.RecyclerViewScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +60,11 @@ public class MedicalRecordActivity extends BaseActivity implements SwipeRefreshL
                 finish();
             }
         });
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerView.addOnScrollListener(new RecyclerViewScroller(gridLayoutManager,mAdapter) {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == recyclerView.SCROLL_STATE_IDLE && !ViewCompat.canScrollVertically(recyclerView, 1)) {
-                    pageNo++;
-                    getMedicalRecord(pageNo);
-                }
+            public void onLoadMore() {
+                pageNo++;
+                getMedicalRecord(pageNo);
             }
         });
         mAdapter = new MedicalRecordAdapter(list, mActivity);
