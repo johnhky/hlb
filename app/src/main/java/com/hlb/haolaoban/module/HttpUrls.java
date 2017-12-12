@@ -217,12 +217,12 @@ public class HttpUrls {
     }
 
     /*发起视频通话请求*/
-    public static Map<String, String> startVideo() {
+    public static Map<String, String> startVideo(String club_id) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "video.calling");
         params.put("call", Settings.getUserProfile().getMid() + "");
         params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
-        params.put("answers[]=", "27");
+        params.put("answers[]=", club_id);
         return params;
     }
 
@@ -291,7 +291,7 @@ public class HttpUrls {
         params.put("param[type]", device);
         params.put("param[start_time]", start_time);
         params.put("param[end_time]", end_time);
-        params.put("param[ds]","0");
+        params.put("param[ds]", "0");
         params.put("method", "member.realtime.chart");
         return params;
     }

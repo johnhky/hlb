@@ -247,7 +247,7 @@ public class VideoActivity extends BaseActivity {
 
     /*发起视频通话请求*/
     private void calling() {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.startVideo()).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.startVideo(Settings.getUserProfile().getClub_id()+"")).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
             }
@@ -259,7 +259,7 @@ public class VideoActivity extends BaseActivity {
                     jsonObject = new JSONObject(response);
                     int code = jsonObject.optInt("nFlag");
                     if (code == 1) {
-                        channel = /*jsonObject.getString("channel");*/1000+"";
+                        channel = jsonObject.getString("channel");
                     } else if (code == -99) {
                         BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
