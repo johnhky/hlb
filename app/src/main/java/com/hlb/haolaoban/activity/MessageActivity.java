@@ -104,6 +104,7 @@ public class MessageActivity extends BaseActivity implements SwipeRefreshLayout.
     public void onRefresh() {
         binding.swipeRefresh.setRefreshing(true);
         list = new ArrayList<>();
-        initData(1);
+        pageNo=1;
+        initData(pageNo);
     }
 }

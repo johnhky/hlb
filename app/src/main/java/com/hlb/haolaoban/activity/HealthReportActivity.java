@@ -97,6 +97,7 @@ public class HealthReportActivity extends BaseActivity implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         list  = new ArrayList<>();
-        initData(1);
+        pageNo=1;
+        initData(pageNo);
     }
 }

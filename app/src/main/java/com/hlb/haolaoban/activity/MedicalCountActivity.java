@@ -81,6 +81,7 @@ public class MedicalCountActivity extends BaseActivity implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         list  = new ArrayList<>();
-        getMedical(1);
+        pageNo=1;
+        getMedical(pageNo);
     }
 }

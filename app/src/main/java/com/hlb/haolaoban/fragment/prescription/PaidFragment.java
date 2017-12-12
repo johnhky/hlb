@@ -102,7 +102,8 @@ public class PaidFragment extends BaseFragment2 implements SwipeRefreshLayout.On
     public void onRefresh(){
     binding.swipeRefresh.setRefreshing(true);
         list = new ArrayList<>();
-    getData(1);
+        pageNo=1;
+    getData(pageNo);
     }
 
     private String getType() {

@@ -105,7 +105,8 @@ public class ExpiredFragment extends BaseFragment2 implements SwipeRefreshLayout
     public void onRefresh() {
         binding.swipeRefresh.setRefreshing(true);
         list = new ArrayList<>();
-        getData(1);
+        pageNo=1;
+        getData(pageNo);
     }
 
     @Subscribe

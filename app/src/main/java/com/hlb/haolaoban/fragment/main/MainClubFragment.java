@@ -234,7 +234,8 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         datas = new ArrayList<>();
-        getClub(1);
+        pageNo=1;
+        getClub(pageNo);
     }
 
     private void contactClub() {
