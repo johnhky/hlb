@@ -80,6 +80,7 @@ android {
             jniLibs.srcDirs = ['libs']
             res.srcDirs =
                     [
+                            'src/main/res/layout/message',
                             'src/main/res/layout/device',
                             'src/main/res/layout/mine',
                             'src/main/res/layout/account',

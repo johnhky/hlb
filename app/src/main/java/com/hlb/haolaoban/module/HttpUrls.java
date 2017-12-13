@@ -1,13 +1,8 @@
 package com.hlb.haolaoban.module;
 
-import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
-import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Calendar;
@@ -302,7 +297,17 @@ public class HttpUrls {
         params.putAll(Constants.addParams());
         params.put("param[oid]", orderId);
         params.put("param[mid]", mid);
-        params.put("method", "payment.weixin.order.creater");
+        params.put("method", "payment.pay.weixin.creater");
+        return params;
+    }
+
+    /*微信支付*/
+    public static Map<String, String> aliPay(String mid, String orderId) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[oid]", orderId);
+        params.put("param[mid]", mid);
+        params.put("method", "payment.pay.alipay.creater");
         return params;
     }
 }

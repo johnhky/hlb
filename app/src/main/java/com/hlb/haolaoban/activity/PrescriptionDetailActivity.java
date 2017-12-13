@@ -16,6 +16,7 @@ import com.hlb.haolaoban.activity.mine.BigImageActivity;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.bean.PrescriptionDetailBean;
 import com.hlb.haolaoban.databinding.ActivityPrescriptionDetailBinding;
+import com.hlb.haolaoban.http.AlipayCallback;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.http.WechatCallback;
@@ -43,6 +44,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     int type = 1;
+    CountDownTimer timer;
 
     public static Intent intentFor(Context context, String oid) {
         Intent i = new Intent(context, PrescriptionDetailActivity.class);
@@ -98,7 +100,7 @@ public class PrescriptionDetailActivity extends BaseActivity {
                     Date date2 = df.parse(date);
                     Date date3 = df.parse(date1);
                     long millis = date2.getTime() - date3.getTime();
-                    CountDownTimer timer = new CountDownTimer(millis, 1000) {
+                    timer = new CountDownTimer(millis, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             long days = millisUntilFinished / (1000 * 60 * 60 * 24);
@@ -110,7 +112,12 @@ public class PrescriptionDetailActivity extends BaseActivity {
 
                         @Override
                         public void onFinish() {
-                            finish();
+                            binding.tvDone.setVisibility(View.VISIBLE);
+                            binding.tvPay.setVisibility(View.GONE);
+                            binding.llDone.setVisibility(View.VISIBLE);
+                            binding.llPay.setVisibility(View.GONE);
+                            binding.tvDone.setText("已过期");
+                            binding.tvStatus.setText("订单已过期");
                             Utils.showToastLong("订单已过期!");
                             BusProvider.getInstance().postEvent(new RefreshOrderEvent());
                         }
@@ -170,6 +177,8 @@ public class PrescriptionDetailActivity extends BaseActivity {
                             case 3:
                                 if (type == 1) {
                                     wechatPay(String.valueOf(data.getMid()), data.getOid());
+                                } else {
+                                    aliPay(String.valueOf(data.getMid()), data.getOid());
                                 }
                                 break;
                         }
@@ -183,15 +192,26 @@ public class PrescriptionDetailActivity extends BaseActivity {
         api.getBaseUrl(HttpUrls.wechatPay(mid, oid)).enqueue(new WechatCallback(this));
     }
 
+    private void aliPay(String mid, String oid) {
+        api.getBaseUrl(HttpUrls.aliPay(mid, oid)).enqueue(new AlipayCallback(this));
+    }
+
     private String getOid() {
         return getIntent().getStringExtra(Constants.DATA);
     }
 
-
     @Subscribe
     public void onReceiveEvent(PaySuccessEvent event) {
         Utils.showToastLong("支付成功!");
-        getData();
+        if (null != timer) {
+            timer.cancel();
+        }
+        binding.tvDone.setVisibility(View.VISIBLE);
+        binding.tvPay.setVisibility(View.GONE);
+        binding.llDone.setVisibility(View.VISIBLE);
+        binding.llPay.setVisibility(View.GONE);
+        binding.tvDone.setText("已支付");
+        binding.tvStatus.setText("订单已支付");
     }
 
 }

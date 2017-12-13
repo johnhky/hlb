@@ -112,10 +112,17 @@ public class UnpayAdapter extends RecyclerView.Adapter<UnpayAdapter.ViewHolder> 
                 break;
             case "5":
                 holder.tv_done.setText("已过期");
-                holder.ll_detail.setEnabled(false);
                 break;
         }
         holder.ll_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = PrescriptionDetailActivity.intentFor(context, myDatas.get(position).getOid() + "");
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+            }
+        });
+        holder.bt_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = PrescriptionDetailActivity.intentFor(context, myDatas.get(position).getOid() + "");

@@ -164,6 +164,8 @@
      <fields>;
      <methods>;
  }
+-dontwarn android.net.**
+-keep class android.net.SSLCertificateSocketFactory{*;}
  -keep class com.alipay.android.phone.mrpc.core.** { *; }
  -keep class com.alipay.apmobilesecuritysdk.** { *; }
  -keep class com.alipay.mobile.framework.service.annotation.** { *; }
