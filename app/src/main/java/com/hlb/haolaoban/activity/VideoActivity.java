@@ -78,6 +78,7 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 disconnectVideo(channel, "2");
+                finish();
             }
         });
 
@@ -164,7 +165,7 @@ public class VideoActivity extends BaseActivity {
     private void onRemoteUserLeft() {
         binding.flYourVideo.removeAllViews();
         binding.tvStatus.setVisibility(View.VISIBLE);
-        BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
+        BusProvider.getInstance().postEvent(new FinishChatEvent("finish", "2"));
     }
 
     /*判断是否显示远程视频*/
@@ -247,7 +248,7 @@ public class VideoActivity extends BaseActivity {
 
     /*发起视频通话请求*/
     private void calling() {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.startVideo(Settings.getUserProfile().getClub_id()+"")).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.startVideo(Settings.getUserProfile().getClub_id() + "")).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
             }
@@ -280,7 +281,7 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 if (!TextUtils.isEmpty(channel)) {
-                    disconnectVideo(channel, "5");
+                    disconnectVideo(channel, "3");
                 }
             }
         };
@@ -308,7 +309,6 @@ public class VideoActivity extends BaseActivity {
                 if (mode.equals("5")) {
                     Toast.makeText(mActivity, "对方未接听视频通话", Toast.LENGTH_LONG).show();
                 }
-                BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
@@ -364,19 +364,13 @@ public class VideoActivity extends BaseActivity {
     public void onReciveEvent(JoinVideoEvent event) {
         if (event.getType().equals("meet")) {
             startChat(channel);
-
         }
     }
 
     @Subscribe
     public void onReciveEvent(FinishChatEvent event) {
-        switch (event.getType()) {
-            case "finish":
-                finish();
-                break;
-        }
-
-
+        disconnectVideo(channel, event.getCode());
+        finish();
     }
 
     private String getChannel() {

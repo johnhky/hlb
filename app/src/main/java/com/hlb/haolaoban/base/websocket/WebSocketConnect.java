@@ -76,7 +76,7 @@ public class WebSocketConnect {
                                         BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
                                         break;
                                     case "refuse":
-                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish"));
+                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish","1"));
                                         break;
                                     case "calling":
                                         BusProvider.getInstance().postEvent(new JoinVideoEvent(type, channel));

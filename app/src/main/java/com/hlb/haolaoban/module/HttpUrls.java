@@ -217,7 +217,7 @@ public class HttpUrls {
         params.put("method", "video.calling");
         params.put("call", Settings.getUserProfile().getMid() + "");
         params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
-        params.put("answers[]=", club_id);
+        params.put("answers[]=", "281");
         return params;
     }
 

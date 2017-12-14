@@ -7,9 +7,18 @@ package com.hlb.haolaoban.otto;
 public class FinishChatEvent extends Event {
 
     private String type;
-
-    public FinishChatEvent(String type) {
+    private String code;
+    public FinishChatEvent(String type,String code) {
         this.type = type;
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getType() {
