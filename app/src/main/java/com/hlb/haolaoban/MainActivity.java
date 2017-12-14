@@ -19,11 +19,13 @@ import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hlb.haolaoban.activity.ChattingActivity;
 import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
@@ -43,7 +45,9 @@ import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
+import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
@@ -61,7 +65,7 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
     ActivityMainBinding binding;
-    Fragment mainHome, mainClub, mainMine;
+    Fragment mainHome, mainClub, mainMine, mainChat;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     public static final int PERMISSION_REQUEST_CODE = 2002;
@@ -84,7 +88,7 @@ public class MainActivity extends FragmentActivity {
         transaction.commitAllowingStateLoss();
         initView();
         if (null != Hawk.get(Constants.MID)) {
-            webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID)+"&type=member";
+            webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID) + "&type=member";
             WebSocketUtil.getInstance().login(webStr);
         }
     }
@@ -123,11 +127,12 @@ public class MainActivity extends FragmentActivity {
                     /*    Intent post = new Intent();
                         post.setAction(Constants.TYPE);
                         sendBroadcast(post);*/
-                    BusProvider.getInstance().postEvent(new HomeRefreshEvent());
+                        BusProvider.getInstance().postEvent(new HomeRefreshEvent());
                         binding.titlebar.tbTitle.setText("好老伴");
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
                         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
                         binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
+                        binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
                         break;
                     case R.id.main_radio_club:
                         if (mainClub == null) {
@@ -140,6 +145,17 @@ public class MainActivity extends FragmentActivity {
                         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.main_tab_color));
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
                         binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
+                        binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
+                        break;
+                    case R.id.main_radio_chat:
+                        if (null != Settings.getUserProfile()) {
+                            Intent i = new Intent(MainActivity.this, ChattingActivity.class);
+                            startActivity(i);
+                        } else {
+                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
                         break;
                     case R.id.main_radio_mine:
                         if (null != com.hlb.haolaoban.utils.Settings.getUserProfile()) {
@@ -153,6 +169,7 @@ public class MainActivity extends FragmentActivity {
                             binding.mainRadioMine.setTextColor(getResources().getColor(R.color.main_tab_color));
                             binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
                             binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
+                            binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
                         } else {
                             Intent i = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(i);
@@ -183,6 +200,16 @@ public class MainActivity extends FragmentActivity {
             showToken();
         }
     }
+
+    @Subscribe
+    public void onReceiveEvent(UpdateHomeEvent event) {
+        binding.mainRadioHome.setChecked(true);
+        binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
+        binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
+        binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
+        binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
+    }
+
 
     @Subscribe
     public void onReciveEvent(JoinVideoEvent event) {

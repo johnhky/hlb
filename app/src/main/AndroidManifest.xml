@@ -139,6 +139,9 @@
         <activity
             android:name=".activity.device.PhysicalDataActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.ChattingActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 微信支付回调 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"

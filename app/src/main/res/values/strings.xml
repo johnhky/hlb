@@ -5,6 +5,7 @@
     <!--首页-->
     <string name="text_home">首页</string>
     <string name="text_club">俱乐部</string>
+    <string name="text_chat">消息</string>
     <string name="text_mine">我的</string>
     <string name="text_connect_team">联系医疗团队</string>
     <string name="text_connect_club">联系俱乐部</string>

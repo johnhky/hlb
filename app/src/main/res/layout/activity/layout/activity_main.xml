@@ -43,6 +43,17 @@
                     android:textColor="@color/gray_33" />
 
                 <RadioButton
+                    android:id="@+id/main_radio_chat"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableTop="@drawable/chat_bg_selector"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/dp_5"
+                    android:text="@string/text_chat"
+                    android:textColor="@color/gray_33" />
+                <RadioButton
                     android:id="@+id/main_radio_mine"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
