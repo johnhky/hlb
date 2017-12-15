@@ -2,7 +2,6 @@ package com.hlb.haolaoban.activity;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
@@ -24,6 +23,7 @@ import com.hlb.haolaoban.databinding.ActivityChattingBinding;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
+import com.hlb.haolaoban.utils.NetworkUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 
@@ -155,7 +155,6 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                         popupWindow.dismiss();
                         break;
                 }
-
                 return true;
             }
         });
@@ -174,6 +173,10 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                 hideAllWhileMore();
                 break;
             case R.id.bt_send:
+                if (!NetworkUtils.isAvailable(mActivity)) {
+                    Utils.showToast("网络连接已断开,请检查您的网络情况!");
+                    return;
+                }
                 binding.etMsg.setText("");
                 break;
             case R.id.iv_keyword:
@@ -187,55 +190,55 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
     }
 
-    /*点击打开语音发送*/
+    /*点击关闭语音发送,回到输入框*/
     private void hideAllWhileAudioOpen() {
-        binding.ivAudio.setVisibility(View.VISIBLE);
-        binding.llMore.setVisibility(View.GONE);
-        binding.ivKeyword.setVisibility(View.GONE);
-        binding.etMsg.setVisibility(View.VISIBLE);
-        binding.btAudio.setVisibility(View.GONE);
-        binding.ivMore.setVisibility(View.VISIBLE);
-        binding.ivClose.setVisibility(View.GONE);
         binding.etMsg.setText("");
+        binding.btAudio.setVisibility(View.GONE);
+        binding.etMsg.setVisibility(View.VISIBLE);
+        binding.ivAudio.setVisibility(View.VISIBLE);
+        binding.ivClose.setVisibility(View.GONE);
+        binding.ivKeyword.setVisibility(View.GONE);
+        binding.ivMore.setVisibility(View.VISIBLE);
+        binding.llMore.setVisibility(View.GONE);
         hideKeyword();
     }
 
-    /*点击关闭语音发送,回到输入框*/
+    /*点击打开语音发送*/
     private void hideAllWhileAudioClose() {
-        binding.ivAudio.setVisibility(View.GONE);
-        binding.ivKeyword.setVisibility(View.VISIBLE);
-        binding.etMsg.setVisibility(View.GONE);
-        binding.btAudio.setVisibility(View.VISIBLE);
-        binding.ivMore.setVisibility(View.VISIBLE);
-        binding.ivClose.setVisibility(View.GONE);
-        binding.llMore.setVisibility(View.GONE);
         binding.etMsg.setText("");
+        binding.btAudio.setVisibility(View.VISIBLE);
+        binding.etMsg.setVisibility(View.GONE);
+        binding.ivAudio.setVisibility(View.GONE);
+        binding.ivClose.setVisibility(View.GONE);
+        binding.ivKeyword.setVisibility(View.VISIBLE);
+        binding.ivMore.setVisibility(View.VISIBLE);
+        binding.llMore.setVisibility(View.GONE);
         hideKeyword();
     }
 
     /*点击打开视频，图片页面*/
     private void hideAllWhileNoMore() {
         binding.etMsg.setText("");
-        binding.ivKeyword.setVisibility(View.GONE);
-        binding.ivAudio.setVisibility(View.VISIBLE);
-        binding.etMsg.setVisibility(View.VISIBLE);
         binding.btAudio.setVisibility(View.GONE);
-        binding.llMore.setVisibility(View.VISIBLE);
-        binding.ivMore.setVisibility(View.GONE);
         binding.ivClose.setVisibility(View.VISIBLE);
+        binding.etMsg.setVisibility(View.VISIBLE);
+        binding.ivAudio.setVisibility(View.VISIBLE);
+        binding.ivKeyword.setVisibility(View.GONE);
+        binding.ivMore.setVisibility(View.GONE);
+        binding.llMore.setVisibility(View.VISIBLE);
         hideKeyword();
     }
 
     /*点击关闭视频，图片页面,回到输入框*/
     private void hideAllWhileMore() {
         binding.etMsg.setText("");
+        binding.btAudio.setVisibility(View.GONE);
+        binding.etMsg.setVisibility(View.VISIBLE);
+        binding.ivAudio.setVisibility(View.VISIBLE);
         binding.ivClose.setVisibility(View.GONE);
-        binding.llMore.setVisibility(View.GONE);
         binding.ivMore.setVisibility(View.VISIBLE);
         binding.ivKeyword.setVisibility(View.GONE);
-        binding.ivAudio.setVisibility(View.VISIBLE);
-        binding.etMsg.setVisibility(View.VISIBLE);
-        binding.btAudio.setVisibility(View.GONE);
+        binding.llMore.setVisibility(View.GONE);
         hideKeyword();
     }
 

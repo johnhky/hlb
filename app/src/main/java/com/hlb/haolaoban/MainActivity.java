@@ -65,7 +65,7 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
     ActivityMainBinding binding;
-    Fragment mainHome, mainClub, mainMine, mainChat;
+    Fragment mainHome, mainClub, mainMine;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
     public static final int PERMISSION_REQUEST_CODE = 2002;
