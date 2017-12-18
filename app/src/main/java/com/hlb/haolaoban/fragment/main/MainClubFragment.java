@@ -160,6 +160,8 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 return true;
             }
         });
+        mAdapter = new ClubAdapter(datas, mActivity);
+        binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addOnScrollListener(new RecyclerViewScroller(linearLayoutManager,mAdapter) {
             @Override
             public void onLoadMore() {
@@ -167,8 +169,6 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 getClub(pageNo);
             }
         });
-        mAdapter = new ClubAdapter(datas, mActivity);
-        binding.recyclerView.setAdapter(mAdapter);
     }
 
     /*上传语音*/
