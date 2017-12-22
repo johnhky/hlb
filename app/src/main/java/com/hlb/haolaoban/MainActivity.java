@@ -30,6 +30,7 @@ import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
 import com.hlb.haolaoban.bean.TokenBean;
+import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
 import com.hlb.haolaoban.fragment.main.MainHomeFragment;
@@ -47,6 +48,7 @@ import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
@@ -57,6 +59,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
 
 
 /**
@@ -75,7 +79,6 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BusProvider.getInstance().register(this);
-        showToken();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         checkPermission();
         binding.titlebar.tbTitle.setText("好老伴");
@@ -88,23 +91,9 @@ public class MainActivity extends FragmentActivity {
         transaction.commitAllowingStateLoss();
         initView();
         if (null != Hawk.get(Constants.MID)) {
-            webStr = BuildConfig.BASE_WEBSOCKET_URL + "mid=" + Hawk.get(Constants.MID) + "&type=member";
+            webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.MID);
             WebSocketUtil.getInstance().login(webStr);
         }
-    }
-
-    public void showToken() {
-        api.getToken(HttpUrls.getToken()).enqueue(new SimpleCallback() {
-            @Override
-            protected void handleResponse(String response) {
-                TokenBean data = gson.fromJson(response, TokenBean.class);
-                if (data != null) {
-                    Hawk.put(Constants.TOKEN, data.getToken());
-                    Hawk.put(Constants.TOKENOUT, data.getTokenout());
-                }
-            }
-
-        });
     }
 
     public void initView() {
@@ -124,9 +113,6 @@ public class MainActivity extends FragmentActivity {
                         } else {
                             transaction.show(mainHome);
                         }
-                    /*    Intent post = new Intent();
-                        post.setAction(Constants.TYPE);
-                        sendBroadcast(post);*/
                         BusProvider.getInstance().postEvent(new HomeRefreshEvent());
                         binding.titlebar.tbTitle.setText("好老伴");
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
@@ -197,8 +183,26 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
-            showToken();
+            login();
         }
+    }
+
+    private void login() {
+        if (Hawk.get(Constants.PHONE) == null) {
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+        api.login(HttpUrls.login(Hawk.get(Constants.PHONE) + "", Hawk.get(Constants.PASSWORD) + "")).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                UserBean data = gson.fromJson(response, UserBean.class);
+                Hawk.put(Constants.MID, data.getMid());
+                Hawk.put(Constants.CLUB_ID, data.getClub_id());
+                Hawk.put(Constants.TOKEN, data.getToken());
+            }
+
+        });
     }
 
     @Subscribe

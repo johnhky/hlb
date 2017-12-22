@@ -2,6 +2,7 @@ package com.hlb.haolaoban.base.websocket;
 
 import android.os.CountDownTimer;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hlb.haolaoban.MyApplication;
 import com.hlb.haolaoban.handler.MsgHandler;
@@ -60,6 +61,7 @@ public class WebSocketConnect {
                 @Override
                 public void onTextMessage(String payload) {
                     super.onTextMessage(payload);
+                    Log.e("eeee",payload);
                     JSONObject jsonObject;
                     try {
                         jsonObject = new JSONObject(payload);

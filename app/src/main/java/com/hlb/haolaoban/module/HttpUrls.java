@@ -60,11 +60,10 @@ public class HttpUrls {
     public static Map<String, String> login(String phone, String psw) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
-        params.put("param[username]", phone);
-        params.put("param[password]", psw);
-        params.put("param[type]", BuildConfig.USER_TYPE + "");
-        params.put("param[device]", "mobile");
-        params.put("method", "member.login");
+        params.put("username", phone);
+        params.put("password", psw);
+        params.put("type", BuildConfig.USER_TYPE + "");
+        params.put("device", "mobile");
         return params;
     }
 
@@ -114,12 +113,14 @@ public class HttpUrls {
     }
 
     /*发起视频通话请求*/
-    public static Map<String, String> uploadData(String mid, String name, String photo) {
+    public static Map<String, String> uploadData(String mid, String name, String photo,String teamId) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "user.infos");
         params.put("mid", mid);
         params.put("name", name);
         params.put("photo", photo);
+        params.put("role","member");
+        params.put("team",teamId);
         return params;
     }
 

@@ -4,17 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.base.BaseActivity;
-import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
-import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
 import com.hlb.haolaoban.http.Api;
@@ -25,8 +22,6 @@ import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import retrofit2.Call;
 
@@ -86,6 +81,11 @@ public class LoginActivity extends BaseActivity {
             showToast("密码不能为空!");
             return;
         }
+        if (binding.etPassword.getText().toString().trim().length() < 8 || binding.etPassword.getText().toString().trim().length() > 12) {
+            DialogUtils.hideLoading(mActivity);
+            showToast("密码长度不能低于8位或者高于12位!");
+            return;
+        }
         api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
@@ -93,9 +93,9 @@ public class LoginActivity extends BaseActivity {
                 UserBean data = gson.fromJson(response, UserBean.class);
                 Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
+                Hawk.put(Constants.TOKEN, data.getToken());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                uploadData(data.getMid() + "", data.getName(), data.getPhoto());
                 startActivity(MainActivity.class);
                 finish();
             }
@@ -104,20 +104,6 @@ public class LoginActivity extends BaseActivity {
             public void onFailure(Call call, Throwable t) {
                 super.onFailure(call, t);
                 DialogUtils.hideLoading(mActivity);
-            }
-        });
-    }
-
-    private void uploadData(final String mid, String name, String photo) {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.uploadData(mid, name, photo)).build().execute(new StringCallback() {
-            @Override
-            public void onError(okhttp3.Call call, Exception e, int id) {
-
-            }
-
-            @Override
-            public void onResponse(String response, int id) {
-
             }
         });
     }

@@ -31,6 +31,16 @@ public class UserBean implements Serializable{
     private String photo;
     private String name;
     private int addtime;
+    private String token;
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public int getMid() {
         return mid;

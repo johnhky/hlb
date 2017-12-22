@@ -2,6 +2,7 @@ package com.hlb.haolaoban.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -21,6 +22,7 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
         BusProvider.getInstance().register(this);
+
     }
 
     public void startActivity(Class c) {
@@ -34,4 +36,13 @@ public class BaseFragment extends Fragment {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
     }
+
+    public static boolean isActivityDestroyed(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
+                && activity != null && activity.isDestroyed()) {
+            return true;
+        }
+        return false;
+    }
+
 }

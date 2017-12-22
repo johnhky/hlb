@@ -47,6 +47,7 @@ import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.hlb.haolaoban.widget.ImageLoader;
+import com.hlb.haolaoban.widget.PhotoView;
 import com.orhanobut.hawk.Hawk;
 import com.squareup.otto.Subscribe;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -269,8 +270,10 @@ public class MainHomeFragment extends BaseFragment {
             TextView tv_read = (TextView) view.findViewById(R.id.tv_read);
             final TextView tv_voice = (TextView) view.findViewById(R.id.tv_voice);
             ImageView iv_title = (ImageView) view.findViewById(R.id.iv_title);
-            ImageLoader loader = new ImageLoader(mActivity);
-            loader.loadImage(list.get(i).getImage(),iv_title);
+            if (!isActivityDestroyed(mActivity)) {
+                ImageLoader loader = new ImageLoader(mActivity);
+                loader.loadImage(list.get(i).getImage(), iv_title);
+            }
             mViewList.add(view);
             final int position = i;
             tv_read.setOnClickListener(new View.OnClickListener() {
@@ -366,8 +369,9 @@ public class MainHomeFragment extends BaseFragment {
             container.removeView(mViewList.get(position));
         }
     }
+
     @Subscribe
-    public void onReceiveEvent(HomeRefreshEvent event){
+    public void onReceiveEvent(HomeRefreshEvent event) {
         getArticle();
         getTodayRemind();
     }

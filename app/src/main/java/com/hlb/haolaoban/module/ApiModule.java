@@ -36,7 +36,7 @@ public interface ApiModule {
     Call<ApiDTO> getUserInfo(@FieldMap Map<String, String> params);
 
     /*用户登录*/
-    @GET("index")
+    @GET("login")
     Call<ApiDTO> login(@QueryMap Map<String, String> params);
 
     /*密码修改*/

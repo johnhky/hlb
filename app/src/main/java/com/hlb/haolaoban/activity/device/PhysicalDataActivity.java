@@ -141,7 +141,6 @@ public class PhysicalDataActivity extends BaseActivity {
         api.getBaseUrl(HttpUrls.getRealTime(Settings.getUserProfile().getMid() + "", getType(), sevenDayTimeStamp + "", currentTime + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.e("eeee",response);
                 if (response.length() < 7) {
                     showToast("暂无相关数据");
                     return;

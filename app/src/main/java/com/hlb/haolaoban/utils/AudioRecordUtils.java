@@ -73,10 +73,10 @@ public class AudioRecordUtils {
         try {
                 /*4. 开始录音*/
             mMediaRecorder.start();
-            updateMicStatus();
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
+        updateMicStatus();
     }
 
     /*停止录音*/
@@ -157,16 +157,21 @@ public class AudioRecordUtils {
      */
     private void updateMicStatus() {
         if (mMediaRecorder != null) {
-            double ratio = (double) mMediaRecorder.getMaxAmplitude() / BASE;
-            double db = 0;// 分贝
-            if (ratio > 1) {
-                db = 20 * Math.log10(ratio);
-                if (null != audioUpdateListtener) {
-                    audioUpdateListtener.onUpdate(db, System.currentTimeMillis() - startTime);
+            try {
+                double ratio = (double) mMediaRecorder.getMaxAmplitude() / BASE;
+                double db = 0;// 分贝
+                if (ratio > 1) {
+                    db = 20 * Math.log10(ratio);
+                    if (null != audioUpdateListtener) {
+                        audioUpdateListtener.onUpdate(db, System.currentTimeMillis() - startTime);
+                    }
                 }
+                mHandler.postDelayed(mUpdateMicStatusTimer, SPACE);
+            } catch (IllegalStateException e) {
+            e.printStackTrace();
             }
-            mHandler.postDelayed(mUpdateMicStatusTimer, SPACE);
         }
+
     }
 
 

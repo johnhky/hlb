@@ -35,6 +35,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,102 +46,132 @@
         <activity
             android:name=".activity.PersonalActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.mine.AboutActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.account.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.HealthRecordActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.device.DeviceManageActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.AccountActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.account.UpdatePasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.account.ForgetPasswordActivity1"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.account.ForgetPasswordActivity2"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.account.BindPhoneActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.account.BindPhoneActivity1"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.account.BindPhoneActivity2"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.account.BindPhoneActivity3"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.VideoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/FullScreenVideoTheme"></activity>
         <activity
             android:name=".activity.MedicalRecordActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.MedicalCountActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.mine.HelpCenterActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.mine.FeedBackActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"></activity>\]
         <activity
             android:name=".activity.mine.BigImageActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.RemindListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name="com.hlb.haolaoban.activity.PrescriptionActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.HealthReportActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.TotalRemindActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.PrescriptionDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.HealthReportDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.device.WristbandsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.device.DeviceDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.MessageActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.device.PhysicalDataActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.ChattingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 微信支付回调 -->
         <activity
