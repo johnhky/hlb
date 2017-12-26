@@ -30,7 +30,7 @@ public class WebSocketConnect {
     WebSocketConnection webSocketConnection = new WebSocketConnection();
     private WebSocketOptions mWebSocketOptions = new WebSocketOptions();
     CountDownTimer timer;
-    private long time = 100000000L;
+    private long time = 10000;
 
     public WebSocketConnect() {
         mWebSocketOptions.setSocketConnectTimeout(30000);
@@ -43,7 +43,7 @@ public class WebSocketConnect {
                 @Override
                 public void onOpen() {
                     super.onOpen();
-                    sendMsg();
+                    sendMsg(time);
                 }
 
                 @Override
@@ -61,7 +61,7 @@ public class WebSocketConnect {
                 @Override
                 public void onTextMessage(String payload) {
                     super.onTextMessage(payload);
-                    Log.e("eeee",payload);
+                    Log.e("eeee", payload);
                     JSONObject jsonObject;
                     try {
                         jsonObject = new JSONObject(payload);
@@ -78,7 +78,7 @@ public class WebSocketConnect {
                                         BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
                                         break;
                                     case "refuse":
-                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish","1"));
+                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish", "1"));
                                         break;
                                     case "calling":
                                         BusProvider.getInstance().postEvent(new JoinVideoEvent(type, channel));
@@ -124,8 +124,8 @@ public class WebSocketConnect {
 
     }
 
-    private void sendMsg() {
-        timer = new CountDownTimer(time, 30000) {
+    private void sendMsg(final long times) {
+        timer = new CountDownTimer(times, 5000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 webSocketConnection.sendTextMessage("");
@@ -133,8 +133,8 @@ public class WebSocketConnect {
 
             @Override
             public void onFinish() {
-                time = 100000000L;
-                sendMsg();
+                time = 10000;
+                sendMsg(time);
             }
         };
         timer.start();

@@ -19,7 +19,7 @@ public class WebSocketUtil {
         return webSocketConnect;
     }
 
-    public void login(String url) {
+    public static void login(String url) {
         webSocketConnect.login(url);
     }
 }

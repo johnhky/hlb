@@ -5,20 +5,27 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.bean.DrugRemind;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.receiver.AlarmReceiver;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,6 +36,7 @@ import java.util.Map;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import okhttp3.Call;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.content.Context.ALARM_SERVICE;
@@ -142,4 +150,34 @@ public class MsgHandler {
         }
     }
 
+
+    public static void sendAudio(String fileName) {
+        File file = new File(fileName);
+        String newFileName = System.currentTimeMillis() / 1000 + ".amr";
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendAudio(Settings.getUserProfile().getMid() + "")).addFile("content", newFileName, file).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Log.e("eeee",e.getMessage()+"");
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e("eeee",response);
+            }
+        });
+    }
+
+    public static void sendText(String text) {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendText(Settings.getUserProfile().getMid() + "",text)).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Log.e("eeee",e.getMessage()+"");
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e("eeee",response);
+            }
+        });
+    }
 }

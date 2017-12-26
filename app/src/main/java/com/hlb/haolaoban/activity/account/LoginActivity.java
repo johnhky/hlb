@@ -9,9 +9,11 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.base.websocket.WebSocketUtil;
 import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
 import com.hlb.haolaoban.http.Api;
@@ -96,6 +98,8 @@ public class LoginActivity extends BaseActivity {
                 Hawk.put(Constants.TOKEN, data.getToken());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
+                String  webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.TOKEN) + "&mid=" + Hawk.get(Constants.MID);
+                WebSocketUtil.getInstance().login(webStr);
                 startActivity(MainActivity.class);
                 finish();
             }

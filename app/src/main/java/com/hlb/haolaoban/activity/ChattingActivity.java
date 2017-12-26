@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,9 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.databinding.ActivityChattingBinding;
+import com.hlb.haolaoban.handler.MsgHandler;
+import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
@@ -100,7 +104,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
             public void onStop(String filePath) {
                 float length = startY - endY;
                 if (length < 80) {
-                    /*uploadAudio(filePath);*/
+                    MsgHandler.sendAudio(filePath);
                 } else {
                     Utils.showToast("录音已取消!");
                 }
@@ -152,6 +156,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                         endY = 0;
                         recordUtils.stopRecord();
                         recordUtils.cancelRecord();
+                        binding.btAudio.setText("按住 说话");
                         popupWindow.dismiss();
                         break;
                 }
@@ -177,6 +182,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                     Utils.showToast("网络连接已断开,请检查您的网络情况!");
                     return;
                 }
+                MsgHandler.sendText(binding.etMsg.getText().toString());
                 binding.etMsg.setText("");
                 break;
             case R.id.iv_keyword:
@@ -253,5 +259,8 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
         super.onDestroy();
         BusProvider.getInstance().postEvent(new UpdateHomeEvent());
     }
+
+
+
 }
 

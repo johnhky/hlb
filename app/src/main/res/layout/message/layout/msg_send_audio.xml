@@ -21,13 +21,13 @@
                 android:layout_marginLeft="@dimen/dp_55"
                 android:layout_marginStart="@dimen/dp_55"
                 android:orientation="horizontal">
-                <ImageView
+          <!--      <ImageView
                     android:layout_width="@dimen/dp_5"
                     android:background="@drawable/shape_red_round"
                     android:layout_height="@dimen/dp_5"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/dp_5"
-                    />
+                    />-->
                 <TextView
                     android:id="@+id/message_item_audio_duration"
                     android:layout_width="wrap_content"

@@ -113,14 +113,14 @@ public class HttpUrls {
     }
 
     /*发起视频通话请求*/
-    public static Map<String, String> uploadData(String mid, String name, String photo,String teamId) {
+    public static Map<String, String> uploadData(String mid, String name, String photo, String teamId) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("method", "user.infos");
         params.put("mid", mid);
         params.put("name", name);
         params.put("photo", photo);
-        params.put("role","member");
-        params.put("team",teamId);
+        params.put("role", "member");
+        params.put("team", teamId);
         return params;
     }
 
@@ -218,7 +218,7 @@ public class HttpUrls {
         params.put("method", "video.calling");
         params.put("call", Settings.getUserProfile().getMid() + "");
         params.put("token", Hawk.get(com.hlb.haolaoban.utils.Constants.TOKEN) + "");
-        params.put("answers[]=", "281");
+        params.put("answers[]=", "306");
         return params;
     }
 
@@ -292,6 +292,17 @@ public class HttpUrls {
         return params;
     }
 
+    /*发送消息*/
+    public static Map<String, String> sendMsg(String text, String id, String type) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("method", "consult.acceptMessage");
+        params.put("mid", id);
+        params.put("content", text);
+        params.put("format", type);
+        return params;
+    }
+
+
     /*微信支付*/
     public static Map<String, String> wechatPay(String mid, String orderId) {
         Map<String, String> params = new LinkedHashMap<>();
@@ -309,6 +320,25 @@ public class HttpUrls {
         params.put("param[oid]", orderId);
         params.put("param[mid]", mid);
         params.put("method", "payment.pay.alipay.creater");
+        return params;
+    }
+
+    /*语音发送*/
+    public static Map<String, String> sendAudio(String mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("mid", mid);
+        params.put("format", "audio");
+        params.put("method", "consult.acceptMessage");
+        return params;
+    }
+
+    /*文字发送*/
+    public static Map<String, String> sendText(String mid,String text) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("mid", mid);
+        params.put("format", "text");
+        params.put("content", text);
+        params.put("method", "consult.acceptMessage");
         return params;
     }
 }

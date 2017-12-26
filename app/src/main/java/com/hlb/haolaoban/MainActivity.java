@@ -19,7 +19,6 @@ import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 
@@ -29,7 +28,6 @@ import com.hlb.haolaoban.activity.ChattingActivity;
 import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
-import com.hlb.haolaoban.bean.TokenBean;
 import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
@@ -48,7 +46,6 @@ import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.Constants;
-import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
@@ -59,8 +56,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
 
 
 /**
@@ -90,16 +85,13 @@ public class MainActivity extends FragmentActivity {
         }
         transaction.commitAllowingStateLoss();
         initView();
-        if (null != Hawk.get(Constants.MID)) {
-            webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.MID);
-            WebSocketUtil.getInstance().login(webStr);
-        }
     }
 
     public void initView() {
         if (!isNotificationEnabled(MainActivity.this)) {
             Utils.showToast("为了您能准时收到消息和紧急通知,请开启好老伴的通知栏权限");
         }
+
         binding.mainRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -192,17 +184,22 @@ public class MainActivity extends FragmentActivity {
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
-        }
-        api.login(HttpUrls.login(Hawk.get(Constants.PHONE) + "", Hawk.get(Constants.PASSWORD) + "")).enqueue(new SimpleCallback() {
-            @Override
-            protected void handleResponse(String response) {
-                UserBean data = gson.fromJson(response, UserBean.class);
-                Hawk.put(Constants.MID, data.getMid());
-                Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                Hawk.put(Constants.TOKEN, data.getToken());
-            }
+        } else {
+            api.login(HttpUrls.login(Hawk.get(Constants.PHONE) + "", Hawk.get(Constants.PASSWORD) + "")).enqueue(new SimpleCallback() {
+                @Override
+                protected void handleResponse(String response) {
+                    UserBean data = gson.fromJson(response, UserBean.class);
+                    Hawk.put(Constants.MID, data.getMid());
+                    Hawk.put(Constants.CLUB_ID, data.getClub_id());
+                    Hawk.put(Constants.TOKEN, data.getToken());
+                    webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.TOKEN) + "&mid=" + Hawk.get(Constants.MID);
+                    WebSocketUtil.getInstance().login(webStr);
 
-        });
+                }
+
+            });
+        }
+
     }
 
     @Subscribe
