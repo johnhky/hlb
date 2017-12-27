@@ -1,9 +1,11 @@
 package com.hlb.haolaoban.activity.account;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -15,13 +17,16 @@ import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
 import com.hlb.haolaoban.bean.UserBean;
+import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityLoginBinding;
+import com.hlb.haolaoban.handler.MsgHandler;
 import com.hlb.haolaoban.http.Api;
 import com.hlb.haolaoban.http.SimpleCallback;
 import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.DialogUtils;
+import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
 
@@ -66,7 +71,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        DialogUtils.showLoading(mActivity, "正在登录...");
         if (TextUtils.isEmpty(binding.etPhone.getText().toString().trim()) || binding.etPhone.getText().toString().trim().length() < 1) {
             DialogUtils.hideLoading(mActivity);
             showToast("手机号码不能为空!");
@@ -88,20 +92,17 @@ public class LoginActivity extends BaseActivity {
             showToast("密码长度不能低于8位或者高于12位!");
             return;
         }
+        DialogUtils.showLoading(mActivity, "正在登录...");
         api.login(HttpUrls.login(binding.etPhone.getText().toString().trim(), binding.etPassword.getText().toString().trim())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                DialogUtils.hideLoading(mActivity);
                 UserBean data = gson.fromJson(response, UserBean.class);
                 Hawk.put(Constants.PHONE, binding.etPhone.getText().toString().trim());
                 Hawk.put(Constants.PASSWORD, binding.etPassword.getText().toString().trim());
                 Hawk.put(Constants.TOKEN, data.getToken());
                 Hawk.put(Constants.MID, data.getMid());
                 Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                String  webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.TOKEN) + "&mid=" + Hawk.get(Constants.MID);
-                WebSocketUtil.getInstance().login(webStr);
-                startActivity(MainActivity.class);
-                finish();
+                initData(data.getMid(),data.getToken());
             }
 
             @Override
@@ -110,6 +111,29 @@ public class LoginActivity extends BaseActivity {
                 DialogUtils.hideLoading(mActivity);
             }
         });
+    }
+
+    /*获取用户信息*/
+    private void initData(int mid, final String token) {
+            api.getUserInfo(HttpUrls.getUserInfo(mid)).enqueue(new SimpleCallback() {
+                @Override
+                protected void handleResponse(String response) {
+                    DialogUtils.hideLoading(mActivity);
+                    UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
+                    MsgHandler.queryMsg(data.getMid() + "", mActivity);
+                    Settings.setUesrProfile(data);
+                    String  webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + token+ "&mid=" + Hawk.get(Constants.MID);
+                    WebSocketUtil.getInstance().login(webStr);
+                    startActivity(MainActivity.class);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    super.onFailure(call, t);
+                    DialogUtils.hideLoading(mActivity);
+                }
+            });
     }
 
     @Override

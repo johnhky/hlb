@@ -1,8 +1,12 @@
 package com.hlb.haolaoban.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,18 +22,31 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.mine.FeedBackActivity;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.databinding.ActivityChattingBinding;
 import com.hlb.haolaoban.handler.MsgHandler;
+import com.hlb.haolaoban.http.Api;
+import com.hlb.haolaoban.http.SimpleCallback;
+import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.AudioRecordUtils;
+import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.NetworkUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.io.IOException;
+
+import okhttp3.Call;
 
 /**
  * Created by heky on 2017/12/13.
@@ -44,6 +61,11 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
     ImageView iv_state;
     TextView tv_voice;
     private float startY, endY;
+    private final int CAMERA_REQUEST = 2;
+    private final int PHOTO_REQUEST = 3;
+    private ApiModule api = Api.of(ApiModule.class);
+    Gson gson = new GsonBuilder().create();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +95,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
         binding.btSend.setOnClickListener(this);
         binding.ivMore.setOnClickListener(this);
         binding.ivClose.setOnClickListener(this);
+        binding.ivPhoto.setOnClickListener(this);
         binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,6 +186,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                 return true;
             }
         });
+        onRefresh();
     }
 
     @Override
@@ -188,12 +212,92 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
             case R.id.iv_keyword:
                 hideAllWhileAudioOpen();
                 break;
+            case R.id.iv_photo:
+                DialogUtils.showPickPhotoDialog(binding.recyclerView, mActivity, new DialogUtils.OnDialogItemClickListener() {
+                    @Override
+                    public void onItemClick(int which) {
+                        switch (which) {
+                            case 1:
+                                takePicture();
+                                break;
+                            case 2:
+                                choosePicture();
+                                break;
+                        }
+                    }
+                });
+                break;
         }
     }
 
     @Override
     public void onRefresh() {
+    /*    api.getBaseUrl(HttpUrls.msgList()).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                Log.e("eeee",response);
+            }
+        });*/
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.msgList()).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+            }
 
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e("eeee", response);
+            }
+        });
+    }
+
+    private void sendPicture(Bitmap bitmap) {
+        MsgHandler.sendImage(bitmap);
+    }
+
+    public void takePicture() {
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(openCameraIntent, CAMERA_REQUEST);
+    }
+
+    /**
+     * 从相册获取
+     */
+    public void choosePicture() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_PICK);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PHOTO_REQUEST);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CAMERA_REQUEST:
+                    if (data.getExtras() != null) {
+                        if (null != data.getExtras().get("data")) {
+                            Bitmap bm = (Bitmap) data.getExtras().get("data");
+                            sendPicture(bm);
+                        }
+                    }
+                    break;
+                case PHOTO_REQUEST:
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        if (null != uri) {
+                            try {
+                                Bitmap bm = Utils.getBitmapFormUri(mActivity, uri);
+                                sendPicture(bm);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     /*点击关闭语音发送,回到输入框*/
@@ -259,7 +363,6 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
         super.onDestroy();
         BusProvider.getInstance().postEvent(new UpdateHomeEvent());
     }
-
 
 
 }

@@ -1,5 +1,7 @@
 package com.hlb.haolaoban.module;
 
+import android.util.Log;
+
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
@@ -47,10 +49,10 @@ public class HttpUrls {
     }
 
     /*用户个人信息参数*/
-    public static Map<String, String> getUserInfo() {
+    public static Map<String, String> getUserInfo(int id) {
         Map<String, String> params = new LinkedHashMap<>();
         params.putAll(Constants.addParams());
-        params.put("param[mid]", Hawk.get(Constants.MID) + "");
+        params.put("param[mid]", id + "");
         params.put("param[username]", Hawk.get(Constants.PHONE) + "");
         params.put("method", "member.get.info");
         return params;
@@ -328,7 +330,6 @@ public class HttpUrls {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("mid", mid);
         params.put("format", "audio");
-        params.put("method", "consult.acceptMessage");
         return params;
     }
 
@@ -339,6 +340,24 @@ public class HttpUrls {
         params.put("format", "text");
         params.put("content", text);
         params.put("method", "consult.acceptMessage");
+        return params;
+    }
+    /*文字发送*/
+    public static Map<String, String> sendImage(String mid,String image) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("mid", mid);
+        params.put("format", "image");
+        params.put("content", image);
+        params.put("method", "consult.acceptMessage");
+        return params;
+    }
+
+    /*消息列表*/
+    public static Map<String, String> msgList() {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("mid", Settings.getUserProfile().getMid()+"");
+        params.put("to",Settings.getUserProfile().getClub_id()+"");
+        params.put("method", "consult.getConsult");
         return params;
     }
 }

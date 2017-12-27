@@ -4,9 +4,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bumptech.glide.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -154,7 +156,7 @@ public class MsgHandler {
     public static void sendAudio(String fileName) {
         File file = new File(fileName);
         String newFileName = System.currentTimeMillis() / 1000 + ".amr";
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendAudio(Settings.getUserProfile().getMid() + "")).addFile("content", newFileName, file).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index?method=consult.acceptMessage").params(HttpUrls.sendAudio(Settings.getUserProfile().getMid() + "")).addFile("content", newFileName, file).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 Log.e("eeee",e.getMessage()+"");
@@ -171,7 +173,20 @@ public class MsgHandler {
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendText(Settings.getUserProfile().getMid() + "",text)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-                Log.e("eeee",e.getMessage()+"");
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e("eeee",response);
+            }
+        });
+    }
+
+    public static void sendImage(Bitmap bitmap) {
+        String image = Utils.bitmapToString(bitmap);
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendImage(Settings.getUserProfile().getMid() + "",image)).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
             }
 
             @Override

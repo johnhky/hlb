@@ -100,7 +100,7 @@ public class MainHomeFragment extends BaseFragment {
         popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         player = new MediaPlayer();
         initView();
-        initData();
+        getTodayRemind();
         getArticle();
         return binding.getRoot();
     }
@@ -188,6 +188,7 @@ public class MainHomeFragment extends BaseFragment {
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index")
                 .params(HttpUrls.uploadAudio(Settings.getUserProfile().getMid(), Settings.getUserProfile().getDoctor_team_id() + ""))
                 .addFile("file", newFileName, file).build().execute(new StringCallback() {
+
             @Override
             public void onError(Call call, Exception e, int id) {
                 DialogUtils.hideLoading(mActivity);
@@ -211,26 +212,6 @@ public class MainHomeFragment extends BaseFragment {
 
             }
         });
-    }
-
-
-    /*获取用户信息*/
-    private void initData() {
-        if (null != Hawk.get(Constants.MID)) {
-            api.getUserInfo(HttpUrls.getUserInfo()).enqueue(new SimpleCallback() {
-                @Override
-                protected void handleResponse(String response) {
-                    UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
-                    MsgHandler.queryMsg(data.getMid() + "", mActivity);
-                    Settings.setUesrProfile(data);
-                    getTodayRemind();
-                }
-            });
-        } else {
-            Intent i = new Intent(mActivity, LoginActivity.class);
-            startActivity(i);
-        }
-
     }
 
     /*获取当天提醒事项*/

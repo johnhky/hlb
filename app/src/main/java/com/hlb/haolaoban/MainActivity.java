@@ -29,6 +29,7 @@ import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
 import com.hlb.haolaoban.bean.UserBean;
+import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
 import com.hlb.haolaoban.fragment.main.MainClubFragment;
 import com.hlb.haolaoban.fragment.main.MainHomeFragment;
@@ -46,6 +47,7 @@ import com.hlb.haolaoban.otto.QueryMessageEvent;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.Constants;
+import com.hlb.haolaoban.utils.DialogUtils;
 import com.hlb.haolaoban.utils.Settings;
 import com.hlb.haolaoban.utils.Utils;
 import com.orhanobut.hawk.Hawk;
@@ -56,6 +58,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
 
 
 /**
@@ -75,8 +79,8 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         BusProvider.getInstance().register(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        login();
         checkPermission();
-        binding.titlebar.tbTitle.setText("好老伴");
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mainHome == null) {
             mainHome = new MainHomeFragment();
@@ -84,6 +88,7 @@ public class MainActivity extends FragmentActivity {
             binding.titlebar.toolBar.setNavigationIcon(null);
         }
         transaction.commitAllowingStateLoss();
+        binding.titlebar.tbTitle.setText("好老伴");
         initView();
     }
 
@@ -175,31 +180,54 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onReceiveEvent(TokenOutEvent event) {
         if (event.getCode() == -99) {
-            login();
+            reLogin();
         }
     }
 
     private void login() {
-        if (Hawk.get(Constants.PHONE) == null) {
+        if (null == Settings.getUserProfile()) {
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
-        } else {
-            api.login(HttpUrls.login(Hawk.get(Constants.PHONE) + "", Hawk.get(Constants.PASSWORD) + "")).enqueue(new SimpleCallback() {
-                @Override
-                protected void handleResponse(String response) {
-                    UserBean data = gson.fromJson(response, UserBean.class);
-                    Hawk.put(Constants.MID, data.getMid());
-                    Hawk.put(Constants.CLUB_ID, data.getClub_id());
-                    Hawk.put(Constants.TOKEN, data.getToken());
-                    webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.TOKEN) + "&mid=" + Hawk.get(Constants.MID);
-                    WebSocketUtil.getInstance().login(webStr);
-
-                }
-
-            });
         }
 
+    }
+
+    private void reLogin() {
+        api.login(HttpUrls.login(Hawk.get(Constants.PHONE) + "", Hawk.get(Constants.PASSWORD) + "")).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                UserBean data = gson.fromJson(response, UserBean.class);
+                Hawk.put(Constants.MID, data.getMid());
+                Hawk.put(Constants.CLUB_ID, data.getClub_id());
+                Hawk.put(Constants.TOKEN, data.getToken());
+                initData(data.getMid());
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+            }
+        });
+    }
+
+    /*获取用户信息*/
+    private void initData(int mid) {
+        api.getUserInfo(HttpUrls.getUserInfo(mid)).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                UserInfoBean data = gson.fromJson(response, UserInfoBean.class);
+                MsgHandler.queryMsg(data.getMid() + "", MainActivity.this);
+                Settings.setUesrProfile(data);
+                webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.TOKEN) + "&mid=" + Hawk.get(Constants.MID);
+                WebSocketUtil.getInstance().login(webStr);
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+            }
+        });
     }
 
     @Subscribe

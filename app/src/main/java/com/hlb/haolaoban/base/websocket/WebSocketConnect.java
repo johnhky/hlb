@@ -30,7 +30,7 @@ public class WebSocketConnect {
     WebSocketConnection webSocketConnection = new WebSocketConnection();
     private WebSocketOptions mWebSocketOptions = new WebSocketOptions();
     CountDownTimer timer;
-    private long time = 10000;
+    private long time = 100000000000L;
 
     public WebSocketConnect() {
         mWebSocketOptions.setSocketConnectTimeout(30000);
@@ -39,6 +39,9 @@ public class WebSocketConnect {
 
     public void login(final String url) {
         try {
+            if (webSocketConnection.isConnected()) {
+                webSocketConnection.disconnect();
+            }
             webSocketConnection.connect(url, new WebSocketHandler() {
                 @Override
                 public void onOpen() {
@@ -61,7 +64,6 @@ public class WebSocketConnect {
                 @Override
                 public void onTextMessage(String payload) {
                     super.onTextMessage(payload);
-                    Log.e("eeee", payload);
                     JSONObject jsonObject;
                     try {
                         jsonObject = new JSONObject(payload);
@@ -85,6 +87,8 @@ public class WebSocketConnect {
                                         break;
                                 }
                             }
+                        } else if (code == -99) {
+                            WebSocketUtil.getInstance().login(url);
                         } else {
                             String msg = jsonObject.getString("msg");
                             String mode = jsonObject.getString("mode");
@@ -133,7 +137,7 @@ public class WebSocketConnect {
 
             @Override
             public void onFinish() {
-                time = 10000;
+                time = 10000000000L;
                 sendMsg(time);
             }
         };

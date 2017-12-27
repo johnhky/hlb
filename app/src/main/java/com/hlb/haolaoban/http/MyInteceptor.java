@@ -39,6 +39,7 @@ public class MyInteceptor implements Interceptor  {
         Request request = chain.request();
         logForRequest(request);
         Response response = chain.proceed(request);
+        Log.e("eeee",request.url().toString());
         return logForResponse(response);
     }
 
