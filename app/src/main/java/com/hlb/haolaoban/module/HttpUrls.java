@@ -353,11 +353,11 @@ public class HttpUrls {
     }
 
     /*消息列表*/
-    public static Map<String, String> msgList() {
+    public static Map<String, String> msgList(int pageNo) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("mid", Settings.getUserProfile().getMid()+"");
-        params.put("to",Settings.getUserProfile().getClub_id()+"");
-        params.put("method", "consult.getConsult");
+        params.put("token",Hawk.get(Constants.TOKEN)+"");
+        params.put("method", "consult.myConsultDetail");
         return params;
     }
 }

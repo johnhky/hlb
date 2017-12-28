@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,13 +22,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.mine.FeedBackActivity;
+import com.hlb.haolaoban.adapter.ConsultAdapter;
 import com.hlb.haolaoban.base.BaseActivity;
+import com.hlb.haolaoban.bean.ConsultBean;
 import com.hlb.haolaoban.databinding.ActivityChattingBinding;
 import com.hlb.haolaoban.handler.MsgHandler;
 import com.hlb.haolaoban.http.Api;
@@ -44,7 +49,12 @@ import com.hlb.haolaoban.utils.Utils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 
@@ -65,7 +75,9 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
     private final int PHOTO_REQUEST = 3;
     private ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
-
+    private int pageNo = 1;
+    ConsultAdapter mAdapter;
+    List<ConsultBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +87,10 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initView() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        binding.recyclerView.setLayoutManager(linearLayoutManager);
+        mAdapter = new ConsultAdapter(mActivity, list);
+        binding.recyclerView.setAdapter(mAdapter);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
@@ -232,20 +248,34 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-    /*    api.getBaseUrl(HttpUrls.msgList()).enqueue(new SimpleCallback() {
-            @Override
-            protected void handleResponse(String response) {
-                Log.e("eeee",response);
-            }
-        });*/
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.msgList()).build().execute(new StringCallback() {
+        messageList(pageNo);
+    }
+
+    private void messageList(int pageNo) {
+        binding.swipeRefresh.setRefreshing(true);
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.msgList(pageNo)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
+                binding.swipeRefresh.setRefreshing(false);
             }
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e("eeee", response);
+                binding.swipeRefresh.setRefreshing(false);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    int code = jsonObject.optInt("code");
+                    if (code == 1) {
+                        Log.e("eeee",jsonObject.getString("data"));
+                        List<ConsultBean> list = gson.fromJson(jsonObject.getString("data"), new TypeToken<ArrayList<ConsultBean>>() {
+                        }.getType());
+                        if (!list.isEmpty()) {
+                            mAdapter.update(list);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
