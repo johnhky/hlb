@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -77,7 +78,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
     Gson gson = new GsonBuilder().create();
     private int pageNo = 1;
     ConsultAdapter mAdapter;
-    List<ConsultBean> list = new ArrayList<>();
+    List<ConsultBean> consultList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
     private void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
-        mAdapter = new ConsultAdapter(ChattingActivity.this, list);
+        mAdapter = new ConsultAdapter(ChattingActivity.this, consultList);
         binding.recyclerView.setAdapter(mAdapter);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         recordUtils = new AudioRecordUtils(mActivity);
@@ -211,7 +212,8 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                 return false;
             }
         });
-        onRefresh();
+        pageNo = 1;
+        messageList(pageNo);
     }
 
     @Override
@@ -257,6 +259,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
+        pageNo++;
         messageList(pageNo);
     }
 
@@ -270,6 +273,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
             @Override
             public void onResponse(String response, int id) {
+                Log.e("eeee", response + "");
                 binding.swipeRefresh.setRefreshing(false);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -278,11 +282,21 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                         List<ConsultBean> list = gson.fromJson(jsonObject.getString("data"), new TypeToken<ArrayList<ConsultBean>>() {
                         }.getType());
                         if (!list.isEmpty()) {
-                            mAdapter.update(list);
+                            Log.e("eeee",pageNo+"");
+                            if (pageNo == 1) {
+                                consultList.addAll(list);
+                                binding.recyclerView.scrollToPosition(mAdapter.getItemCount()-1);
+                            } else {
+                                for (int i = 0; i < list.size(); i++) {
+                                    consultList.add(0, list.get(i));
+                                }
+                                binding.recyclerView.scrollToPosition(0);
+                            }
                         }
-                        if (pageNo <= 1) {
-                            binding.recyclerView.scrollToPosition(list.size() - 1);
-                        }
+                        mAdapter.update(consultList);
+                    } else if (code == 0) {
+                        String reason = jsonObject.getString("data");
+                        Utils.showToast(reason);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -408,6 +422,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Subscribe
     public void onReceiveEvent(RefreshMsgList event) {
+        pageNo = 1;
         messageList(pageNo);
     }
 }

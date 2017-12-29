@@ -332,10 +332,8 @@ public class ConsultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 ImageView iv = (ImageView) msg.obj;
-                if (iv.getDrawable() instanceof AnimationDrawable) {
-                    ((AnimationDrawable) iv.getBackground()).stop();
-                    iv.clearAnimation();
-                }
+                ((AnimationDrawable) iv.getBackground()).stop();
+                iv.clearAnimation();
                 iv.setBackgroundResource(R.drawable.nim_audio_animation_list_right_3);
             }
         };

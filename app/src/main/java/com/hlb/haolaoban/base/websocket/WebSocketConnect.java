@@ -119,7 +119,9 @@ public class WebSocketConnect {
 
                         }
                         if (null != from || !TextUtils.isEmpty(from)) {
-                            NotificationUtil.showNotification(MyApplication.mContext, "message", "您收到了一条新消息!");
+                            if (!Constants.isRead){
+                                NotificationUtil.showNotification(MyApplication.mContext, "message", "您收到了一条新消息!");
+                            }
                             BusProvider.getInstance().postEvent(new RefreshMsgList());
                         }
                     } catch (JSONException e) {

@@ -356,7 +356,9 @@ public class HttpUrls {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("mid", Settings.getUserProfile().getMid()+"");
         params.put("token",Hawk.get(Constants.TOKEN)+"");
+        params.put("page",pageNo+"");
         params.put("method", "consult.myConsultDetail");
         return params;
     }
+
 }
