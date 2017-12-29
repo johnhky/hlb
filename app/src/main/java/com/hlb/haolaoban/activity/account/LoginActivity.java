@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -87,7 +86,7 @@ public class LoginActivity extends BaseActivity {
             showToast("密码不能为空!");
             return;
         }
-        if (binding.etPassword.getText().toString().trim().length() < 8 || binding.etPassword.getText().toString().trim().length() > 12) {
+        if (binding.etPassword.getText().toString().trim().length() < 8 || binding.etPassword.getText().toString().trim().length() > 20) {
             DialogUtils.hideLoading(mActivity);
             showToast("密码长度不能低于8位或者高于12位!");
             return;

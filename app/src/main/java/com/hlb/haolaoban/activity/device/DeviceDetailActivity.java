@@ -6,26 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.base.BaseActivity;
 import com.hlb.haolaoban.databinding.ActivityDeviceDetailBinding;
 import com.hlb.haolaoban.utils.DialogUtils;
-/*import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
-import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
-import com.inuker.bluetooth.library.model.BleGattCharacter;
-import com.inuker.bluetooth.library.model.BleGattProfile;
-import com.inuker.bluetooth.library.model.BleGattService;
-import com.inuker.bluetooth.library.utils.BluetoothLog;
-import com.inuker.bluetooth.library.utils.BluetoothUtils;*/
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-//import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
 /**
  * Created by heky on 2017/11/17.

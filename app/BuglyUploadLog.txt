@@ -12,3 +12,4 @@ C:\Users\Administrator\AndroidStudioProjects\Haolaoban\app\build\outputs\mapping
 C:\Users\Administrator\Desktop\hlb\app\build\outputs\mapping\elderRelease\app-mapping.txt --> 2576eb461ae135ff57b5e56e00b1b359d95f6c7d
 C:\Users\Administrator\Desktop\hlb\app\build\outputs\mapping\elderRelease\app-mapping.txt --> 129ac911cb8f7955541dee169733f41de446d5a3
 D:\hlb\app\build\outputs\mapping\elderRelease\app-mapping.txt --> f6ac363cc963772fd130f931bec7b22eb637742b
+D:\hlb\app\build\outputs\mapping\elderRelease\app-mapping.txt --> 8abf882369760bbb3eec706d0ff5706733c070f1

@@ -9,62 +9,78 @@
             android:id="@+id/titlebar"
             layout="@layout/titlebar"></include>
 
-            <RadioGroup
-                android:id="@+id/main_radio"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/white"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal">
+        <RadioGroup
+            android:id="@+id/main_radio"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/main_radio_home"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:checked="true"
-                    android:drawableTop="@drawable/home_bg_selector"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/dp_5"
-                    android:text="@string/text_home"
-                    android:textColor="@color/main_tab_color" />
+            <RadioButton
+                android:id="@+id/main_radio_home"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@drawable/home_bg_selector"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_5"
+                android:text="@string/text_home"
+                android:textColor="@color/main_tab_color" />
 
-                <RadioButton
-                    android:id="@+id/main_radio_club"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/club_bg_selector"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/dp_5"
-                    android:text="@string/text_club"
-                    android:textColor="@color/gray_33" />
+            <RadioButton
+                android:id="@+id/main_radio_club"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/club_bg_selector"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_5"
+                android:text="@string/text_club"
+                android:textColor="@color/gray_33" />
 
-                <RadioButton
-                    android:id="@+id/main_radio_chat"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/chat_bg_selector"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/dp_5"
+            <LinearLayout
+                android:id="@+id/ll_message"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_5"
+                android:orientation="horizontal"
+               >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/message"
                     android:text="@string/text_chat"
-                    android:textColor="@color/gray_33" />
-                <RadioButton
-                    android:id="@+id/main_radio_mine"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/mine_bg_selector"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/dp_5"
-                    android:text="@string/text_mine"
-                    android:textColor="@color/gray_33" />
-            </RadioGroup>
+                    android:textColor="@color/gray_33"
+                    android:drawablePadding="@dimen/dp_5"
+                    />
+                <TextView
+                    android:id="@+id/tv_red"
+                    android:layout_width="@dimen/dp_7"
+                    android:layout_height="@dimen/dp_7"
+                    android:layout_marginTop="-15dp"
+                    android:visibility="gone"
+                    android:background="@drawable/shape_red_round"
+                    />
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/main_radio_mine"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/mine_bg_selector"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_5"
+                android:text="@string/text_mine"
+                android:textColor="@color/gray_33" />
+        </RadioGroup>
 
         <FrameLayout
             android:id="@+id/fragment_container"

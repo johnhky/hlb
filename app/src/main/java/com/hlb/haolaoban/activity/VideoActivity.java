@@ -222,7 +222,6 @@ public class VideoActivity extends BaseActivity {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             super.onUserJoined(uid, elapsed);
-            Log.e("eeee", uid + "  " + elapsed);
         }
 
         @Override

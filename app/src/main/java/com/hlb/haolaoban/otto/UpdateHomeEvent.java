@@ -5,7 +5,7 @@ package com.hlb.haolaoban.otto;
  */
 
 public class UpdateHomeEvent extends Event {
-    public UpdateHomeEvent(){
 
+    public UpdateHomeEvent() {
     }
 }

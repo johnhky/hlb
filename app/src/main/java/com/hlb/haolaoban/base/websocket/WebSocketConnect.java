@@ -2,7 +2,6 @@ package com.hlb.haolaoban.base.websocket;
 
 import android.os.CountDownTimer;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hlb.haolaoban.MyApplication;
 import com.hlb.haolaoban.handler.MsgHandler;
@@ -10,6 +9,7 @@ import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.FinishChatEvent;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.LoginWebSocketEvent;
+import com.hlb.haolaoban.otto.RefreshMsgList;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.NotificationUtil;
 import com.orhanobut.hawk.Hawk;
@@ -69,6 +69,7 @@ public class WebSocketConnect {
                         jsonObject = new JSONObject(payload);
                         int code = jsonObject.optInt("nFlag");
                         String type = jsonObject.getString("type");
+                        String from = jsonObject.getString("name");
                         String channel = "";
                         if (code == 1) {
                             if (!TextUtils.isEmpty(type)) {
@@ -116,6 +117,10 @@ public class WebSocketConnect {
                                 }
                             }
 
+                        }
+                        if (null != from || !TextUtils.isEmpty(from)) {
+                            NotificationUtil.showNotification(MyApplication.mContext, "message", "您收到了一条新消息!");
+                            BusProvider.getInstance().postEvent(new RefreshMsgList());
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -5,6 +5,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginRight="@dimen/dp_8"
         android:orientation="horizontal"
         android:paddingTop="@dimen/dp_15">
 
@@ -25,6 +27,7 @@
                     android:id="@+id/message_item_audio_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="@dimen/dp_30"
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/avatar"
                     android:background="@drawable/right"
@@ -35,7 +38,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text=""
+                        android:text="你好吗"
+                        android:textSize="@dimen/sp_14"
                         />
 
                 </FrameLayout>

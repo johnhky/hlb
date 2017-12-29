@@ -117,7 +117,6 @@ public class MainHomeFragment extends BaseFragment {
                 } else if (dp <= 70 && dp > 55) {
                     iv_state.getDrawable().setLevel(2);
                 } else if (dp <= 85 && dp > 70) {
-
                     iv_state.getDrawable().setLevel(3);
                 } else if (dp <= 100 && dp > 85) {
                     iv_state.getDrawable().setLevel(4);

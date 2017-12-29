@@ -1,7 +1,6 @@
 package com.hlb.haolaoban.http;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -39,7 +38,6 @@ public class MyInteceptor implements Interceptor  {
         Request request = chain.request();
         logForRequest(request);
         Response response = chain.proceed(request);
-        Log.e("eeee",request.url().toString());
         return logForResponse(response);
     }
 
@@ -73,13 +71,12 @@ public class MyInteceptor implements Interceptor  {
             RequestBody requestBody = request.body();
             if (requestBody != null) {
                 MediaType mediaType = requestBody.contentType();
-                if (mediaType != null) {
+             /*   if (mediaType != null) {
                     try {
-                        Log.w(TAG,"HttpReceiver requestBody's content : " + bodyToString(request));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
+                }*/
             }
         } catch (Exception e) {
 //            e.printStackTrace();

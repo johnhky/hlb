@@ -3,7 +3,6 @@ package com.hlb.haolaoban.activity.account;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.hlb.haolaoban.base.BaseActivity;
@@ -71,7 +70,7 @@ public class UpdatePasswordActivity extends BaseActivity {
             showToast("密码不能为空!");
             return;
         }
-        if (oldPassword.length() < 8 || oldPassword.length() > 12) {
+        if (oldPassword.length() < 8 || oldPassword.length() > 20) {
             showToast("密码长度不能低于8位和大于12位!");
             return;
         }
@@ -83,7 +82,7 @@ public class UpdatePasswordActivity extends BaseActivity {
             showToast("新密码不能为空!");
             return;
         }
-        if (password.length() < 8 || password.length() > 12) {
+        if (password.length() < 8 || password.length() > 20) {
             showToast("密码长度不能低于8位和大于12位!");
             return;
         }
@@ -91,7 +90,7 @@ public class UpdatePasswordActivity extends BaseActivity {
             showToast("新密码不能为空!");
             return;
         }
-        if (confirmPassword.length() < 8 || confirmPassword.length() > 12) {
+        if (confirmPassword.length() < 8 || confirmPassword.length() > 20) {
             showToast("密码长度不能低于8位和大于12位!");
             return;
         }

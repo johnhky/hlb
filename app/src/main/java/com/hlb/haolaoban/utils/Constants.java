@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class Constants {
 
+    public static  boolean isRead = false;
     public static final String TOKEN = "TOKEN";
     public static final String TOKENOUT = "TOKENOUT";
     public static final String USER_PROFILE = "USER_PROFILE";

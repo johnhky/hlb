@@ -341,3 +341,5 @@ public class ConsultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         };
     }
 }
+
+

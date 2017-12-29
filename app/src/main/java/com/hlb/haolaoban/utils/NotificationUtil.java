@@ -13,6 +13,7 @@ import android.text.TextUtils;
 
 import com.hlb.haolaoban.MainActivity;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.ChattingActivity;
 import com.hlb.haolaoban.activity.PrescriptionActivity;
 
 /**
@@ -31,7 +32,11 @@ public class NotificationUtil {
         builder.setLights(Color.GREEN, 1000, 3000);
         Intent i;
         if (!TextUtils.isEmpty(type)) {
-            i = new Intent(context, PrescriptionActivity.class);
+            if (type.equals("message")){
+                i = new Intent(context, ChattingActivity.class);
+            }else {
+                i = new Intent(context, PrescriptionActivity.class);
+            }
         } else {
             i = new Intent(context, MainActivity.class);
         }

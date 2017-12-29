@@ -1,10 +1,14 @@
 package com.hlb.haolaoban.bean;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by heky on 2017/12/28.
  */
 
-public class ConsultBean {
+public class ConsultBean implements Serializable{
 
 
     /**
@@ -41,7 +45,7 @@ public class ConsultBean {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         /**
          * consult_No : 1
          * type : 1
@@ -55,8 +59,26 @@ public class ConsultBean {
         private int type;
         private int time;
         private int owner;
+        private String msg;
         private FromBean from;
         private ToBean to;
+        @SerializedName("long")
+        private String longs;
+        public String getLongs() {
+            return longs;
+        }
+
+        public void setLongs(String longs) {
+            this.longs = longs;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
 
         public int getConsult_No() {
             return consult_No;
@@ -106,7 +128,7 @@ public class ConsultBean {
             this.to = to;
         }
 
-        public static class FromBean {
+        public static class FromBean implements Serializable{
             /**
              * name : 屠呦呦
              * headlogo : http://test.haolaoban99.com/uploads/file/20171221/767248a996303467df2c8704a2ec58ea.jpg
@@ -130,32 +152,73 @@ public class ConsultBean {
             public void setHeadlogo(String headlogo) {
                 this.headlogo = headlogo;
             }
+
+
+            @Override
+            public String toString() {
+                return "FromBean{" +
+                        "name='" + name + '\'' +
+                        ", headlogo='" + headlogo + '\'' +
+                        '}';
+            }
         }
 
-        public static class ToBean {
+        public static class ToBean implements Serializable{
             /**
              * name : null
              * headlogo : null
              */
 
-            private Object name;
-            private Object headlogo;
+            private String name;
+            private String headlogo;
 
-            public Object getName() {
+            public String getName() {
                 return name;
             }
 
-            public void setName(Object name) {
+            public void setName(String name) {
                 this.name = name;
             }
 
-            public Object getHeadlogo() {
+            public String getHeadlogo() {
                 return headlogo;
             }
 
-            public void setHeadlogo(Object headlogo) {
+            public void setHeadlogo(String headlogo) {
                 this.headlogo = headlogo;
             }
+
+
+            @Override
+            public String toString() {
+                return "ToBean{" +
+                        "name='" + name + '\'' +
+                        ", headlogo='" + headlogo + '\'' +
+                        '}';
+            }
         }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "consult_No=" + consult_No +
+                    ", type=" + type +
+                    ", time=" + time +
+                    ", owner=" + owner +
+                    ", msg='" + msg + '\'' +
+                    ", from=" + from +
+                    ", to=" + to +
+                    ", longs='" + longs + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ConsultBean{" +
+                "mode='" + mode + '\'' +
+                ", taskid=" + taskid +
+                ", data=" + data +
+                '}';
     }
 }

@@ -11,6 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_8"
         android:background="@color/main_bg"
         android:orientation="vertical"
         android:paddingTop="@dimen/dp_15">
@@ -31,9 +33,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_11"
-                android:text=""
                 android:layout_marginRight="10dp"
-                android:layout_toRightOf="@+id/iv_avatar" />
+                android:layout_toRightOf="@+id/iv_avatar"
+                android:text="" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -42,6 +44,7 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/dp_55"
                 android:layout_marginRight="@dimen/dp_55"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_toRightOf="@+id/iv_avatar"
                 android:background="@drawable/left"
                 android:orientation="vertical"
@@ -56,7 +59,7 @@
                     android:id="@+id/iv"
                     android:layout_width="@dimen/dp_80"
                     android:layout_height="@dimen/dp_100"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="fitXY" />
             </LinearLayout>
 
         </RelativeLayout>

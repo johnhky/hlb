@@ -60,7 +60,7 @@ public class BindPhoneActivity1 extends BaseActivity {
             showToast("密码不能为空!");
             return;
         }
-        if (password.length() < 8 && password.length() > 12) {
+        if (password.length() < 8 && password.length() > 20) {
             showToast("密码长度不能低于8位和高于12位!");
             return;
         }

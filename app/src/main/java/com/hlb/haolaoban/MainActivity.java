@@ -20,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import com.hlb.haolaoban.activity.ChattingActivity;
 import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.base.websocket.WebSocketUtil;
+import com.hlb.haolaoban.bean.UnReadMsgEvent;
 import com.hlb.haolaoban.bean.UserBean;
 import com.hlb.haolaoban.bean.UserInfoBean;
 import com.hlb.haolaoban.databinding.ActivityMainBinding;
@@ -44,6 +46,7 @@ import com.hlb.haolaoban.otto.HomeRefreshEvent;
 import com.hlb.haolaoban.otto.JoinVideoEvent;
 import com.hlb.haolaoban.otto.LoginWebSocketEvent;
 import com.hlb.haolaoban.otto.QueryMessageEvent;
+import com.hlb.haolaoban.otto.RefreshMsgList;
 import com.hlb.haolaoban.otto.TokenOutEvent;
 import com.hlb.haolaoban.otto.UpdateHomeEvent;
 import com.hlb.haolaoban.utils.Constants;
@@ -66,7 +69,7 @@ import retrofit2.Call;
  * Created by heky on 2017/10/31.
  */
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     ActivityMainBinding binding;
     Fragment mainHome, mainClub, mainMine;
     ApiModule api = Api.of(ApiModule.class);
@@ -93,10 +96,10 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void initView() {
+        binding.llMessage.setOnClickListener(this);
         if (!isNotificationEnabled(MainActivity.this)) {
             Utils.showToast("为了您能准时收到消息和紧急通知,请开启好老伴的通知栏权限");
         }
-
         binding.mainRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -115,7 +118,6 @@ public class MainActivity extends FragmentActivity {
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
                         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
                         binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
-                        binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
                         break;
                     case R.id.main_radio_club:
                         if (mainClub == null) {
@@ -128,17 +130,6 @@ public class MainActivity extends FragmentActivity {
                         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.main_tab_color));
                         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
                         binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
-                        binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
-                        break;
-                    case R.id.main_radio_chat:
-                        if (null != Settings.getUserProfile()) {
-                            Intent i = new Intent(MainActivity.this, ChattingActivity.class);
-                            startActivity(i);
-                        } else {
-                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
                         break;
                     case R.id.main_radio_mine:
                         if (null != com.hlb.haolaoban.utils.Settings.getUserProfile()) {
@@ -152,7 +143,6 @@ public class MainActivity extends FragmentActivity {
                             binding.mainRadioMine.setTextColor(getResources().getColor(R.color.main_tab_color));
                             binding.mainRadioHome.setTextColor(getResources().getColor(R.color.gray_33));
                             binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
-                            binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
                         } else {
                             Intent i = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(i);
@@ -163,6 +153,22 @@ public class MainActivity extends FragmentActivity {
                 transaction.commitAllowingStateLoss();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_message:
+                if (null != Settings.getUserProfile()) {
+                    Intent i = new Intent(MainActivity.this, ChattingActivity.class);
+                    startActivity(i);
+                } else {
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+                break;
+        }
     }
 
     public void hideAllFragment(FragmentTransaction transaction) {
@@ -177,18 +183,14 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    @Subscribe
-    public void onReceiveEvent(TokenOutEvent event) {
-        if (event.getCode() == -99) {
-            reLogin();
-        }
-    }
-
     private void login() {
         if (null == Settings.getUserProfile()) {
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
+        } else {
+            webStr = BuildConfig.BASE_WEBSOCKET_URL + "token=" + Hawk.get(Constants.TOKEN) + "&mid=" + Hawk.get(Constants.MID);
+            WebSocketUtil.getInstance().login(webStr);
         }
 
     }
@@ -231,14 +233,19 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Subscribe
+    public void onReceiveEvent(TokenOutEvent event) {
+        if (event.getCode() == -99) {
+            reLogin();
+        }
+    }
+
+    @Subscribe
     public void onReceiveEvent(UpdateHomeEvent event) {
         binding.mainRadioHome.setChecked(true);
         binding.mainRadioHome.setTextColor(getResources().getColor(R.color.main_tab_color));
         binding.mainRadioClub.setTextColor(getResources().getColor(R.color.gray_33));
         binding.mainRadioMine.setTextColor(getResources().getColor(R.color.gray_33));
-        binding.mainRadioChat.setTextColor(getResources().getColor(R.color.gray_33));
     }
-
 
     @Subscribe
     public void onReciveEvent(JoinVideoEvent event) {
@@ -246,6 +253,20 @@ public class MainActivity extends FragmentActivity {
             Intent i = VideoActivity.intentFor(MainActivity.this, event.getChannel());
             startActivity(i);
         }
+    }
+
+    @Subscribe
+    public void onReceiveEvent(RefreshMsgList event) {
+        if (!Constants.isRead) {
+            binding.tvRed.setVisibility(View.VISIBLE);
+        } else {
+            binding.tvRed.setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe
+    public void onReceiveEvent(UnReadMsgEvent event) {
+        binding.tvRed.setVisibility(View.GONE);
     }
 
     @Subscribe
