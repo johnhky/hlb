@@ -257,7 +257,7 @@ public class VideoActivity extends BaseActivity {
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("nFlag");
+                    int code = jsonObject.optInt("code");
                     if (code == 1) {
                         channel = jsonObject.getString("channel");
                     } else if (code == -99) {
@@ -311,7 +311,7 @@ public class VideoActivity extends BaseActivity {
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("nFlag");
+                    int code = jsonObject.optInt("code");
                     if (code == -99) {
                         BusProvider.getInstance().postEvent(new TokenOutEvent(code));
                     }
@@ -336,7 +336,7 @@ public class VideoActivity extends BaseActivity {
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("nFlag");
+                    int code = jsonObject.optInt("code");
                     if (code == 1) {
                         startChat(channel);
                     }

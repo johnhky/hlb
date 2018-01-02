@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -251,6 +250,9 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                     }
                 });
                 break;
+            case R.id.iv_video:
+                startActivity(VideoActivity.class);
+                break;
         }
     }
 
@@ -280,7 +282,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                         if (!list.isEmpty()) {
                             if (pageNo == 1) {
                                 consultList.addAll(list);
-                                binding.recyclerView.scrollToPosition(mAdapter.getItemCount()-1);
+                                binding.recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
                             } else {
                                 for (int i = 0; i < list.size(); i++) {
                                     consultList.add(0, list.get(i));

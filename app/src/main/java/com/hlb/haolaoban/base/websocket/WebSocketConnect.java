@@ -2,6 +2,7 @@ package com.hlb.haolaoban.base.websocket;
 
 import android.os.CountDownTimer;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hlb.haolaoban.MyApplication;
 import com.hlb.haolaoban.handler.MsgHandler;
@@ -67,7 +68,7 @@ public class WebSocketConnect {
                     JSONObject jsonObject;
                     try {
                         jsonObject = new JSONObject(payload);
-                        int code = jsonObject.optInt("nFlag");
+                        int code = jsonObject.optInt("code");
                         String type = jsonObject.getString("type");
                         String from = jsonObject.getString("name");
                         String channel = "";

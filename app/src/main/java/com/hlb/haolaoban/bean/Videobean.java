@@ -10,17 +10,17 @@ import java.util.List;
 
 public class Videobean implements Serializable{
 
-    private int nFlag;
+    private int code;
     private List<String> answers = new ArrayList<>();
     private String channel;
     private String type;
 
-    public int getnFlag() {
-        return nFlag;
+    public int getCode() {
+        return code;
     }
 
-    public void setnFlag(int nFlag) {
-        this.nFlag = nFlag;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public List<String> getAnswers() {
