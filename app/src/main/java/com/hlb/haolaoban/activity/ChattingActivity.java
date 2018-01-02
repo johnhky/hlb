@@ -1,6 +1,5 @@
 package com.hlb.haolaoban.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -35,8 +34,6 @@ import com.hlb.haolaoban.bean.ConsultBean;
 import com.hlb.haolaoban.bean.UnReadMsgEvent;
 import com.hlb.haolaoban.databinding.ActivityChattingBinding;
 import com.hlb.haolaoban.handler.MsgHandler;
-import com.hlb.haolaoban.http.Api;
-import com.hlb.haolaoban.module.ApiModule;
 import com.hlb.haolaoban.module.HttpUrls;
 import com.hlb.haolaoban.otto.BusProvider;
 import com.hlb.haolaoban.otto.RefreshMsgList;
@@ -273,7 +270,6 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e("eeee", response + "");
                 binding.swipeRefresh.setRefreshing(false);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -282,7 +278,6 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                         List<ConsultBean> list = gson.fromJson(jsonObject.getString("data"), new TypeToken<ArrayList<ConsultBean>>() {
                         }.getType());
                         if (!list.isEmpty()) {
-                            Log.e("eeee",pageNo+"");
                             if (pageNo == 1) {
                                 consultList.addAll(list);
                                 binding.recyclerView.scrollToPosition(mAdapter.getItemCount()-1);

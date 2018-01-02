@@ -122,7 +122,6 @@ public class ConsultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             String time = Utils.stampToHourMitues(list.get(position).getData().getTime() + "000");
             ((TimeEndHolder) holder).tv_time.setText("咨询结束:" + time);
         } else if (holder instanceof TimeHolder) {
-            String time = Utils.stampToHourMitues(list.get(position).getData().getTime() + "000");
             ((TimeHolder) holder).tv_time.setText("现在暂时无人值班,请稍候");
         }
     }
@@ -130,36 +129,43 @@ public class ConsultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         int type = list.get(position).getData().getType();
-        if (list.get(position).getData().getOwner() == Settings.getUserProfile().getMid()) {
-            switch (type) {
-                case 1: {
-                    return 1;
+        switch (list.get(position).getMode()){
+            case "consult":
+                if (list.get(position).getData().getOwner() == Settings.getUserProfile().getMid()) {
+                    switch (type) {
+                        case 1: {
+                            return 1;
+                        }
+                        case 2: {
+                            return 2;
+                        }
+                        case 3: {
+                            return 3;
+                        }
+                    }
+                } else {
+                    switch (type) {
+                        case 1: {
+                            return 4;
+                        }
+                        case 2: {
+                            return 5;
+                        }
+                        case 3: {
+                            return 6;
+                        }
+                    }
                 }
-                case 2: {
-                    return 2;
+                switch (type) {
+                    case 95:
+                        return 95;
+                    case 98:
+                        return 98;
                 }
-                case 3: {
-                    return 3;
-                }
-            }
-        } else {
-            switch (type) {
-                case 1: {
-                    return 4;
-                }
-                case 2: {
-                    return 5;
-                }
-                case 3: {
-                    return 6;
-                }
-            }
-        }
-        switch (type) {
-            case 95:
-                return 95;
-            case 98:
-                return 98;
+                break;
+            case "order":
+
+                break;
         }
         return 100;
     }
