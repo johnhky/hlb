@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
+import android.view.View;
 
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.adapter.ClubDetailAdapter;
@@ -31,6 +32,13 @@ public class ClubDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(mActivity, R.layout.activity_club_detail);
+        binding.titlebar.tbTitle.setText("俱乐部");
+        binding.titlebar.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         initAdapter();
     }
 

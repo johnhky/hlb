@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.hlb.haolaoban.R;
 import com.hlb.haolaoban.activity.ClubDetailActivity;
-import com.hlb.haolaoban.bean.ArticleBean;
 import com.hlb.haolaoban.bean.ClubListBean;
 
 import java.util.List;

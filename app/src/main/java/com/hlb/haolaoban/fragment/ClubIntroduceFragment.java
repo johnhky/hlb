@@ -57,7 +57,6 @@ public class ClubIntroduceFragment extends BaseFragment2 {
         api.getBaseUrl(HttpUrls.clubDetail(id())).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
-                Log.e("eeee",response);
                 ClubBean data = gson.fromJson(response, ClubBean.class);
                 initData(data);
             }
