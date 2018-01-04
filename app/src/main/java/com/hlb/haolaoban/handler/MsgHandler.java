@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -165,7 +166,7 @@ public class MsgHandler {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     int code = jsonObject.getInt("code");
-                    if (code==1){
+                    if (code == 1) {
                         BusProvider.getInstance().postEvent(new RefreshMsgList());
                     }
                 } catch (JSONException e) {
@@ -177,7 +178,7 @@ public class MsgHandler {
     }
 
     public static void sendText(String text) {
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendText(Settings.getUserProfile().getMid() + "",text)).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendText(Settings.getUserProfile().getMid() + "", text)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
             }
@@ -187,7 +188,7 @@ public class MsgHandler {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     int code = jsonObject.getInt("code");
-                    if (code==1){
+                    if (code == 1) {
                         BusProvider.getInstance().postEvent(new RefreshMsgList());
                     }
                 } catch (JSONException e) {
@@ -199,7 +200,7 @@ public class MsgHandler {
 
     public static void sendImage(Bitmap bitmap) {
         String image = Utils.bitmapToString(bitmap);
-        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendImage(Settings.getUserProfile().getMid() + "",image)).build().execute(new StringCallback() {
+        OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendImage(Settings.getUserProfile().getMid() + "", image)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
             }
@@ -209,7 +210,7 @@ public class MsgHandler {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     int code = jsonObject.getInt("code");
-                    if (code==1){
+                    if (code == 1) {
                         BusProvider.getInstance().postEvent(new RefreshMsgList());
                     }
                 } catch (JSONException e) {

@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_wechat_pay" />
+                android:background="@drawable/wechat" />
 
             <RadioButton
                 android:id="@+id/radio_wechat"
@@ -74,7 +74,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_alipay" />
+                android:background="@drawable/alipay" />
 
             <RadioButton
                 android:id="@+id/radio_ali"

@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
+        android:id="@+id/ll_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_8"
@@ -13,9 +14,10 @@
             android:layout_height="180dp">
 
             <ImageView
-                android:id="@+id/iv_title"
+                android:id="@+id/iv_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="fitXY"
                 android:layout_margin="@dimen/dp_8" />
 
             <TextView

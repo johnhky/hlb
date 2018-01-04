@@ -1,6 +1,8 @@
 package com.hlb.haolaoban.module;
 
 
+import android.util.Log;
+
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.utils.Constants;
 import com.hlb.haolaoban.utils.Settings;
@@ -36,6 +38,48 @@ public class HttpUrls {
         params.put("method", "article.get.list");
         return params;
     }
+
+    /*俱乐部详情*/
+    public static Map<String, String> clubDetail(String mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[mid]", mid);
+        params.put("method", "club.get.info");
+        return params;
+    }
+
+    /*俱乐部列表*/
+    public static Map<String, String> club(String keyword, String pageNo, String mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[exclude_club_id]", mid);
+        params.put("param[keyword]", keyword);
+        params.put("param[pageno]", pageNo);
+        params.put("method", "club.get.list");
+        return params;
+    }
+
+    /*俱乐部活动列表*/
+    public static Map<String, String> clubActivity(String keyword, String pageNo, String mid) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[club_id]", mid);
+        params.put("param[keyword]", keyword);
+        params.put("param[pageno]", pageNo);
+        params.put("method", "club.get.activity.list");
+        Log.e("eeee",params.toString());
+        return params;
+    }
+
+    /*俱乐部活动详情*/
+    public static Map<String, String> clubActivityDetail(String id) {
+        Map<String, String> params = new LinkedHashMap<>();
+        params.putAll(Constants.addParams());
+        params.put("param[id]",id);
+        params.put("method", "club.get.activity.info");
+        return params;
+    }
+
 
     /*首页文章列表参数*/
     public static Map<String, String> getHelpCenter(int pageNo) {
@@ -333,7 +377,7 @@ public class HttpUrls {
     }
 
     /*文字发送*/
-    public static Map<String, String> sendText(String mid,String text) {
+    public static Map<String, String> sendText(String mid, String text) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("mid", mid);
         params.put("format", "text");
@@ -341,8 +385,9 @@ public class HttpUrls {
         params.put("method", "consult.acceptMessage");
         return params;
     }
+
     /*文字发送*/
-    public static Map<String, String> sendImage(String mid,String image) {
+    public static Map<String, String> sendImage(String mid, String image) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("mid", mid);
         params.put("format", "image");
@@ -354,9 +399,9 @@ public class HttpUrls {
     /*消息列表*/
     public static Map<String, String> msgList(int pageNo) {
         Map<String, String> params = new LinkedHashMap<>();
-        params.put("mid", Settings.getUserProfile().getMid()+"");
-        params.put("token",Hawk.get(Constants.TOKEN)+"");
-        params.put("page",pageNo+"");
+        params.put("mid", Settings.getUserProfile().getMid() + "");
+        params.put("token", Hawk.get(Constants.TOKEN) + "");
+        params.put("page", pageNo + "");
         params.put("method", "consult.myConsultDetail");
         return params;
     }

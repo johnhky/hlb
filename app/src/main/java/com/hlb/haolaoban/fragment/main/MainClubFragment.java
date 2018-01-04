@@ -1,13 +1,16 @@
 package com.hlb.haolaoban.fragment.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,14 +23,18 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hlb.haolaoban.BuildConfig;
 import com.hlb.haolaoban.R;
+import com.hlb.haolaoban.activity.ClubDetailActivity;
 import com.hlb.haolaoban.activity.VideoActivity;
 import com.hlb.haolaoban.activity.account.LoginActivity;
 import com.hlb.haolaoban.adapter.ClubAdapter;
 import com.hlb.haolaoban.bean.ArticleBean;
+import com.hlb.haolaoban.bean.ClubBean;
+import com.hlb.haolaoban.bean.ClubListBean;
 import com.hlb.haolaoban.databinding.ActivityClubBinding;
 import com.hlb.haolaoban.base.BaseFragment;
 import com.hlb.haolaoban.http.Api;
@@ -59,7 +66,6 @@ import retrofit2.Call;
 
 public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     ActivityClubBinding binding;
-    private ClubAdapter mAdapter;
     private int pageNo = 1;
     ApiModule api = Api.of(ApiModule.class);
     Gson gson = new GsonBuilder().create();
@@ -69,15 +75,23 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
     TextView tv_voice;
     LinearLayoutManager linearLayoutManager;
     private float startY, endY;
-    List<ArticleBean.ItemsBean> datas = new ArrayList<>();
+    ClubBean data = new ClubBean();
+    List<ClubListBean.ItemsBean> list = new ArrayList<>();
+    ClubAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_club, container, false);
+        clubDetail();
+        pageNo =1;
+        clubList(pageNo);
         binding.swipeRefresh.setOnRefreshListener(this);
         linearLayoutManager = new LinearLayoutManager(mActivity);
         binding.recyclerView.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
+        binding.recyclerView.addItemDecoration(dividerItemDecoration);
         recordUtils = new AudioRecordUtils(mActivity);
         popupWindow = new PopupWindow();
         View view = LayoutInflater.from(mActivity).inflate(R.layout.pop_voice, null);
@@ -89,11 +103,19 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
         popupWindow.setWidth(width / 2);
         popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         initView();
-        onRefresh();
         return binding.getRoot();
     }
 
     private void initView() {
+        mAdapter = new ClubAdapter(list, mActivity);
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.addOnScrollListener(new RecyclerViewScroller(linearLayoutManager, mAdapter) {
+            @Override
+            public void onLoadMore() {
+                pageNo++;
+                clubList(pageNo);
+            }
+        });
         recordUtils.setOnAudioUpdateListener(new AudioRecordUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
@@ -160,15 +182,17 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
                 return true;
             }
         });
-        mAdapter = new ClubAdapter(datas, mActivity);
-        binding.recyclerView.setAdapter(mAdapter);
-        binding.recyclerView.addOnScrollListener(new RecyclerViewScroller(linearLayoutManager,mAdapter) {
+        binding.llDetail.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onLoadMore() {
-                pageNo++;
-                getClub(pageNo);
+            public void onClick(View v) {
+                if (null == data) {
+                    return;
+                }
+                Intent i = ClubDetailActivity.intentFor(mActivity, data.getMid() + "");
+                startActivity(i);
             }
         });
+
     }
 
     /*上传语音*/
@@ -204,23 +228,46 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
         });
     }
 
+    private void initInfo(ClubBean data) {
+        binding.tvAddress.setText(data.getAddress());
+        binding.tvName.setText(data.getDoctor_name() + "医生");
+        binding.tvClubName.setText(data.getName());
+        binding.tvPhone.setText(data.getUsername());
+        Glide.with(mActivity).load(data.getDoctor_photo()).fitCenter().into(binding.ivAvatar);
+        Glide.with(mActivity).load(data.getPhoto()).fitCenter().into(binding.ivMain);
+    }
 
-    private void getClub(final int pageNo) {
+    private void clubDetail() {
+        api.getBaseUrl(HttpUrls.clubDetail(Settings.getUserProfile().getClub_id() + "")).enqueue(new SimpleCallback() {
+            @Override
+            protected void handleResponse(String response) {
+                data = gson.fromJson(response, ClubBean.class);
+                initInfo(data);
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
+            }
+        });
+
+    }
+
+    private void clubList(final int pageNo) {
         binding.swipeRefresh.setRefreshing(true);
-        api.getBaseUrl(HttpUrls.getArticle(pageNo)).enqueue(new SimpleCallback() {
+        api.getBaseUrl(HttpUrls.club("", pageNo + "", Settings.getUserProfile().getClub_id() + "")).enqueue(new SimpleCallback() {
             @Override
             protected void handleResponse(String response) {
                 binding.swipeRefresh.setRefreshing(false);
-                ArticleBean data = gson.fromJson(response, ArticleBean.class);
-                if (!data.getItems().isEmpty()) {
-                    datas.addAll(data.getItems());
+                ClubListBean data = gson.fromJson(response, ClubListBean.class);
+                if (null != data.getItems() || !data.getItems().isEmpty()) {
+                    list.addAll(data.getItems());
                 } else {
                     if (pageNo > 1) {
                         Utils.showToast("暂时没有更多数据了");
                     }
                 }
-                mAdapter.update(datas);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.update(list);
             }
 
             @Override
@@ -233,24 +280,13 @@ public class MainClubFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        datas = new ArrayList<>();
-        pageNo=1;
-        getClub(pageNo);
+        pageNo = 1;
+        list = new ArrayList<>();
+        clubList(pageNo);
     }
 
     private void contactClub() {
         startActivity(VideoActivity.class);
-/*        DialogUtils.showConsactClub(mActivity, Settings.getUserProfile().getClub_name(), new DialogUtils.OnDialogItemClickListener() {
-            @Override
-            public void onItemClick(int which) {
-                if (which == 1) {
-                    Intent i = new Intent();
-                    i.setAction(Intent.ACTION_CALL);
-                    i.setData(Uri.parse("tel:" + Settings.getUserProfile().getClub_username()));
-                    startActivity(i);
-                }
-            }
-        });*/
     }
 
 }

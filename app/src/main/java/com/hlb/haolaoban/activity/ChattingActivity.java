@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,6 +53,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.Call;
@@ -128,7 +131,6 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                 } else if (dp <= 70 && dp > 55) {
                     iv_state.getDrawable().setLevel(2);
                 } else if (dp <= 85 && dp > 70) {
-
                     iv_state.getDrawable().setLevel(3);
                 } else if (dp <= 100 && dp > 85) {
                     iv_state.getDrawable().setLevel(4);
@@ -284,8 +286,11 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
                                 consultList.addAll(list);
                                 binding.recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
                             } else {
-                                for (int i = 0; i < list.size(); i++) {
+                                for (int i = list.size() - 1; i >=0; i--) {
                                     consultList.add(0, list.get(i));
+                                    if (list.size() == 0) {
+                                        continue;
+                                    }
                                 }
                                 binding.recyclerView.scrollToPosition(0);
                             }
@@ -420,6 +425,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
     @Subscribe
     public void onReceiveEvent(RefreshMsgList event) {
         pageNo = 1;
+        consultList = new ArrayList<>();
         messageList(pageNo);
     }
 }
