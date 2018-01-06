@@ -94,6 +94,8 @@ public class VideoActivity extends BaseActivity {
                     binding.chxVoice.setTextColor(getResources().getColor(R.color.main_bg));
                 }
                 if (null != mRtcEngine) {
+
+                    
                     mRtcEngine.muteLocalAudioStream(binding.chxVoice.isSelected());
                 }
             }
