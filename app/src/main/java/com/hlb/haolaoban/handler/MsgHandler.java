@@ -181,10 +181,12 @@ public class MsgHandler {
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "platform/index").params(HttpUrls.sendText(Settings.getUserProfile().getMid() + "", text)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
+                Log.e("Eeee",e.getLocalizedMessage()+"");
             }
 
             @Override
             public void onResponse(String response, int id) {
+                Log.e("Eeee",response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     int code = jsonObject.getInt("code");

@@ -58,7 +58,8 @@ public class VideoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
         if (!TextUtils.isEmpty(getChannel())) {
-            acceptVideo(getChannel());
+            channel = getChannel();
+            acceptVideo();
         } else {
             calling();
         }
@@ -77,7 +78,8 @@ public class VideoActivity extends BaseActivity {
         binding.tvFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disconnectVideo(channel, "2");
+                Log.e("eeee",channel+"");
+                disconnectVideo(channel, "5");
                 finish();
             }
         });
@@ -255,18 +257,17 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onResponse(String response, int id) {
                 JSONObject jsonObject;
+                Log.e("eeee",response);
                 try {
                     jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
+                    String code = jsonObject.getString("mode");
+                    if (code.equals("video")) {
                         channel = jsonObject.getString("channel");
-                    } else if (code == -99) {
-                        BusProvider.getInstance().postEvent(new TokenOutEvent(code));
+                        Log.e("eeee",channel);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
             }
         });
@@ -279,8 +280,10 @@ public class VideoActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                Log.e("eeee",channel+"  无人接听");
                 if (!TextUtils.isEmpty(channel)) {
                     disconnectVideo(channel, "3");
+                    finish();
                 }
             }
         };
@@ -305,26 +308,12 @@ public class VideoActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                if (mode.equals("5")) {
-                    Toast.makeText(mActivity, "对方未接听视频通话", Toast.LENGTH_LONG).show();
-                }
-                JSONObject jsonObject;
-                try {
-                    jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == -99) {
-                        BusProvider.getInstance().postEvent(new TokenOutEvent(code));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
             }
         });
     }
 
     /*接受视频通话*/
-    private void acceptVideo(final String channel) {
+    private void acceptVideo() {
         OkHttpUtils.post().url(BuildConfig.BASE_VIDEO_URL + "videochat/index").params(HttpUrls.acceptVideo(Settings.getUserProfile().getMid() + "", channel)).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -336,8 +325,8 @@ public class VideoActivity extends BaseActivity {
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(response);
-                    int code = jsonObject.optInt("code");
-                    if (code == 1) {
+                    String code = jsonObject.getString("mode");
+                    if (code.equals("video")) {
                         startChat(channel);
                     }
                 } catch (JSONException e) {
@@ -362,6 +351,7 @@ public class VideoActivity extends BaseActivity {
     @Subscribe
     public void onReciveEvent(JoinVideoEvent event) {
         if (event.getType().equals("meet")) {
+            Log.e("eeee",channel+"");
             startChat(channel);
         }
     }
@@ -369,6 +359,7 @@ public class VideoActivity extends BaseActivity {
     @Subscribe
     public void onReciveEvent(FinishChatEvent event) {
         disconnectVideo(channel, event.getCode());
+        leaveChannel();
         finish();
     }
 

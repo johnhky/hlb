@@ -59,52 +59,20 @@ public class WebSocketConnect {
                     if (!TextUtils.isEmpty(url)) {
                         BusProvider.getInstance().postEvent(new LoginWebSocketEvent(url + ""));
                     }
-
                 }
-
                 @Override
                 public void onTextMessage(String payload) {
                     super.onTextMessage(payload);
+                    Log.e("eeee", payload);
                     JSONObject jsonObject;
                     try {
                         jsonObject = new JSONObject(payload);
-                        int code = jsonObject.optInt("code");
-                        String type = jsonObject.getString("type");
-                        String from = jsonObject.getString("name");
+                        String mode = jsonObject.getString("mode");
                         String channel = "";
-                        if (code == 1) {
-                            if (!TextUtils.isEmpty(type)) {
-                                if (type.equals("calling")) {
-                                    channel = jsonObject.getString("channel");
-                                }
-                                switch (type) {
-                                    case "meet":
-                                        BusProvider.getInstance().postEvent(new JoinVideoEvent(type));
-                                        break;
-                                    case "refuse":
-                                        BusProvider.getInstance().postEvent(new FinishChatEvent("finish", "1"));
-                                        break;
-                                    case "calling":
-                                        BusProvider.getInstance().postEvent(new JoinVideoEvent(type, channel));
-                                        break;
-                                }
-                            }
-                        } else if (code == -99) {
-                            WebSocketUtil.getInstance().login(url);
-                        } else {
-                            String msg = jsonObject.getString("msg");
-                            String mode = jsonObject.getString("mode");
-                            if (mode.equals("order")) {
-                                switch (type) {
-                                    case "1":
-                                    case "2":
-                                    case "3":
-                                    case "4":
-                                    case "5":
-                                        NotificationUtil.showNotification(MyApplication.mContext, type, msg);
-                                        break;
-                                }
-                            } else if (mode.equals("message")) {
+                        switch (mode) {
+                            case "message":
+                                String type = jsonObject.getString("type");
+                                String msg = jsonObject.getString("msg");
                                 switch (type) {
                                     case "1":
                                     case "4":
@@ -116,16 +84,55 @@ public class WebSocketConnect {
                                         }
                                         break;
                                 }
-                            }
-
-                        }
-                        if (null != from || !TextUtils.isEmpty(from)) {
-                            if (!Constants.isRead){
-                                NotificationUtil.showNotification(MyApplication.mContext, "message", "您收到了一条新消息!");
-                            }
-                            BusProvider.getInstance().postEvent(new RefreshMsgList());
+                                break;
+                            case "consult":
+                                if (!Constants.isRead) {
+                                    NotificationUtil.showNotification(MyApplication.mContext, "message", "您收到了一条新消息!");
+                                }
+                                BusProvider.getInstance().postEvent(new RefreshMsgList());
+                                break;
+                            case "order":
+                                String msgs = jsonObject.getString("msg");
+                                String mType = jsonObject.getString("type");
+                                switch (mType) {
+                                    case "1":
+                                    case "2":
+                                    case "3":
+                                    case "4":
+                                    case "5":
+                                        NotificationUtil.showNotification(MyApplication.mContext, mType, msgs);
+                                        break;
+                                }
+                                break;
+                            case "video":
+                                String types = jsonObject.getString("type");
+                                if (!TextUtils.isEmpty(types)) {
+                                    if (types.equals("calling")) {
+                                        channel = jsonObject.getString("channel");
+                                    }
+                                    switch (types) {
+                                        case "meet":
+                                            BusProvider.getInstance().postEvent(new JoinVideoEvent(types));
+                                            break;
+                                        case "refuse":
+                                            BusProvider.getInstance().postEvent(new FinishChatEvent("finish", "1"));
+                                            break;
+                                        case "calling":
+                                            BusProvider.getInstance().postEvent(new JoinVideoEvent(types, channel));
+                                            break;
+                                        case "leave":
+                                            BusProvider.getInstance().postEvent(new FinishChatEvent("finish","2"));
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "-99":
+                                WebSocketUtil.getInstance().login(url);
+                                break;
                         }
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

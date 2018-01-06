@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,11 +53,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import okhttp3.Call;
 
@@ -275,6 +272,7 @@ public class ChattingActivity extends BaseActivity implements SwipeRefreshLayout
 
             @Override
             public void onResponse(String response, int id) {
+                Log.e("eeee",response);
                 binding.swipeRefresh.setRefreshing(false);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
